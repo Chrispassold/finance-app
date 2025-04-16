@@ -5,15 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.chrispassold.askbuddy.ui.theme.AppTheme
-import com.chrispassold.askbuddy.ui.theme.AppTypography
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,10 +22,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android", modifier = Modifier.padding(innerPadding)
-                    )
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding: PaddingValues ->
+                    Column(modifier = Modifier.padding(innerPadding)) {
+                        Greeting(
+                            name = "Android"
+                        )
+                    }
                 }
             }
         }
@@ -32,20 +35,22 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+private fun Greeting(name: String, modifier: Modifier = Modifier) {
     Column {
         Text(
-            text = "Hello $name!", modifier = modifier, style = AppTypography.headlineLarge
+            text = "Hello $name!",
+            modifier = modifier,
+            style = MaterialTheme.typography.headlineLarge,
         )
         Text(
-            text = "Hello $name!", modifier = modifier, style = AppTypography.bodyLarge
+            text = "Hello $name!", modifier = modifier, style = MaterialTheme.typography.bodyLarge,
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+private fun GreetingPreview() {
     AppTheme {
         Greeting("Android")
     }
