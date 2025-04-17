@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,6 +26,7 @@ import com.chrispassold.askbuddy.ui.extensions.LocalUiMode
 import com.chrispassold.askbuddy.ui.extensions.PreviewDarkMode
 import com.chrispassold.askbuddy.ui.extensions.PreviewLightMode
 import com.chrispassold.askbuddy.ui.extensions.choose
+import com.chrispassold.askbuddy.ui.extensions.ifTrue
 import com.chrispassold.askbuddy.ui.theme.AppTheme
 
 // todo: turn this into private and use some domain model to represent the social media
@@ -53,15 +55,45 @@ enum class SocialMedia(
 typealias OnSocialMediaButtonClick = (SocialMedia) -> Unit
 
 @Composable
+fun SocialMediaGroup(
+    textFormat: String,
+    onSocialMediaClick: OnSocialMediaButtonClick,
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        SocialMediaButton(
+            textFormat = textFormat,
+            socialMedia = SocialMedia.Google,
+            onClick = onSocialMediaClick,
+        )
+        Spacer(modifier = Modifier.padding(8.dp))
+        SocialMediaButton(
+            textFormat = textFormat,
+            socialMedia = SocialMedia.Apple,
+            onClick = onSocialMediaClick,
+        )
+        Spacer(modifier = Modifier.padding(8.dp))
+        SocialMediaButton(
+            textFormat = textFormat,
+            socialMedia = SocialMedia.Facebook,
+            onClick = onSocialMediaClick,
+        )
+    }
+}
+
+@Composable
 fun SocialMediaButton(
     socialMedia: SocialMedia,
     modifier: Modifier = Modifier,
+    textFormat: String = "",
     showLabel: Boolean = true,
     onClick: OnSocialMediaButtonClick,
 ) {
     Button(
         onClick = { onClick(socialMedia) },
-        modifier = modifier,
+        modifier = modifier.ifTrue(showLabel) { fillMaxWidth() },
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant, // Example background color
             contentColor = MaterialTheme.colorScheme.onSurfaceVariant, // Example content color
@@ -82,10 +114,10 @@ fun SocialMediaButton(
                 contentDescription = socialMedia.label,
                 modifier = Modifier.size(24.dp),
             )
-            if (showLabel) {
+            if (showLabel && textFormat.isNotEmpty()) {
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
-                    text = stringResource(id = R.string.sign_in_with, socialMedia.label),
+                    text = textFormat.format(socialMedia.label),
                     style = MaterialTheme.typography.labelLarge,
                 )
             }
@@ -112,6 +144,7 @@ private fun PreviewShowingLabel(
                 socialMedia = socialMedia,
                 showLabel = true,
                 onClick = {},
+                textFormat = stringResource(R.string.sign_in_with),
             )
         }
     }
@@ -131,6 +164,7 @@ private fun PreviewHiddingLabel(
                 socialMedia = socialMedia,
                 showLabel = false,
                 onClick = {},
+                textFormat = "",
             )
         }
     }

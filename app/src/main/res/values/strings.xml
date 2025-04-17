@@ -1,12 +1,16 @@
 <resources>
     <string name="app_name">AskBuddy</string>
     <string name="sign_in_with">Sign in with %1$s</string>
-    <string name="login_welcome">Welcome</string>
-    <string name="login_welcome_description">Please login to continue</string>
-    <string name="login">Login</string>
+    <string name="sign_up_with">Sign up with %1$s</string>
+    <string name="sign_in_greeting">Welcome</string>
+    <string name="sign_in_greeting_description">Please sign in to continue</string>
     <string name="login_username_label">E-mail</string>
     <string name="login_password_label">Password</string>
-    <string name="ask_create_a_new_account">Create a new account?</string>
     <string name="or">or</string>
     <string name="ask_forgot_password">Forgot password?</string>
+    <string name="sign_up_greeting">Welcome</string>
+    <string name="sign_up_greeting_description">Please sign up to start</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
+    <string name="do_not_have_an_account">Do not have an account?</string>
 </resources>

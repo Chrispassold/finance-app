@@ -6,10 +6,10 @@ object Routes {
 
     object Login {
         @Serializable
-        object Start
+        object SignIn
 
         @Serializable
-        object CreateAccount
+        object SignUp
 
         @Serializable
         object ForgetPassword
