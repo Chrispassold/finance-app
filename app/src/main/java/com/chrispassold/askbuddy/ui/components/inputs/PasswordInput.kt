@@ -1,4 +1,4 @@
-package com.chrispassold.askbuddy.ui.uikit.inputs
+package com.chrispassold.askbuddy.ui.components.inputs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -72,7 +72,7 @@ fun PasswordInput(
             }
         },
         label = { Text(label, style = MaterialTheme.typography.labelLarge) },
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
     )
 }
 

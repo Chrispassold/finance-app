@@ -84,7 +84,10 @@ fun SocialMediaButton(
             )
             if (showLabel) {
                 Spacer(modifier = Modifier.width(16.dp))
-                Text(text = stringResource(id = R.string.sign_in_with, socialMedia.label))
+                Text(
+                    text = stringResource(id = R.string.sign_in_with, socialMedia.label),
+                    style = MaterialTheme.typography.labelLarge,
+                )
             }
         }
     }

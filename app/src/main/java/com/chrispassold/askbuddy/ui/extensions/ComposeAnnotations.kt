@@ -18,3 +18,7 @@ annotation class PreviewDarkMode
     backgroundColor = 0xFFFFF8F5,
 )
 annotation class PreviewLightMode
+
+@PreviewDarkMode
+@PreviewLightMode
+annotation class PreviewUiModes

@@ -6,4 +6,7 @@
     <string name="login">Login</string>
     <string name="login_username_label">E-mail</string>
     <string name="login_password_label">Password</string>
+    <string name="ask_create_a_new_account">Create a new account?</string>
+    <string name="or">or</string>
+    <string name="ask_forgot_password">Forgot password?</string>
 </resources>
