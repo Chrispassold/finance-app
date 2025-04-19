@@ -15,4 +15,24 @@ object Routes {
         object ForgetPassword
     }
 
+    object Profile {
+        @Serializable
+        object Profile
+
+        @Serializable
+        object BankAccounts
+
+        @Serializable
+        object CreditCards
+
+        @Serializable
+        object PersonalInformation
+
+        @Serializable
+        object Categories
+
+        @Serializable
+        object ExitApp
+    }
+
 }

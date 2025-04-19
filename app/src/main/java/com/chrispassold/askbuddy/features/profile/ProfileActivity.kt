@@ -1,4 +1,4 @@
-package com.chrispassold.askbuddy.features.login
+package com.chrispassold.askbuddy.features.profile
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -17,7 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.chrispassold.askbuddy.ui.routes.Routes
 import com.chrispassold.askbuddy.ui.theme.AppTheme
 
-class LoginActivity : ComponentActivity() {
+class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -26,7 +26,7 @@ class LoginActivity : ComponentActivity() {
             AppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(modifier = Modifier.padding(innerPadding)) {
-                        LoginRouter(
+                        Router(
                             navController = navController,
                         )
                     }
@@ -37,35 +37,34 @@ class LoginActivity : ComponentActivity() {
 }
 
 @Composable
-private fun LoginRouter(
+private fun Router(
     navController: NavHostController,
 ) {
-    NavHost(navController = navController, startDestination = Routes.Login.SignIn) {
-        composable<Routes.Login.SignIn> {
-            SignInScreen(
-                onNavigateToSignUp = { navController.navigate(Routes.Login.SignUp) },
-                onForgetPassword = { navController.navigate(Routes.Login.ForgetPassword) },
-                onSignIn = { /*todo*/ },
-            )
-        }
-        composable<Routes.Login.SignUp> {
-            SignUpScreen(
-                onNavigationToSignIn = {
-                    if (!navController.popBackStack()) {
-                        navController.navigate(Routes.Login.SignIn) {
-                            popUpTo(Routes.Login.SignUp) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }
-                    }
-                },
-                onSignUp = { /*todo*/ },
-            )
+    NavHost(navController = navController, startDestination = Routes.Profile.Profile) {
+        composable<Routes.Profile.Profile> {
 
         }
-        composable<Routes.Login.ForgetPassword> { /*todo*/ }
-        // Add more destinations similarly.
+
+        composable<Routes.Profile.BankAccounts> {
+            TODO("BANK ACCOUNTS IN THE FUTURE")
+        }
+
+        composable<Routes.Profile.Categories> {
+            TODO("CATEGORIES IN THE FUTURE")
+        }
+
+        composable<Routes.Profile.PersonalInformation> {
+            TODO("PERSONAL INFORMATION IN THE FUTURE")
+        }
+
+        composable<Routes.Profile.CreditCards> {
+            TODO("CREDIT CARDS IN THE FUTURE")
+        }
+
+        composable<Routes.Profile.ExitApp> {
+            TODO("EXIT APP IN THE FUTURE")
+        }
+
     }
 
 }

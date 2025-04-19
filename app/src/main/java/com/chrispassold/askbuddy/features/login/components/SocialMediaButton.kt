@@ -23,8 +23,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.chrispassold.askbuddy.R
 import com.chrispassold.askbuddy.ui.extensions.LocalUiMode
-import com.chrispassold.askbuddy.ui.extensions.PreviewDarkMode
-import com.chrispassold.askbuddy.ui.extensions.PreviewLightMode
+import com.chrispassold.askbuddy.ui.extensions.PreviewUiModes
 import com.chrispassold.askbuddy.ui.extensions.choose
 import com.chrispassold.askbuddy.ui.extensions.ifTrue
 import com.chrispassold.askbuddy.ui.theme.AppTheme
@@ -130,8 +129,7 @@ private class SocialMediaParameters : PreviewParameterProvider<SocialMedia> {
         get() = SocialMedia.entries.asSequence()
 }
 
-@PreviewLightMode
-@PreviewDarkMode
+@PreviewUiModes
 @Composable
 private fun PreviewShowingLabel(
     @PreviewParameter(SocialMediaParameters::class) socialMedia: SocialMedia,
@@ -150,8 +148,7 @@ private fun PreviewShowingLabel(
     }
 }
 
-@PreviewLightMode
-@PreviewDarkMode
+@PreviewUiModes
 @Composable
 private fun PreviewHiddingLabel(
     @PreviewParameter(SocialMediaParameters::class) socialMedia: SocialMedia,
