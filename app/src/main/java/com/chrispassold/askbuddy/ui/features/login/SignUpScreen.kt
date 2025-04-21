@@ -1,4 +1,4 @@
-package com.chrispassold.askbuddy.features.login
+package com.chrispassold.askbuddy.ui.features.login
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -9,12 +9,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.chrispassold.askbuddy.R
-import com.chrispassold.askbuddy.features.login.components.LoginFooterMessage
-import com.chrispassold.askbuddy.features.login.components.PasswordBasedLoginComponent
-import com.chrispassold.askbuddy.features.login.components.SocialMediaGroup
+import com.chrispassold.askbuddy.ui.features.login.components.LoginFooterMessage
+import com.chrispassold.askbuddy.ui.features.login.components.PasswordBasedLoginComponent
+import com.chrispassold.askbuddy.ui.features.login.components.SocialMediaGroup
 import com.chrispassold.askbuddy.ui.components.containers.ScreenContainer
 import com.chrispassold.askbuddy.ui.components.separators.SeparatorWithText
-import com.chrispassold.askbuddy.ui.extensions.PreviewUiModes
+import com.chrispassold.askbuddy.extensions.PreviewUiModes
 import com.chrispassold.askbuddy.ui.theme.AppTheme
 
 @Composable

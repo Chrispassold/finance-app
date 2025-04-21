@@ -1,4 +1,4 @@
-package com.chrispassold.askbuddy.ui.extensions
+package com.chrispassold.askbuddy.extensions
 
 import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview

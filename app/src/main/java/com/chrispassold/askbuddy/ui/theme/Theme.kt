@@ -12,8 +12,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import com.chrispassold.askbuddy.ui.extensions.LocalUiMode
-import com.chrispassold.askbuddy.ui.extensions.UiMode
+import com.chrispassold.askbuddy.extensions.LocalUiMode
+import com.chrispassold.askbuddy.extensions.UiMode
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,

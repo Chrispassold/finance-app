@@ -1,4 +1,4 @@
-package com.chrispassold.askbuddy.features.profile
+package com.chrispassold.askbuddy.ui.features.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +23,7 @@ import com.chrispassold.askbuddy.ui.components.avatars.Avatar
 import com.chrispassold.askbuddy.ui.components.avatars.AvatarImage
 import com.chrispassold.askbuddy.ui.components.avatars.AvatarSize
 import com.chrispassold.askbuddy.ui.components.containers.ScreenContainer
-import com.chrispassold.askbuddy.ui.extensions.PreviewUiModes
+import com.chrispassold.askbuddy.extensions.PreviewUiModes
 import com.chrispassold.askbuddy.ui.theme.AppTheme
 
 @Composable

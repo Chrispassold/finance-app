@@ -1,4 +1,4 @@
-package com.chrispassold.askbuddy.features.login.components
+package com.chrispassold.askbuddy.ui.features.login.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.chrispassold.askbuddy.ui.components.texts.TextLink
-import com.chrispassold.askbuddy.ui.extensions.PreviewUiModes
+import com.chrispassold.askbuddy.extensions.PreviewUiModes
 import com.chrispassold.askbuddy.ui.theme.AppTheme
 
 @Composable

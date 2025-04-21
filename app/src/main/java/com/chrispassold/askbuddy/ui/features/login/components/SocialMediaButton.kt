@@ -1,4 +1,4 @@
-package com.chrispassold.askbuddy.features.login.components
+package com.chrispassold.askbuddy.ui.features.login.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -22,10 +22,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.chrispassold.askbuddy.R
-import com.chrispassold.askbuddy.ui.extensions.LocalUiMode
-import com.chrispassold.askbuddy.ui.extensions.PreviewUiModes
-import com.chrispassold.askbuddy.ui.extensions.choose
-import com.chrispassold.askbuddy.ui.extensions.ifTrue
+import com.chrispassold.askbuddy.extensions.LocalUiMode
+import com.chrispassold.askbuddy.extensions.PreviewUiModes
+import com.chrispassold.askbuddy.extensions.choose
+import com.chrispassold.askbuddy.extensions.ifTrue
 import com.chrispassold.askbuddy.ui.theme.AppTheme
 
 // todo: turn this into private and use some domain model to represent the social media

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -12,11 +13,14 @@ import androidx.compose.ui.unit.dp
 fun ScreenContainer(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
-){
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        content = content
-    )
+) {
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Column(
+            modifier = modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .padding(horizontal = 24.dp),
+            content = content,
+        )
+    }
 }

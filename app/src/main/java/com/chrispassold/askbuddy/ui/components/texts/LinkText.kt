@@ -6,8 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import com.chrispassold.askbuddy.ui.extensions.PreviewDarkMode
-import com.chrispassold.askbuddy.ui.extensions.PreviewLightMode
+import com.chrispassold.askbuddy.extensions.PreviewDarkMode
+import com.chrispassold.askbuddy.extensions.PreviewLightMode
 import com.chrispassold.askbuddy.ui.theme.AppTheme
 
 @Composable

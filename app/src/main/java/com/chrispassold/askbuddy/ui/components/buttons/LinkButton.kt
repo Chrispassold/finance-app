@@ -6,7 +6,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import com.chrispassold.askbuddy.ui.extensions.PreviewUiModes
+import com.chrispassold.askbuddy.extensions.PreviewUiModes
 import com.chrispassold.askbuddy.ui.theme.AppTheme
 
 @Composable

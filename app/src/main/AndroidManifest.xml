@@ -14,7 +14,7 @@
         android:theme="@style/Theme.AppTheme"
         tools:targetApi="31">
         <activity
-            android:name=".features.login.LoginActivity"
+            android:name=".ui.SingleActivity"
             android:exported="true"
             android:theme="@style/Theme.AppTheme">
             <intent-filter>

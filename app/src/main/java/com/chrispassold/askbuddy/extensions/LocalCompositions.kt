@@ -1,4 +1,4 @@
-package com.chrispassold.askbuddy.ui.extensions
+package com.chrispassold.askbuddy.extensions
 
 import androidx.compose.runtime.compositionLocalOf
 

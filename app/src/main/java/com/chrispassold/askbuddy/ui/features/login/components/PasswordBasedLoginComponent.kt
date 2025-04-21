@@ -1,4 +1,4 @@
-package com.chrispassold.askbuddy.features.login.components
+package com.chrispassold.askbuddy.ui.features.login.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,7 +19,7 @@ import com.chrispassold.askbuddy.ui.components.buttons.PrimaryButton
 import com.chrispassold.askbuddy.ui.components.inputs.PasswordInput
 import com.chrispassold.askbuddy.ui.components.inputs.TextInput
 import com.chrispassold.askbuddy.ui.components.texts.TextLink
-import com.chrispassold.askbuddy.ui.extensions.PreviewUiModes
+import com.chrispassold.askbuddy.extensions.PreviewUiModes
 import com.chrispassold.askbuddy.ui.theme.AppTheme
 
 @Composable
