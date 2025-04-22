@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.chrispassold.askbuddy.ui.features.login.navigateToLogin
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -23,21 +24,31 @@ private data object PersonalInformationDestination
 
 fun NavGraphBuilder.profile(navController: NavController) {
     navigation<ProfileEntryDestination>(startDestination = ProfileHomeDestination) {
-        profileHome()
+        profileHome(navController)
         bankAccounts()
         categories()
         personalInformation()
     }
 }
 
-private fun NavGraphBuilder.profileHome() {
+private fun NavGraphBuilder.profileHome(navController: NavController) {
     composable<ProfileHomeDestination> {
         ProfileScreen(
-            onNavigateToBankAccounts = {},
-            onNavigateToCategories = {},
-            onNavigateToPersonalInformation = {},
-            onNavigateToCreditCards = {},
-            onExitApp = {},
+            onNavigateToBankAccounts = {
+                navController.navigateToBankAccounts()
+            },
+            onNavigateToCategories = {
+                navController.navigateToCategories()
+            },
+            onNavigateToPersonalInformation = {
+                navController.navigateToPersonalInformation()
+            },
+            onNavigateToCreditCards = {
+                TODO()
+            },
+            onExitApp = {
+                navController.navigateToLogin()
+            },
         )
     }
 }
@@ -64,10 +75,6 @@ private fun NavGraphBuilder.personalInformation() {
 
 fun NavController.navigateToProfile() {
     navigate(ProfileEntryDestination)
-}
-
-private fun NavController.navigateToProfileHome() {
-    navigate(ProfileHomeDestination)
 }
 
 private fun NavController.navigateToBankAccounts() {

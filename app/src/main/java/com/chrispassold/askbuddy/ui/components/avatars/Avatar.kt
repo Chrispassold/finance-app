@@ -2,7 +2,7 @@ package com.chrispassold.askbuddy.ui.components.avatars
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -46,11 +46,10 @@ fun Avatar(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.primary,
 ) {
-    val avatarModifier =
-        modifier
-            .size(avatarSize.size)
-            .clip(CircleShape)
-            .border(1.dp, Color.LightGray, CircleShape)
+    val avatarModifier = modifier
+        .clip(CircleShape)
+        .size(avatarSize.size)
+        .background(color = MaterialTheme.colorScheme.surface)
 
     Box(
         modifier = avatarModifier,

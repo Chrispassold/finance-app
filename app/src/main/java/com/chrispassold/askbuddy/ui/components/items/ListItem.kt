@@ -1,6 +1,7 @@
 package com.chrispassold.askbuddy.ui.components.items
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -12,23 +13,45 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.chrispassold.askbuddy.extensions.PreviewUiModes
 import com.chrispassold.askbuddy.ui.theme.AppTheme
+
 
 @Composable
 fun ListItem(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     text: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
+    val backgroundColor: Color
+    val textColor: Color
+    val iconColor: Color
+    when (enabled) {
+        true -> {
+            backgroundColor = MaterialTheme.colorScheme.surface
+            textColor = MaterialTheme.colorScheme.onSurface
+            iconColor = MaterialTheme.colorScheme.onSurface
+        }
+
+        false -> {
+            backgroundColor = MaterialTheme.colorScheme.surfaceVariant
+            textColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+            iconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+        }
+    }
     ListItem(
-        modifier = modifier.background(color = MaterialTheme.colorScheme.surface),
+        modifier = modifier
+            .background(color = backgroundColor)
+            .clickable(enabled = enabled, onClick = onClick),
         leadingContent = {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
+                tint = iconColor,
                 modifier = Modifier.size(24.dp),
             )
         },
@@ -36,13 +59,14 @@ fun ListItem(
             Text(
                 text = text,
                 style = MaterialTheme.typography.bodyLarge,
+                color = textColor,
             )
         },
         trailingContent = {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                 contentDescription = "Go to",
-                tint = MaterialTheme.colorScheme.onSurface,
+                tint = iconColor,
                 modifier = Modifier.size(24.dp),
             )
         },
@@ -51,12 +75,28 @@ fun ListItem(
 
 @PreviewUiModes
 @Composable
-private fun Preview() {
+private fun PreviewEnabled() {
     AppTheme {
         ListItem(
+            enabled = true,
             icon = Icons.Filled.Info,
             text = "Example Item",
             modifier = Modifier.padding(16.dp),
+            onClick = {},
+        )
+    }
+}
+
+@PreviewUiModes
+@Composable
+private fun PreviewDisabled() {
+    AppTheme {
+        ListItem(
+            enabled = false,
+            icon = Icons.Filled.Info,
+            text = "Example Item",
+            modifier = Modifier.padding(16.dp),
+            onClick = {},
         )
     }
 }
