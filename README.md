@@ -2,7 +2,50 @@
 
 ## Features to implement
 
-- [ ] Add dependency injection
+- [ ] Profile
+  - [ ] Personal Information
+    - [ ] Edit
+      - Photo
+      - Email
+      - Name
+      - Password
+  - [ ] Bank Accounts
+    - [ ] List
+      - List all bank accounts already registered
+    - [ ] Create/Edit
+      - Icon
+      - Name
+      - Initial budget
+      - Type
+        - Checking account
+        - Savings account
+      - Should agregate into home?
+  - [ ] Categories
+    - [ ] List
+      - List all categories already registered 
+    - [ ] Create/Edit
+      - Icon
+      - Color
+      - Name
+      - Type
+        - Income
+        - Expense
+      - Add sub category
+        - Name
+- [ ] Transactions
+  - List
+    - List all transactions
+  - Create/Edit
+    - Value
+    - Type
+      - Income
+      - Expense
+      - Saving
+    - Description
+    - Category
+    - Date
+    - Bank Account
+
 
 ## How to use the typography
 
