@@ -4,17 +4,75 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.chrispassold.askbuddy.extensions.PreviewUiModes
+import com.chrispassold.askbuddy.presentation.theme.AppTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenContainer(
     modifier: Modifier = Modifier,
+    appBarTitle: String? = null,
+    onBack: (() -> Unit)? = null,
+    onRightAction: (() -> Unit)? = null,
+    rightActionIcon: @Composable (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            CenterAlignedTopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary,
+                ),
+                title = {
+                    if (appBarTitle != null) {
+                        Text(
+                            text = appBarTitle,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.headlineSmall,
+                        )
+                    }
+                },
+                navigationIcon = {
+                    if (onBack != null) {
+                        IconButton(onClick = onBack) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = "Go back",
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            )
+                        }
+                    }
+                },
+                actions = {
+                    if (onRightAction != null) {
+                        if (rightActionIcon != null) {
+                            IconButton(onClick = onRightAction) {
+                                rightActionIcon()
+                            }
+                        }
+                    }
+                },
+            )
+        },
+    ) { innerPadding ->
         Column(
             modifier = modifier
                 .padding(innerPadding)
@@ -22,5 +80,20 @@ fun ScreenContainer(
                 .padding(horizontal = 24.dp),
             content = content,
         )
+    }
+}
+
+@PreviewUiModes
+@Composable
+private fun Preview(){
+    AppTheme {
+        ScreenContainer(
+            appBarTitle = "My App Screen",
+            onBack = { /* Handle back navigation */ },
+            onRightAction = { /* Handle right action */ },
+            rightActionIcon = { Icon(imageVector = Icons.Filled.Info, contentDescription = "info") }
+        ) {
+            Text("Screen content here")
+        }
     }
 }

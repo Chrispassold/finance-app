@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.chrispassold.askbuddy.presentation.features.login.navigateToLogin
+import com.chrispassold.askbuddy.presentation.features.profile.personalinformation.PersonalInformationScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -27,7 +28,7 @@ fun NavGraphBuilder.profile(navController: NavController) {
         profileHome(navController)
         bankAccounts()
         categories()
-        personalInformation()
+        personalInformation(navController)
     }
 }
 
@@ -66,9 +67,13 @@ private fun NavGraphBuilder.categories() {
     }
 }
 
-private fun NavGraphBuilder.personalInformation() {
+private fun NavGraphBuilder.personalInformation(navController: NavController) {
     composable<PersonalInformationDestination> {
-        TODO()
+        PersonalInformationScreen(
+            onBack = {
+                navController.popBackStack()
+            }
+        )
     }
 }
 

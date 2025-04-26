@@ -72,7 +72,7 @@ fun PasswordInput(
             }
         },
         label = { Text(label, style = MaterialTheme.typography.labelLarge) },
-        modifier = modifier,
+        modifier = Modifier.fillMaxWidth().then(modifier),
     )
 }
 

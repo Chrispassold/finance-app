@@ -24,8 +24,10 @@ fun TextInput(
     modifier: Modifier = Modifier,
     errorMessage: String? = null,
     isError: Boolean = false,
+    readOnly: Boolean = false,
 ) {
     TextField(
+        readOnly = readOnly,
         value = value,
         onValueChange = {
             onValueChange(it)
@@ -43,7 +45,7 @@ fun TextInput(
             }
         },
         label = { Text(label, style = MaterialTheme.typography.labelLarge) },
-        modifier = modifier,
+        modifier = Modifier.fillMaxWidth().then(modifier),
     )
 }
 

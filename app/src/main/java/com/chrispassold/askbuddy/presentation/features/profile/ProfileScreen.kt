@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -43,7 +44,7 @@ fun ProfileScreen(
     onExitApp: () -> Unit,
 ) {
     ScreenContainer {
-        Spacer(modifier = Modifier.padding(24.dp))
+        Spacer(modifier = Modifier.height(24.dp))
         Header()
         Content(
             modifier = Modifier.weight(1f),
