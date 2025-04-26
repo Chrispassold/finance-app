@@ -13,4 +13,13 @@
     <string name="sign_up">Sign up</string>
     <string name="sign_in">Sign in</string>
     <string name="do_not_have_an_account">Do not have an account?</string>
+    <string name="save">Save</string>
+    <string name="edit_picture">Edit picture</string>
+    <string name="name">Name</string>
+    <string name="e_mail">E-mail</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="password">Password</string>
+    <string name="personal_information_screen_title">Personal Information</string>
+    <string name="bank_accounts_screen_title">Bank Accounts</string>
+    <string name="total_amount_in_accounts">Total amount in accounts</string>
 </resources>

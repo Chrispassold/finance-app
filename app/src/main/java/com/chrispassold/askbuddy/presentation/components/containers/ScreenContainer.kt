@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.chrispassold.askbuddy.extensions.PreviewUiModes
@@ -29,7 +30,8 @@ fun ScreenContainer(
     appBarTitle: String? = null,
     onBack: (() -> Unit)? = null,
     onRightAction: (() -> Unit)? = null,
-    rightActionIcon: @Composable (() -> Unit)? = null,
+    rightActionIcon: ImageVector? = null,
+    rightActionIconContentDescription: String? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Scaffold(
@@ -65,7 +67,11 @@ fun ScreenContainer(
                     if (onRightAction != null) {
                         if (rightActionIcon != null) {
                             IconButton(onClick = onRightAction) {
-                                rightActionIcon()
+                                Icon(
+                                    imageVector = rightActionIcon,
+                                    contentDescription = rightActionIconContentDescription,
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                )
                             }
                         }
                     }
@@ -85,13 +91,14 @@ fun ScreenContainer(
 
 @PreviewUiModes
 @Composable
-private fun Preview(){
+private fun Preview() {
     AppTheme {
         ScreenContainer(
             appBarTitle = "My App Screen",
             onBack = { /* Handle back navigation */ },
             onRightAction = { /* Handle right action */ },
-            rightActionIcon = { Icon(imageVector = Icons.Filled.Info, contentDescription = "info") }
+            rightActionIcon = Icons.Filled.Info,
+            rightActionIconContentDescription = "Info",
         ) {
             Text("Screen content here")
         }

@@ -14,9 +14,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import com.chrispassold.askbuddy.R
 import com.chrispassold.askbuddy.extensions.PreviewUiModes
 import com.chrispassold.askbuddy.extensions.whenPreview
 import com.chrispassold.askbuddy.presentation.components.avatars.Avatar
@@ -35,7 +37,7 @@ fun PersonalInformationScreen(
     onBack: () -> Unit,
 ) {
     ScreenContainer(
-        appBarTitle = "Personal Information",
+        appBarTitle = stringResource(R.string.personal_information_screen_title),
         onBack = onBack,
     ) {
         Spacer(modifier = Modifier.height(24.dp))
@@ -44,7 +46,7 @@ fun PersonalInformationScreen(
         Content()
         PrimaryButton(
             modifier = Modifier.fillMaxWidth(),
-            text = "Save",
+            text = stringResource(R.string.save),
             onClick = onBack,
         )
     }
@@ -67,7 +69,7 @@ private fun Header() {
             )
         }
         Row {
-            TextLink(text = "Edit picture", onClick = {})
+            TextLink(text = stringResource(R.string.edit_picture), onClick = {})
         }
     }
 }
@@ -84,17 +86,17 @@ private fun Content() {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         TextInput(
-            label = "Name",
+            label = stringResource(R.string.name),
             value = name,
             onValueChange = { name = it },
         )
         TextInput(
-            label = "E-mail",
+            label = stringResource(R.string.e_mail),
             value = email,
             onValueChange = { email = it },
         )
         DatePickerInput(
-            label = "Date of Birth",
+            label = stringResource(R.string.date_of_birth),
             onDateSelected = {
                 birthDate = it
             },
@@ -103,7 +105,7 @@ private fun Content() {
             },
         )
         PasswordInput(
-            label = "Password",
+            label = stringResource(R.string.password),
             value = password,
             onValueChange = { password = it },
         )
