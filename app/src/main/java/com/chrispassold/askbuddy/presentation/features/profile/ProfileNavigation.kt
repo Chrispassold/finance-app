@@ -5,6 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.chrispassold.askbuddy.presentation.features.login.navigateToLogin
+import com.chrispassold.askbuddy.presentation.features.profile.bankaccounts.DetailBankAccountScreen
+import com.chrispassold.askbuddy.presentation.features.profile.bankaccounts.ListBankAccountsScreen
 import com.chrispassold.askbuddy.presentation.features.profile.personalinformation.PersonalInformationScreen
 import kotlinx.serialization.Serializable
 
@@ -15,7 +17,13 @@ private data object ProfileEntryDestination
 private data object ProfileHomeDestination
 
 @Serializable
-private data object BankAccountsDestination
+private data object BankAccountsDestination {
+    @Serializable
+    data object List
+
+    @Serializable
+    data object Detail
+}
 
 @Serializable
 private data object CategoriesDestination
@@ -26,7 +34,7 @@ private data object PersonalInformationDestination
 fun NavGraphBuilder.profile(navController: NavController) {
     navigation<ProfileEntryDestination>(startDestination = ProfileHomeDestination) {
         profileHome(navController)
-        bankAccounts()
+        bankAccounts(navController)
         categories()
         personalInformation(navController)
     }
@@ -55,9 +63,25 @@ private fun NavGraphBuilder.profileHome(navController: NavController) {
 }
 
 
-private fun NavGraphBuilder.bankAccounts() {
-    composable<BankAccountsDestination> {
-        TODO()
+private fun NavGraphBuilder.bankAccounts(navController: NavController) {
+    navigation<BankAccountsDestination>(startDestination = BankAccountsDestination.List) {
+        composable<BankAccountsDestination.List> {
+            ListBankAccountsScreen(
+                onNewBankAccount = {
+                    navController.navigate(BankAccountsDestination.Detail)
+                },
+                onBack = {
+                    navController.popBackStack()
+                },
+            )
+        }
+        composable<BankAccountsDestination.Detail> {
+            DetailBankAccountScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+            )
+        }
     }
 }
 
@@ -72,7 +96,7 @@ private fun NavGraphBuilder.personalInformation(navController: NavController) {
         PersonalInformationScreen(
             onBack = {
                 navController.popBackStack()
-            }
+            },
         )
     }
 }

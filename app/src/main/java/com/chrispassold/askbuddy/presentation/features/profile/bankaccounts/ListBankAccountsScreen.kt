@@ -3,24 +3,27 @@ package com.chrispassold.askbuddy.presentation.features.profile.bankaccounts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FoodBank
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -28,10 +31,11 @@ import com.chrispassold.askbuddy.R
 import com.chrispassold.askbuddy.domain.models.Money
 import com.chrispassold.askbuddy.extensions.PreviewUiModes
 import com.chrispassold.askbuddy.presentation.components.containers.ScreenContainer
+import com.chrispassold.askbuddy.presentation.components.tags.Tag
 import com.chrispassold.askbuddy.presentation.theme.AppTheme
 
 @Composable
-fun BankAccountsScreen(
+fun ListBankAccountsScreen(
     onNewBankAccount: () -> Unit,
     onBack: () -> Unit,
 ) {
@@ -42,7 +46,8 @@ fun BankAccountsScreen(
         rightActionIconContentDescription = "Add",
         onRightAction = onNewBankAccount,
     ) {
-        Column {
+        Spacer(modifier = Modifier.height(16.dp))
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             TotalAmountAccounts(
                 Money(100_001.50),
             )
@@ -71,9 +76,9 @@ private fun BankAccount(
     modifier: Modifier = Modifier,
 ) {
     ListItem(
-        modifier = modifier.background(
-            color = MaterialTheme.colorScheme.surface,
-            shape = MaterialTheme.shapes.medium,
+        modifier = modifier.clip(RoundedCornerShape(8.dp)),
+        colors = ListItemDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
         ),
         headlineContent = {
             Text(text = bankName, style = MaterialTheme.typography.titleMedium)
@@ -85,9 +90,9 @@ private fun BankAccount(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary)
+                    .background(MaterialTheme.colorScheme.inverseOnSurface)
                     .padding(8.dp),
-                tint = Color.White,
+                tint = MaterialTheme.colorScheme.onSurface,
             )
         },
         supportingContent = {
@@ -100,32 +105,15 @@ private fun BankAccount(
 }
 
 @Composable
-private fun Tag(
-    text: String,
-    modifier: Modifier = Modifier,
-) {
-    Surface(
-        modifier = modifier.padding(2.dp),
-        shape = MaterialTheme.shapes.small,
-        color = MaterialTheme.colorScheme.secondaryContainer,
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelSmall,
-            modifier = Modifier.padding(8.dp),
-        )
-    }
-}
-
-@Composable
 private fun TotalAmountAccounts(
     totalAmount: Money,
     modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp),
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+        )
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -144,7 +132,7 @@ private fun TotalAmountAccounts(
 @Composable
 private fun Preview() {
     AppTheme {
-        BankAccountsScreen(
+        ListBankAccountsScreen(
             onNewBankAccount = {},
             onBack = {},
         )

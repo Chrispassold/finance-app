@@ -37,46 +37,15 @@ fun ScreenContainer(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    if (appBarTitle != null) {
-                        Text(
-                            text = appBarTitle,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.headlineSmall,
-                        )
-                    }
-                },
-                navigationIcon = {
-                    if (onBack != null) {
-                        IconButton(onClick = onBack) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = "Go back",
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                            )
-                        }
-                    }
-                },
-                actions = {
-                    if (onRightAction != null) {
-                        if (rightActionIcon != null) {
-                            IconButton(onClick = onRightAction) {
-                                Icon(
-                                    imageVector = rightActionIcon,
-                                    contentDescription = rightActionIconContentDescription,
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                                )
-                            }
-                        }
-                    }
-                },
-            )
+            if (appBarTitle != null) {
+                AppBar(
+                    appBarTitle = appBarTitle,
+                    onBack = onBack,
+                    onRightAction = onRightAction,
+                    rightActionIcon = rightActionIcon,
+                    rightActionIconContentDescription = rightActionIconContentDescription,
+                )
+            }
         },
     ) { innerPadding ->
         Column(
@@ -87,6 +56,55 @@ fun ScreenContainer(
             content = content,
         )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AppBar(
+    appBarTitle: String,
+    onBack: (() -> Unit)? = null,
+    onRightAction: (() -> Unit)? = null,
+    rightActionIcon: ImageVector? = null,
+    rightActionIconContentDescription: String? = null,
+) {
+    CenterAlignedTopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.primary,
+        ),
+        title = {
+            Text(
+                text = appBarTitle,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.headlineSmall,
+            )
+        },
+        navigationIcon = {
+            if (onBack != null) {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Go back",
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                }
+            }
+        },
+        actions = {
+            if (onRightAction != null) {
+                if (rightActionIcon != null) {
+                    IconButton(onClick = onRightAction) {
+                        Icon(
+                            imageVector = rightActionIcon,
+                            contentDescription = rightActionIconContentDescription,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        )
+                    }
+                }
+            }
+        },
+    )
 }
 
 @PreviewUiModes
