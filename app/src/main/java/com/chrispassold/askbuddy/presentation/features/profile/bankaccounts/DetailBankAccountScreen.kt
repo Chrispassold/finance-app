@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.chrispassold.askbuddy.R
+import com.chrispassold.askbuddy.domain.models.Money
 import com.chrispassold.askbuddy.extensions.PreviewUiModes
 import com.chrispassold.askbuddy.presentation.components.avatars.Avatar
 import com.chrispassold.askbuddy.presentation.components.avatars.AvatarImage
@@ -32,7 +33,7 @@ fun DetailBankAccountScreen(
     onBack: () -> Unit,
 ) {
     var bankAccountName by remember { mutableStateOf(TextFieldValue("")) }
-    var initialValue by remember { mutableStateOf(TextFieldValue("")) }
+    var initialValue by remember { mutableStateOf(Money.zero()) }
 
     ScreenContainer(
         appBarTitle = stringResource(R.string.bank_accounts_screen_title),

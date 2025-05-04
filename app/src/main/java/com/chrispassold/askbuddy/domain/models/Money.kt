@@ -1,9 +1,13 @@
 package com.chrispassold.askbuddy.domain.models
 
+import timber.log.Timber
 import java.math.BigDecimal
 import java.text.NumberFormat
+import java.text.ParseException
 import java.util.Currency
 import java.util.Locale
+
+private fun Locale.toCurrency(): Currency = Currency.getInstance(this)
 
 /**
  * Represents an immutable amount of money in a specific currency.
@@ -11,25 +15,65 @@ import java.util.Locale
  * @property amount The monetary amount, represented as a BigDecimal for precision.
  * @property currency The currency of the money, represented by a Currency object.
  */
-data class Money(val amount: BigDecimal, val currency: Currency) : Comparable<Money> {
+data class Money(val amount: BigDecimal, val locale: Locale) : Comparable<Money> {
 
-    constructor(amount: Double) : this(BigDecimal.valueOf(amount), DEFAULT_CURRENCY)
+    private val currency: Currency = locale.toCurrency()
+
+    constructor(amount: Double, locale: Locale = DEFAULT_CURRENCY_LOCALE) : this(
+        BigDecimal.valueOf(
+            amount,
+        ),
+        locale,
+    )
+
+    /**
+     * Creates a Money object from a String representation of an amount,
+     * using the currency and locale for parsing.
+     *
+     * @param amount The String representation of the amount.
+     * @throws ParseException if the amount string is not in a parsable format according to the specified locale.
+     */
+    private constructor(
+        amount: String,
+        locale: Locale = DEFAULT_CURRENCY_LOCALE,
+    ) : this(
+        parseAmount(amount, locale).setScale(
+            locale.toCurrency().defaultFractionDigits,
+            java.math.RoundingMode.HALF_UP,
+        ),
+        locale,
+    )
 
     init {
+        // This check might need adjustment if you are parsing strings with different scales
+        // depending on the locale and format. However, for basic cases, keeping it is fine.
         require(amount.scale() <= currency.defaultFractionDigits) {
-            "Amount scale cannot be greater than currency default fraction digits"
+            "Amount scale (${amount.scale()}) cannot be greater than currency default fraction digits (${currency.defaultFractionDigits})"
         }
     }
 
     /**
-     * Formats the money value according to the specified locale.
+     * Formats the money value according to the specified locale and includes or excludes the currency symbol based on the [withCurrencyPrefix] parameter.
      *
      * @param locale The locale to use for formatting. Defaults to the system's default locale.
-     * @return The formatted money string.
+     * @param withCurrencyPrefix If true, includes the currency symbol in the formatted string. If false, excludes it. Defaults to true.
+     * @return The formatted money string, with or without the currency symbol based on the [withCurrencyPrefix] parameter.
      */
-    fun format(locale: Locale = DEFAULT_CURRENCY_LOCALE): String {
-        val format = NumberFormat.getCurrencyInstance(locale)
-        format.currency = currency
+    fun format(
+        locale: Locale = DEFAULT_CURRENCY_LOCALE,
+        withCurrencyPrefix: Boolean = true,
+    ): String {
+        val format: NumberFormat
+        if (withCurrencyPrefix) {
+            format = NumberFormat.getCurrencyInstance(locale)
+            format.currency = currency
+        } else {
+            format = NumberFormat.getNumberInstance(locale)
+            format.maximumFractionDigits = currency.defaultFractionDigits
+            format.minimumFractionDigits = currency.defaultFractionDigits
+            format.isGroupingUsed =
+                true // Typically you want grouping (e.g., commas) for larger numbers
+        }
         return format.format(amount)
     }
 
@@ -41,8 +85,8 @@ data class Money(val amount: BigDecimal, val currency: Currency) : Comparable<Mo
      * @throws IllegalArgumentException if the currencies are different.
      */
     operator fun plus(other: Money): Money {
-        require(currency == other.currency) { "Currencies must be the same for addition" }
-        return Money(amount + other.amount, currency)
+        require(locale == other.locale) { "Locale must be the same for addition" }
+        return Money(amount + other.amount, locale)
     }
 
     /**
@@ -53,8 +97,8 @@ data class Money(val amount: BigDecimal, val currency: Currency) : Comparable<Mo
      * @throws IllegalArgumentException if the currencies are different.
      */
     operator fun minus(other: Money): Money {
-        require(currency == other.currency) { "Currencies must be the same for subtraction" }
-        return Money(amount - other.amount, currency)
+        require(locale == other.locale) { "Locale must be the same for subtraction" }
+        return Money(amount - other.amount, locale)
     }
 
     /**
@@ -64,7 +108,7 @@ data class Money(val amount: BigDecimal, val currency: Currency) : Comparable<Mo
      * @return A new Money object representing the product.
      */
     operator fun times(scalar: BigDecimal): Money {
-        return Money(amount * scalar, currency)
+        return Money(amount * scalar, locale)
     }
 
     /**
@@ -81,7 +125,7 @@ data class Money(val amount: BigDecimal, val currency: Currency) : Comparable<Mo
                 currency.defaultFractionDigits,
                 java.math.RoundingMode.HALF_UP,
             ),
-            currency,
+            locale,
         )
     }
 
@@ -93,13 +137,41 @@ data class Money(val amount: BigDecimal, val currency: Currency) : Comparable<Mo
      * @throws IllegalArgumentException if the currencies are different.
      */
     override fun compareTo(other: Money): Int {
-        require(currency == other.currency) { "Currencies must be the same for comparison" }
+        require(locale == other.locale) { "Currencies must be the same for comparison" }
         return amount.compareTo(other.amount)
+    }
+
+    /**
+     * Returns a string representation of the money value.
+     *
+     * @return The formatted money string with default locale.
+     */
+    override fun toString(): String {
+        return this.format(withCurrencyPrefix = false)
     }
 
     companion object {
         val DEFAULT_CURRENCY_LOCALE = Locale("pt", "BR")
-        val DEFAULT_CURRENCY = Currency.getInstance(DEFAULT_CURRENCY_LOCALE)
+        fun zero(locale: Locale = DEFAULT_CURRENCY_LOCALE) = Money(BigDecimal.ZERO, locale)
+
+        /**
+         * Parses a string representation of a monetary amount into a BigDecimal.
+         *
+         * @param amountString The string to parse.
+         * @param locale The locale to use for parsing.
+         * @return The parsed BigDecimal amount.
+         * @throws ParseException if the amount string is not in a parsable format.
+         */
+        private fun parseAmount(amountString: String, locale: Locale): BigDecimal {
+            if (amountString.isEmpty()) return BigDecimal.ZERO
+            val format = NumberFormat.getNumberInstance(locale)
+            val number = format.parse(amountString)
+            return when (number) {
+                null -> BigDecimal.ZERO
+                is BigDecimal -> number
+                else -> BigDecimal(number.toString())
+            }
+        }
 
         /**
          * Creates a Money object from a String representation of an amount.
@@ -107,10 +179,16 @@ data class Money(val amount: BigDecimal, val currency: Currency) : Comparable<Mo
          * @param amount The String representation of the amount.
          * @param currency The currency of the money.
          * @return A new Money object.
-         * @throws NumberFormatException if the amount is not a valid number.
+         * @throws ParseException if the amount string is not in a parsable format.
          */
-        fun fromString(amount: String, currency: Currency): Money {
-            return Money(BigDecimal(amount), currency)
+        fun fromString(amount: String, locale: Locale = DEFAULT_CURRENCY_LOCALE): Money {
+            return runCatching {
+                Money(amount, locale)
+            }.onFailure {
+                Timber.e(it, "Error parsing amount: $amount")
+                // Rethrow or handle the exception as appropriate for your application
+                throw it
+            }.getOrThrow()
         }
     }
 }
