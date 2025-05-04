@@ -13,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -34,27 +35,32 @@ fun ScreenContainer(
     rightActionIconContentDescription: String? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    Scaffold(
+    Surface(
         modifier = Modifier.fillMaxSize(),
-        topBar = {
-            if (appBarTitle != null) {
-                AppBar(
-                    appBarTitle = appBarTitle,
-                    onBack = onBack,
-                    onRightAction = onRightAction,
-                    rightActionIcon = rightActionIcon,
-                    rightActionIconContentDescription = rightActionIconContentDescription,
-                )
-            }
-        },
-    ) { innerPadding ->
-        Column(
-            modifier = modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .padding(horizontal = 24.dp),
-            content = content,
-        )
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            topBar = {
+                if (appBarTitle != null) {
+                    AppBar(
+                        appBarTitle = appBarTitle,
+                        onBack = onBack,
+                        onRightAction = onRightAction,
+                        rightActionIcon = rightActionIcon,
+                        rightActionIconContentDescription = rightActionIconContentDescription,
+                    )
+                }
+            },
+        ) { innerPadding ->
+            Column(
+                modifier = modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp),
+                content = content,
+            )
+        }
     }
 }
 
