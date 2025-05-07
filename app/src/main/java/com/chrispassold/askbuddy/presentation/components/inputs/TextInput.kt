@@ -44,7 +44,7 @@ fun TextInput(
                 )
             }
         },
-        label = { Text(label, style = MaterialTheme.typography.labelLarge) },
+        placeholder = { Text(label, style = MaterialTheme.typography.labelLarge) },
         modifier = Modifier.fillMaxWidth().then(modifier),
     )
 }

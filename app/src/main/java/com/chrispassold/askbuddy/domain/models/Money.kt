@@ -142,6 +142,13 @@ data class Money(val amount: BigDecimal, val locale: Locale) : Comparable<Money>
     }
 
     /**
+     * Checks if this Money value is equal to zero.
+     *
+     * @return True if the amount is zero, false otherwise.
+     */
+    fun isZero(): Boolean = amount.compareTo(BigDecimal.ZERO) == 0
+
+    /**
      * Returns a string representation of the money value.
      *
      * @return The formatted money string with default locale.

@@ -15,18 +15,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.chrispassold.askbuddy.domain.models.Money
 import com.chrispassold.askbuddy.extensions.PreviewUiModes
 import com.chrispassold.askbuddy.presentation.theme.AppTheme
-import kotlin.math.max
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,101 +36,36 @@ fun MoneyInput(
     enabled: Boolean = true,
     readOnly: Boolean = false,
 ) {
-    val currentValue by remember { mutableStateOf(TextFieldValue(value.toString())) }
-
+    var textFieldValueState by remember {
+        mutableStateOf(
+            TextFieldValue(
+                text = if (value.isZero()) "" else value.toString(),
+            ),
+        )
+    }
     TextField(
-        value = currentValue,
+        value = textFieldValueState,
         onValueChange = { newValue: TextFieldValue ->
-            onValueChange(Money.fromString(newValue.text))
+            val filteredValue = newValue.text.filter { it.isDigit() || it == '.' || it == ',' }
+            textFieldValueState =
+                newValue.copy(text = filteredValue, selection = TextRange(filteredValue.length))
+            val newMoneyValue = try {
+                Money.fromString(filteredValue, locale = value.locale)
+            } catch (e: Exception) {
+                Timber.e(e, "Error parsing filtered value to Money: $filteredValue")
+                value
+            }
+            onValueChange(newMoneyValue)
         },
         modifier = modifier.fillMaxWidth(),
-        label = { Text(label, style = MaterialTheme.typography.labelLarge) },
+        placeholder = { Text(label, style = MaterialTheme.typography.labelLarge) },
         leadingIcon = { Icon(Icons.Default.AttachMoney, contentDescription = null) },
         isError = isError,
         enabled = enabled,
         readOnly = readOnly,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
-        visualTransformation = CurrencyAmountInputVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword), // Use Number or NumberPassword
+        visualTransformation = MoneyInputVisualTransformation(locale = value.locale),
     )
-}
-
-private class CurrencyAmountInputVisualTransformation(
-    private val fixedCursorAtTheEnd: Boolean = true,
-    private val numberOfDecimals: Int = 2,
-) : VisualTransformation {
-
-    override fun filter(text: AnnotatedString): TransformedText {
-
-        val inputText = text.text
-
-        val newText = AnnotatedString(
-            text = inputText,
-            spanStyles = text.spanStyles,
-            paragraphStyles = text.paragraphStyles,
-        )
-
-        val offsetMapping = if (fixedCursorAtTheEnd) {
-            FixedCursorOffsetMapping(
-                contentLength = inputText.length,
-                formattedContentLength = inputText.length,
-            )
-        } else {
-            MovableCursorOffsetMapping(
-                unmaskedText = text.toString(),
-                maskedText = newText.toString(),
-                decimalDigits = numberOfDecimals,
-            )
-        }
-
-        return TransformedText(newText, offsetMapping)
-    }
-
-    private class FixedCursorOffsetMapping(
-        private val contentLength: Int,
-        private val formattedContentLength: Int,
-    ) : OffsetMapping {
-        override fun originalToTransformed(offset: Int): Int = formattedContentLength
-        override fun transformedToOriginal(offset: Int): Int = contentLength
-    }
-
-    private class MovableCursorOffsetMapping(
-        private val unmaskedText: String,
-        private val maskedText: String,
-        private val decimalDigits: Int,
-    ) : OffsetMapping {
-        override fun originalToTransformed(offset: Int): Int = when {
-            unmaskedText.length <= decimalDigits -> {
-                maskedText.length - (unmaskedText.length - offset)
-            }
-
-            else -> {
-                offset + offsetMaskCount(offset, maskedText)
-            }
-        }
-
-        override fun transformedToOriginal(offset: Int): Int = when {
-            unmaskedText.length <= decimalDigits -> {
-                max(unmaskedText.length - (maskedText.length - offset), 0)
-            }
-
-            else -> {
-                offset - maskedText.take(offset).count { !it.isDigit() }
-            }
-        }
-
-        private fun offsetMaskCount(offset: Int, maskedText: String): Int {
-            var maskOffsetCount = 0
-            var dataCount = 0
-            for (maskChar in maskedText) {
-                if (!maskChar.isDigit()) {
-                    maskOffsetCount++
-                } else if (++dataCount > offset) {
-                    break
-                }
-            }
-            return maskOffsetCount
-        }
-    }
 }
 
 private class PreviewParameters : PreviewParameterProvider<Money> {
