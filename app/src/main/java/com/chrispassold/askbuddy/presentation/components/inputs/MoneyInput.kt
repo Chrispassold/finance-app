@@ -15,7 +15,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -47,8 +46,7 @@ fun MoneyInput(
         value = textFieldValueState,
         onValueChange = { newValue: TextFieldValue ->
             val filteredValue = newValue.text.filter { it.isDigit() || it == '.' || it == ',' }
-            textFieldValueState =
-                newValue.copy(text = filteredValue, selection = TextRange(filteredValue.length))
+            textFieldValueState = newValue.copy(text = filteredValue)
             val newMoneyValue = try {
                 Money.fromString(filteredValue, locale = value.locale)
             } catch (e: Exception) {
