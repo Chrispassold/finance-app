@@ -22,4 +22,7 @@
     <string name="personal_information_screen_title">Personal Information</string>
     <string name="bank_accounts_screen_title">Bank Accounts</string>
     <string name="total_amount_in_accounts">Total amount in accounts</string>
+    <string name="hide_from_balance">Hide from balance</string>
+    <string name="label_initial_value">Initial value</string>
+    <string name="label_bank_account_name">Bank Account Name</string>
 </resources>

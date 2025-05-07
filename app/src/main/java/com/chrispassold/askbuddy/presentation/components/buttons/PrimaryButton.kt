@@ -25,14 +25,6 @@ fun PrimaryButton(
         enabled = enabled,
         onClick = onClick,
         modifier = modifier,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-        ),
-        contentPadding = PaddingValues(
-            horizontal = 24.dp,
-            vertical = 12.dp,
-        ),
     ) {
         Text(
             text = text,
