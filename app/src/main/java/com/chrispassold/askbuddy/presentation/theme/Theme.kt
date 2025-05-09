@@ -2,6 +2,11 @@ package com.chrispassold.askbuddy.presentation.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -10,10 +15,13 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.chrispassold.askbuddy.extensions.LocalUiMode
 import com.chrispassold.askbuddy.extensions.UiMode
+import com.chrispassold.askbuddy.extensions.ifTrue
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -276,6 +284,28 @@ fun AppTheme(
         MaterialTheme(
             colorScheme = colorScheme,
             typography = AppTypography,
+            content = content,
+        )
+    }
+}
+
+@Composable
+fun AppThemePreview(
+    modifier: Modifier = Modifier,
+    fillAllSize: Boolean = false,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    AppTheme {
+        Column(
+            modifier = Modifier
+                .ifTrue(fillAllSize) {
+                    fillMaxSize()
+                }
+                .ifTrue(!fillAllSize) {
+                    wrapContentSize()
+                }
+                .padding(16.dp)
+                .then(modifier),
             content = content,
         )
     }

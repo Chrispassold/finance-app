@@ -25,4 +25,7 @@
     <string name="hide_from_balance">Hide from balance</string>
     <string name="label_initial_value">Initial value</string>
     <string name="label_bank_account_name">Bank Account Name</string>
+    <string name="categories">Categories</string>
+    <string name="tab_title_expenses">Expenses</string>
+    <string name="tab_title_incomes">Incomes</string>
 </resources>

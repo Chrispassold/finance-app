@@ -26,7 +26,13 @@ private data object BankAccountsDestination {
 }
 
 @Serializable
-private data object CategoriesDestination
+private data object CategoriesDestination {
+    @Serializable
+    data object List
+
+    @Serializable
+    data object Detail
+}
 
 @Serializable
 private data object PersonalInformationDestination
@@ -86,8 +92,13 @@ private fun NavGraphBuilder.bankAccounts(navController: NavController) {
 }
 
 private fun NavGraphBuilder.categories() {
-    composable<CategoriesDestination> {
-        TODO()
+    navigation<CategoriesDestination>(startDestination = CategoriesDestination.List) {
+        composable<CategoriesDestination.List> {
+            TODO()
+        }
+        composable<CategoriesDestination.Detail> {
+            TODO()
+        }
     }
 }
 
