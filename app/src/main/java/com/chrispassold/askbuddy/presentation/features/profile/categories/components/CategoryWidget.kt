@@ -27,7 +27,7 @@ import com.chrispassold.askbuddy.presentation.components.containers.Widget
 import com.chrispassold.askbuddy.presentation.theme.AppThemePreview
 
 @Composable
-fun CategorieWidget(
+fun CategoryWidget(
     icon: ImageVector,
     iconContentDescription: String,
     subCategoriesCount: Int,
@@ -87,7 +87,7 @@ fun CategorieWidget(
 @Composable
 private fun Preview() {
     AppThemePreview {
-        CategorieWidget(
+        CategoryWidget(
             icon = Icons.Filled.House,
             iconContentDescription = "House",
             subCategoriesCount = 5,

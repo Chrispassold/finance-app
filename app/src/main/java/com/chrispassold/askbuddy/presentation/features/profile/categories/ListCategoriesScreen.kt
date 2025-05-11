@@ -16,9 +16,7 @@ import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.filled.Work
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.chrispassold.askbuddy.R
 import com.chrispassold.askbuddy.extensions.PreviewUiModes
 import com.chrispassold.askbuddy.presentation.components.containers.ScreenContainer
-import com.chrispassold.askbuddy.presentation.features.profile.categories.components.CategorieWidget
+import com.chrispassold.askbuddy.presentation.features.profile.categories.components.CategoryWidget
 import com.chrispassold.askbuddy.presentation.features.profile.categories.components.ExpensesIncomesTabs
 import com.chrispassold.askbuddy.presentation.theme.AppTheme
 
@@ -72,35 +70,35 @@ private fun ExpensesContent(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            CategorieWidget(
+            CategoryWidget(
                 icon = Icons.Filled.House,
                 iconContentDescription = "House",
                 subCategoriesCount = 5,
                 name = "House",
                 onClick = onClick,
             )
-            CategorieWidget(
+            CategoryWidget(
                 icon = Icons.Filled.Work,
                 iconContentDescription = "Work",
                 subCategoriesCount = 1,
                 name = "Work",
                 onClick = onClick,
             )
-            CategorieWidget(
+            CategoryWidget(
                 icon = Icons.Filled.School,
                 iconContentDescription = "Education",
                 subCategoriesCount = 0,
                 name = "Education",
                 onClick = onClick,
             )
-            CategorieWidget(
+            CategoryWidget(
                 icon = Icons.Filled.ShoppingCart,
                 iconContentDescription = "Groceries",
                 subCategoriesCount = 3,
                 name = "Groceries",
                 onClick = onClick,
             )
-            CategorieWidget(
+            CategoryWidget(
                 icon = Icons.Filled.DirectionsCar,
                 iconContentDescription = "Car",
                 subCategoriesCount = 0,
@@ -124,21 +122,21 @@ private fun IncomesContent(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            CategorieWidget(
+            CategoryWidget(
                 icon = Icons.Filled.Money,
                 iconContentDescription = "Salary",
                 subCategoriesCount = 0,
                 name = "Salary",
                 onClick = onClick,
             )
-            CategorieWidget(
+            CategoryWidget(
                 icon = Icons.AutoMirrored.Filled.TrendingUp,
                 iconContentDescription = "Investments",
                 subCategoriesCount = 1,
                 name = "Investments",
                 onClick = onClick,
             )
-            CategorieWidget(
+            CategoryWidget(
                 icon = Icons.Filled.AttachMoney,
                 iconContentDescription = "Sales",
                 subCategoriesCount = 5,

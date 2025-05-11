@@ -7,6 +7,8 @@ import androidx.navigation.navigation
 import com.chrispassold.askbuddy.presentation.features.login.navigateToLogin
 import com.chrispassold.askbuddy.presentation.features.profile.bankaccounts.DetailBankAccountScreen
 import com.chrispassold.askbuddy.presentation.features.profile.bankaccounts.ListBankAccountsScreen
+import com.chrispassold.askbuddy.presentation.features.profile.categories.DetailCategoryScreen
+import com.chrispassold.askbuddy.presentation.features.profile.categories.ListCategoriesScreen
 import com.chrispassold.askbuddy.presentation.features.profile.personalinformation.PersonalInformationScreen
 import kotlinx.serialization.Serializable
 
@@ -41,7 +43,7 @@ fun NavGraphBuilder.profile(navController: NavController) {
     navigation<ProfileEntryDestination>(startDestination = ProfileHomeDestination) {
         profileHome(navController)
         bankAccounts(navController)
-        categories()
+        categories(navController)
         personalInformation(navController)
     }
 }
@@ -91,13 +93,24 @@ private fun NavGraphBuilder.bankAccounts(navController: NavController) {
     }
 }
 
-private fun NavGraphBuilder.categories() {
+private fun NavGraphBuilder.categories(navController: NavController) {
     navigation<CategoriesDestination>(startDestination = CategoriesDestination.List) {
         composable<CategoriesDestination.List> {
-            TODO()
+            ListCategoriesScreen(
+                onNewCategory = {
+                    navController.navigate(CategoriesDestination.Detail)
+                },
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
         }
         composable<CategoriesDestination.Detail> {
-            TODO()
+            DetailCategoryScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+            )
         }
     }
 }

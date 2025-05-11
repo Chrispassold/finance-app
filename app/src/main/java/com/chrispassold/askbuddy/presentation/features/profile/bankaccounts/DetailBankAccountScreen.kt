@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -39,9 +40,9 @@ import com.chrispassold.askbuddy.presentation.theme.AppTheme
 fun DetailBankAccountScreen(
     onBack: () -> Unit,
 ) {
-    var bankAccountName by rememberSaveable { mutableStateOf(TextFieldValue("")) }
-    var initialValue by rememberSaveable { mutableStateOf(Money.zero()) }
-    var hideFromBalanceCheck by rememberSaveable { mutableStateOf(false) }
+    var bankAccountName by remember { mutableStateOf(TextFieldValue("")) }
+    var initialValue by remember { mutableStateOf(Money.zero()) }
+    var hideFromBalanceCheck by remember { mutableStateOf(false) }
 
     ScreenContainer(
         appBarTitle = stringResource(R.string.bank_accounts_screen_title),

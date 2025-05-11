@@ -28,4 +28,9 @@
     <string name="categories">Categories</string>
     <string name="tab_title_expenses">Expenses</string>
     <string name="tab_title_incomes">Incomes</string>
+    <string name="category_detail_screen_title">Category</string>
+    <string name="category_type_name_income">Income</string>
+    <string name="category_type_name_expense">Expense</string>
+    <string name="add_sub_category">Add sub category?</string>
+    <string name="category_name_placeholder">Category name</string>
 </resources>
