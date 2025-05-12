@@ -1,5 +1,13 @@
 # Ask Buddy
 
+[Recomendations](https://developer.android.com/topic/architecture/recommendations)
+
+[Data layer](https://developer.android.com/topic/architecture/data-layer)
+
+[UI layer](https://developer.android.com/topic/architecture/ui-layer)
+
+[Domain layer](https://developer.android.com/topic/architecture/domain-layer)
+
 ## Features to implement
 
 - [ ] Profile

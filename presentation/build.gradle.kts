@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -32,7 +33,7 @@ android {
         jvmTarget = ProjectConfig.jvmTarget
     }
     buildFeatures {
-        compose = false
+        compose = true
         buildConfig = true
     }
     packaging {
@@ -42,9 +43,13 @@ android {
     }
 }
 dependencies {
+    implementation(project(":core"))
+    implementation(project(":domain"))
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
     implementation(libs.timber)
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

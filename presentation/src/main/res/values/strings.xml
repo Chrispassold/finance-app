@@ -1,0 +1,35 @@
+<resources>
+    <string name="sign_in_with">Sign in with %1$s</string>
+    <string name="sign_up_with">Sign up with %1$s</string>
+    <string name="sign_in_greeting">Welcome</string>
+    <string name="sign_in_greeting_description">Please sign in to continue</string>
+    <string name="login_username_label">E-mail</string>
+    <string name="login_password_label">Password</string>
+    <string name="or">or</string>
+    <string name="ask_forgot_password">Forgot password?</string>
+    <string name="sign_up_greeting">Welcome</string>
+    <string name="sign_up_greeting_description">Please sign up to start</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
+    <string name="do_not_have_an_account">Do not have an account?</string>
+    <string name="save">Save</string>
+    <string name="edit_picture">Edit picture</string>
+    <string name="name">Name</string>
+    <string name="e_mail">E-mail</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="password">Password</string>
+    <string name="personal_information_screen_title">Personal Information</string>
+    <string name="bank_accounts_screen_title">Bank Accounts</string>
+    <string name="total_amount_in_accounts">Total amount in accounts</string>
+    <string name="hide_from_balance">Hide from balance</string>
+    <string name="label_initial_value">Initial value</string>
+    <string name="label_bank_account_name">Bank Account Name</string>
+    <string name="categories">Categories</string>
+    <string name="tab_title_expenses">Expenses</string>
+    <string name="tab_title_incomes">Incomes</string>
+    <string name="category_detail_screen_title">Category</string>
+    <string name="category_type_name_income">Income</string>
+    <string name="category_type_name_expense">Expense</string>
+    <string name="add_sub_category">Add sub category?</string>
+    <string name="category_name_placeholder">Category name</string>
+</resources>

@@ -1,0 +1,143 @@
+package com.chrispassold.presentation.features.profile
+
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import androidx.navigation.navigation
+import com.chrispassold.presentation.features.login.navigateToLogin
+import com.chrispassold.presentation.features.profile.bankaccounts.DetailBankAccountScreen
+import com.chrispassold.presentation.features.profile.bankaccounts.ListBankAccountsScreen
+import com.chrispassold.presentation.features.profile.categories.DetailCategoryScreen
+import com.chrispassold.presentation.features.profile.categories.ListCategoriesScreen
+import com.chrispassold.presentation.features.profile.personalinformation.PersonalInformationScreen
+import kotlinx.serialization.Serializable
+
+@Serializable
+private data object ProfileEntryDestination
+
+@Serializable
+private data object ProfileHomeDestination
+
+@Serializable
+private data object BankAccountsDestination {
+    @Serializable
+    data object List
+
+    @Serializable
+    data object Detail
+}
+
+@Serializable
+private data object CategoriesDestination {
+    @Serializable
+    data object List
+
+    @Serializable
+    data object Detail
+}
+
+@Serializable
+private data object PersonalInformationDestination
+
+fun NavGraphBuilder.profile(navController: NavController) {
+    navigation<ProfileEntryDestination>(startDestination = ProfileHomeDestination) {
+        profileHome(navController)
+        bankAccounts(navController)
+        categories(navController)
+        personalInformation(navController)
+    }
+}
+
+private fun NavGraphBuilder.profileHome(navController: NavController) {
+    composable<ProfileHomeDestination> {
+        ProfileScreen(
+            onNavigateToBankAccounts = {
+                navController.navigateToBankAccounts()
+            },
+            onNavigateToCategories = {
+                navController.navigateToCategories()
+            },
+            onNavigateToPersonalInformation = {
+                navController.navigateToPersonalInformation()
+            },
+            onNavigateToCreditCards = {
+                TODO()
+            },
+            onExitApp = {
+                navController.navigateToLogin()
+            },
+        )
+    }
+}
+
+
+private fun NavGraphBuilder.bankAccounts(navController: NavController) {
+    navigation<BankAccountsDestination>(startDestination = BankAccountsDestination.List) {
+        composable<BankAccountsDestination.List> {
+            ListBankAccountsScreen(
+                onNewBankAccount = {
+                    navController.navigate(BankAccountsDestination.Detail)
+                },
+                onBack = {
+                    navController.popBackStack()
+                },
+            )
+        }
+        composable<BankAccountsDestination.Detail> {
+            DetailBankAccountScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+            )
+        }
+    }
+}
+
+private fun NavGraphBuilder.categories(navController: NavController) {
+    navigation<CategoriesDestination>(startDestination = CategoriesDestination.List) {
+        composable<CategoriesDestination.List> {
+            ListCategoriesScreen(
+                onNewCategory = {
+                    navController.navigate(CategoriesDestination.Detail)
+                },
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable<CategoriesDestination.Detail> {
+            DetailCategoryScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+            )
+        }
+    }
+}
+
+private fun NavGraphBuilder.personalInformation(navController: NavController) {
+    composable<PersonalInformationDestination> {
+        PersonalInformationScreen(
+            onBack = {
+                navController.popBackStack()
+            },
+        )
+    }
+}
+
+
+fun NavController.navigateToProfile() {
+    navigate(ProfileEntryDestination)
+}
+
+private fun NavController.navigateToBankAccounts() {
+    navigate(BankAccountsDestination)
+}
+
+private fun NavController.navigateToCategories() {
+    navigate(CategoriesDestination)
+}
+
+private fun NavController.navigateToPersonalInformation() {
+    navigate(PersonalInformationDestination)
+}
