@@ -42,7 +42,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core"))
+    core()
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.timber)

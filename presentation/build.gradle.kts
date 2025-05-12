@@ -43,8 +43,9 @@ android {
     }
 }
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":domain"))
+    core()
+    domain()
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.timber)
     implementation(libs.kotlinx.serialization.json)
