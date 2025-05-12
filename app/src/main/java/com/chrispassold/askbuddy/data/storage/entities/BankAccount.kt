@@ -31,5 +31,5 @@ data class BankAccount(
     @ColumnInfo(name = "image") val image: String,
 ) {
     @ColumnInfo(name = "initial_amount_in_cents")
-    val initialAmountInCents: BigCents = BigCents(initialAmount)
+    var initialAmountInCents: BigCents = BigCents(initialAmount)
 }

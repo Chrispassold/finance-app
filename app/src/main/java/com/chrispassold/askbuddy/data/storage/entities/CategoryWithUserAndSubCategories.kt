@@ -6,11 +6,11 @@ import androidx.room.Relation
 data class CategoryWithUserAndSubCategories(
     @Embedded val category: Category,
     @Relation(
-        parentColumn = "id",
-        entityColumn = "user_id",
+        parentColumn = "user_id",
+        entityColumn = "id",
     ) val user: User,
     @Relation(
-        parentColumn = "id",
-        entityColumn = "parent_category_id",
+        parentColumn = "parent_category_id",
+        entityColumn = "id",
     ) val subCategories: List<Category> = emptyList(),
 )

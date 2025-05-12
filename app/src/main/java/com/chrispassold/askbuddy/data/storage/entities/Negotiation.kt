@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 import com.chrispassold.askbuddy.data.storage.entities.customtypes.BigCents
 import com.chrispassold.askbuddy.domain.models.NegotiationType
 import java.math.BigDecimal
+import java.time.LocalDateTime
 import java.util.Date
 
 @Entity(
@@ -43,11 +44,11 @@ data class Negotiation(
     @ColumnInfo(name = "user_id") val userId: String,
     @ColumnInfo(name = "negotiation_type") val type: NegotiationType,
     @ColumnInfo(name = "amount") val amount: BigDecimal,
-    @ColumnInfo(name = "negotiation_date") val date: Date,
+    @ColumnInfo(name = "negotiation_date") val date: LocalDateTime,
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "category_id") val categoryId: String,
     @ColumnInfo(name = "bank_account_id") val bankAccountId: String,
 ) {
     @ColumnInfo(name = "amount_in_cents")
-    val amountInCents: BigCents = BigCents(amount)
+    var amountInCents: BigCents = BigCents(amount)
 }

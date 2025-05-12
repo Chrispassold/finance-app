@@ -13,6 +13,7 @@ import com.chrispassold.askbuddy.data.storage.entities.Negotiation
 import com.chrispassold.askbuddy.data.storage.entities.User
 import com.chrispassold.askbuddy.data.storage.entities.typeconverters.BigCentsConverter
 import com.chrispassold.askbuddy.data.storage.entities.typeconverters.BigDecimalConverter
+import com.chrispassold.askbuddy.data.storage.entities.typeconverters.LocalDateTimeConverter
 import com.chrispassold.askbuddy.data.storage.entities.typeconverters.NegotiationTypeConverter
 
 // TODO: INICIALIZAR O ROOM
@@ -26,6 +27,7 @@ import com.chrispassold.askbuddy.data.storage.entities.typeconverters.Negotiatio
     BigDecimalConverter::class,
     BigCentsConverter::class,
     NegotiationTypeConverter::class,
+    LocalDateTimeConverter::class,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
