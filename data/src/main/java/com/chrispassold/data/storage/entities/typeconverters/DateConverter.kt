@@ -5,7 +5,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
 
-internal class DateConverter {
+class DateConverter {
 
     private val savedInTimeZone: TimeZone
         get() = TimeZone.getTimeZone("UTC")

@@ -10,7 +10,7 @@ import com.chrispassold.data.storage.entities.UserEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-internal interface UserDao {
+interface UserDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(userEntity: UserEntity)
 

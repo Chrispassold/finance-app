@@ -10,7 +10,7 @@ import java.math.BigDecimal
  * e suporta queries numéricas no banco Room ao armazenar valores em centavos.
  *
  */
-internal data class BigCents(private val cents: Long) {
+data class BigCents(private val cents: Long) {
 
     constructor(value: BigDecimal) : this(value.multiply(BigDecimal(100)).longValueExact())
 

@@ -7,11 +7,10 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.chrispassold.data.storage.entities.customtypes.BigCents
 import java.math.BigDecimal
-import java.time.LocalDateTime
 import java.util.Date
 
 @Entity(
-    tableName = "negotiations",
+    tableName = "transactions",
     foreignKeys = [
         ForeignKey(
             entity = UserEntity::class,
@@ -38,10 +37,10 @@ import java.util.Date
         Index(value = ["bank_account_id"]),
     ],
 )
-internal data class NegotiationEntity(
+data class TransactionEntity(
     @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "user_id") val userId: String,
-    @ColumnInfo(name = "negotiation_type") val type: String,
+    @ColumnInfo(name = "transaction_type") val type: String,
     @ColumnInfo(name = "amount") val amount: BigDecimal,
     @ColumnInfo(name = "negotiation_date") val date: Date,
     @ColumnInfo(name = "description") val description: String,

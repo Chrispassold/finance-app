@@ -7,31 +7,31 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.chrispassold.data.storage.entities.NegotiationEntity
-import com.chrispassold.data.storage.entities.NegotiationWithDetailsEntity // Import the new data class
+import com.chrispassold.data.storage.entities.TransactionEntity
+import com.chrispassold.data.storage.entities.TransactionWithDetailsEntity // Import the new data class
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-internal interface NegotiationDao {
+interface NegotiationDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(negotiationEntity: NegotiationEntity)
+    suspend fun insert(transactionEntity: TransactionEntity)
 
     @Update
-    suspend fun update(negotiationEntity: NegotiationEntity)
+    suspend fun update(transactionEntity: TransactionEntity)
 
     @Delete
-    suspend fun delete(negotiationEntity: NegotiationEntity)
+    suspend fun delete(transactionEntity: TransactionEntity)
 
     @Transaction
     @Query("SELECT * FROM negotiations WHERE id = :negotiationId")
-    fun getNegotiationWithDetails(negotiationId: String): Flow<NegotiationWithDetailsEntity>
+    fun getNegotiationWithDetails(negotiationId: String): Flow<TransactionWithDetailsEntity>
 
     @Transaction
     @Query("SELECT * FROM negotiations WHERE user_id = :userId ORDER BY negotiation_date DESC")
-    fun getAllNegotiationsWithDetailsByUserId(userId: String): Flow<List<NegotiationWithDetailsEntity>>
+    fun getAllNegotiationsWithDetailsByUserId(userId: String): Flow<List<TransactionWithDetailsEntity>>
 
     @Transaction
     @Query("SELECT * FROM negotiations ORDER BY negotiation_date DESC")
-    fun getAllNegotiationsWithDetails(): Flow<List<NegotiationWithDetailsEntity>>
+    fun getAllNegotiationsWithDetails(): Flow<List<TransactionWithDetailsEntity>>
 }

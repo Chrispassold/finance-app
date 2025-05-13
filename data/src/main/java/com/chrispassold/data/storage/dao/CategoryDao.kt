@@ -12,7 +12,7 @@ import com.chrispassold.data.storage.entities.CategoryWithUserAndSubCategoriesEn
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-internal interface CategoryDao {
+interface CategoryDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(categoryEntity: CategoryEntity)
 

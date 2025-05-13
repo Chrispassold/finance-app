@@ -1,4 +1,4 @@
-package com.chrispassold.data.storage.di
+package com.chrispassold.data.di
 
 import android.content.Context
 import androidx.room.Room

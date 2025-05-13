@@ -3,7 +3,7 @@ package com.chrispassold.domain.models
 private const val EXPENSE_DATABASE_NAME = "expense"
 private const val INCOME_DATABASE_NAME = "income"
 
-enum class NegotiationType(val databaseName: String) {
+enum class TransactionType(val databaseName: String) {
     EXPENSE(
         databaseName = EXPENSE_DATABASE_NAME,
     ),
@@ -12,8 +12,8 @@ enum class NegotiationType(val databaseName: String) {
     );
 
     companion object {
-        fun fromDatabaseName(name: String): NegotiationType? {
-            return NegotiationType.entries.find { it.databaseName == name }
+        fun fromDatabaseName(name: String): TransactionType? {
+            return TransactionType.entries.find { it.databaseName == name }
         }
     }
 }

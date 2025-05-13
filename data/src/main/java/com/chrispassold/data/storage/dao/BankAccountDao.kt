@@ -12,7 +12,7 @@ import com.chrispassold.data.storage.entities.BankAccountWithUserEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-internal interface BankAccountDao {
+interface BankAccountDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(bankAccountEntity: BankAccountEntity)
 

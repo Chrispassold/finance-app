@@ -8,7 +8,7 @@ import java.text.ParseException
 import java.util.Currency
 import java.util.Locale
 
-private fun Locale.toCurrency(): Currency = Currency.getInstance(this)
+private fun Locale.getCurrency(): Currency = Currency.getInstance(this)
 
 /**
  * Represents an immutable amount of money in a specific currency.
@@ -18,7 +18,9 @@ private fun Locale.toCurrency(): Currency = Currency.getInstance(this)
  */
 data class Money(val amount: BigDecimal, val locale: Locale) : Comparable<Money> {
 
-    private val currency: Currency = locale.toCurrency()
+    private val currency: Currency = locale.getCurrency()
+
+    constructor(amount: BigDecimal) : this(amount = amount, locale = DEFAULT_CURRENCY_LOCALE)
 
     constructor(amount: Double, locale: Locale = DEFAULT_CURRENCY_LOCALE) : this(
         BigDecimal.valueOf(
@@ -39,7 +41,7 @@ data class Money(val amount: BigDecimal, val locale: Locale) : Comparable<Money>
         locale: Locale = DEFAULT_CURRENCY_LOCALE,
     ) : this(
         parseAmount(amount, locale).setScale(
-            locale.toCurrency().defaultFractionDigits,
+            locale.getCurrency().defaultFractionDigits,
             RoundingMode.HALF_UP,
         ),
         locale,

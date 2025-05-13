@@ -27,7 +27,7 @@ import androidx.room.PrimaryKey
         Index(value = ["parent_category_id"]),
     ],
 )
-internal data class CategoryEntity(
+data class CategoryEntity(
     @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "user_id") val userId: String,
     @ColumnInfo(name = "name") val name: String,

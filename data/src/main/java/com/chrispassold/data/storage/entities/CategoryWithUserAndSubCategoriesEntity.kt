@@ -3,7 +3,7 @@ package com.chrispassold.data.storage.entities
 import androidx.room.Embedded
 import androidx.room.Relation
 
-internal data class CategoryWithUserAndSubCategoriesEntity(
+data class CategoryWithUserAndSubCategoriesEntity(
     @Embedded val categoryEntity: CategoryEntity,
     @Relation(
         parentColumn = "user_id",

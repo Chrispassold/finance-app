@@ -3,7 +3,7 @@ package com.chrispassold.data.storage.entities.typeconverters
 import androidx.room.TypeConverter
 import java.math.BigDecimal
 
-internal class BigDecimalConverter {
+class BigDecimalConverter {
 
     @TypeConverter
     fun fromBigDecimal(value: BigDecimal?): String? {

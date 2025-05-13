@@ -22,7 +22,7 @@ import java.math.BigDecimal
         Index(value = ["user_id"]),
     ],
 )
-internal data class BankAccountEntity(
+data class BankAccountEntity(
     @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "user_id") val user: String,
     @ColumnInfo(name = "name") val name: String,

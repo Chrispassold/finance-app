@@ -9,16 +9,14 @@ import com.chrispassold.data.storage.dao.NegotiationDao
 import com.chrispassold.data.storage.dao.UserDao
 import com.chrispassold.data.storage.entities.BankAccountEntity
 import com.chrispassold.data.storage.entities.CategoryEntity
-import com.chrispassold.data.storage.entities.NegotiationEntity
+import com.chrispassold.data.storage.entities.TransactionEntity
 import com.chrispassold.data.storage.entities.UserEntity
 import com.chrispassold.data.storage.entities.typeconverters.BigCentsConverter
 import com.chrispassold.data.storage.entities.typeconverters.BigDecimalConverter
 import com.chrispassold.data.storage.entities.typeconverters.DateConverter
 
-// TODO: INICIALIZAR O ROOM
-
 @Database(
-    entities = [UserEntity::class, BankAccountEntity::class, CategoryEntity::class, NegotiationEntity::class],
+    entities = [UserEntity::class, BankAccountEntity::class, CategoryEntity::class, TransactionEntity::class],
     version = 1,
     exportSchema = false,
 )
@@ -27,7 +25,7 @@ import com.chrispassold.data.storage.entities.typeconverters.DateConverter
     BigCentsConverter::class,
     DateConverter::class,
 )
-abstract class AppDatabase : RoomDatabase() {
+internal abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun bankAccountDao(): BankAccountDao
     abstract fun categoryDao(): CategoryDao

@@ -3,8 +3,8 @@ package com.chrispassold.data.storage.entities
 import androidx.room.Embedded
 import androidx.room.Relation
 
-internal data class NegotiationWithDetailsEntity(
-    @Embedded val negotiationEntity: NegotiationEntity,
+data class TransactionWithDetailsEntity(
+    @Embedded val transactionEntity: TransactionEntity,
     @Relation(
         parentColumn = "user_id",
         entityColumn = "id",
