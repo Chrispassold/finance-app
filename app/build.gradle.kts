@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.hilt.application)
 }
 
 android {
@@ -59,6 +60,6 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.timber)
-//    implementation(libs.koin.android)
-//    implementation(libs.koin.androidx.compose)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
 }
