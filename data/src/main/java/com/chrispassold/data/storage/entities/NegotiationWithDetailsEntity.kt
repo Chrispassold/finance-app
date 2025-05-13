@@ -3,18 +3,18 @@ package com.chrispassold.data.storage.entities
 import androidx.room.Embedded
 import androidx.room.Relation
 
-data class NegotiationWithDetails(
-    @Embedded val negotiation: Negotiation,
+internal data class NegotiationWithDetailsEntity(
+    @Embedded val negotiationEntity: NegotiationEntity,
     @Relation(
         parentColumn = "user_id",
         entityColumn = "id",
-    ) val user: User,
+    ) val userEntity: UserEntity,
     @Relation(
         parentColumn = "category_id",
         entityColumn = "id",
-    ) val category: Category,
+    ) val categoryEntity: CategoryEntity,
     @Relation(
         parentColumn = "bank_account_id",
         entityColumn = "id",
-    ) val bankAccount: BankAccount,
+    ) val bankAccountEntity: BankAccountEntity,
 )

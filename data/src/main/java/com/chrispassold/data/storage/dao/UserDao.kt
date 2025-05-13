@@ -6,23 +6,23 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.chrispassold.data.storage.entities.User
+import com.chrispassold.data.storage.entities.UserEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface UserDao {
+internal interface UserDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(user: User)
+    suspend fun insert(userEntity: UserEntity)
 
     @Update
-    suspend fun update(user: User)
+    suspend fun update(userEntity: UserEntity)
 
     @Delete
-    suspend fun delete(user: User)
+    suspend fun delete(userEntity: UserEntity)
 
     @Query("SELECT * FROM users WHERE id = :userId")
-    fun getUserById(userId: String): Flow<User>
+    fun getUserById(userId: String): Flow<UserEntity>
 
     @Query("SELECT * FROM users ORDER BY full_name ASC")
-    fun getAllUsers(): Flow<List<User>>
+    fun getAllUsers(): Flow<List<UserEntity>>
 }

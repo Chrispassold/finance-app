@@ -3,14 +3,14 @@ package com.chrispassold.data.storage.entities
 import androidx.room.Embedded
 import androidx.room.Relation
 
-data class CategoryWithUserAndSubCategories(
-    @Embedded val category: Category,
+internal data class CategoryWithUserAndSubCategoriesEntity(
+    @Embedded val categoryEntity: CategoryEntity,
     @Relation(
         parentColumn = "user_id",
         entityColumn = "id",
-    ) val user: User,
+    ) val userEntity: UserEntity,
     @Relation(
         parentColumn = "parent_category_id",
         entityColumn = "id",
-    ) val subCategories: List<Category> = emptyList(),
+    ) val subCategories: List<CategoryEntity> = emptyList(),
 )

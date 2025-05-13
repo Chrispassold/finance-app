@@ -8,24 +8,25 @@ import androidx.room.PrimaryKey
 import com.chrispassold.data.storage.entities.customtypes.BigCents
 import java.math.BigDecimal
 import java.time.LocalDateTime
+import java.util.Date
 
 @Entity(
     tableName = "negotiations",
     foreignKeys = [
         ForeignKey(
-            entity = User::class,
+            entity = UserEntity::class,
             parentColumns = ["id"],
             childColumns = ["user_id"],
             onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
-            entity = Category::class,
+            entity = CategoryEntity::class,
             parentColumns = ["id"],
             childColumns = ["category_id"],
             onDelete = ForeignKey.RESTRICT,
         ),
         ForeignKey(
-            entity = BankAccount::class,
+            entity = BankAccountEntity::class,
             parentColumns = ["id"],
             childColumns = ["bank_account_id"],
             onDelete = ForeignKey.RESTRICT,
@@ -37,12 +38,12 @@ import java.time.LocalDateTime
         Index(value = ["bank_account_id"]),
     ],
 )
-data class Negotiation(
+internal data class NegotiationEntity(
     @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "user_id") val userId: String,
     @ColumnInfo(name = "negotiation_type") val type: String,
     @ColumnInfo(name = "amount") val amount: BigDecimal,
-    @ColumnInfo(name = "negotiation_date") val date: LocalDateTime,
+    @ColumnInfo(name = "negotiation_date") val date: Date,
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "category_id") val categoryId: String,
     @ColumnInfo(name = "bank_account_id") val bankAccountId: String,

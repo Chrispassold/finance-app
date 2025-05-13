@@ -7,25 +7,25 @@ import com.chrispassold.data.storage.dao.BankAccountDao
 import com.chrispassold.data.storage.dao.CategoryDao
 import com.chrispassold.data.storage.dao.NegotiationDao
 import com.chrispassold.data.storage.dao.UserDao
-import com.chrispassold.data.storage.entities.BankAccount
-import com.chrispassold.data.storage.entities.Category
-import com.chrispassold.data.storage.entities.Negotiation
-import com.chrispassold.data.storage.entities.User
+import com.chrispassold.data.storage.entities.BankAccountEntity
+import com.chrispassold.data.storage.entities.CategoryEntity
+import com.chrispassold.data.storage.entities.NegotiationEntity
+import com.chrispassold.data.storage.entities.UserEntity
 import com.chrispassold.data.storage.entities.typeconverters.BigCentsConverter
 import com.chrispassold.data.storage.entities.typeconverters.BigDecimalConverter
-import com.chrispassold.data.storage.entities.typeconverters.LocalDateTimeConverter
+import com.chrispassold.data.storage.entities.typeconverters.DateConverter
 
 // TODO: INICIALIZAR O ROOM
 
 @Database(
-    entities = [User::class, BankAccount::class, Category::class, Negotiation::class],
+    entities = [UserEntity::class, BankAccountEntity::class, CategoryEntity::class, NegotiationEntity::class],
     version = 1,
     exportSchema = false,
 )
 @TypeConverters(
     BigDecimalConverter::class,
     BigCentsConverter::class,
-    LocalDateTimeConverter::class,
+    DateConverter::class,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao

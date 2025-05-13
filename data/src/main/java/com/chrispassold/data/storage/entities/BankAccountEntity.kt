@@ -12,7 +12,7 @@ import java.math.BigDecimal
     tableName = "bank_account",
     foreignKeys = [
         ForeignKey(
-            entity = User::class,
+            entity = UserEntity::class,
             parentColumns = ["id"],
             childColumns = ["user_id"],
             onDelete = ForeignKey.CASCADE,
@@ -22,7 +22,7 @@ import java.math.BigDecimal
         Index(value = ["user_id"]),
     ],
 )
-data class BankAccount(
+internal data class BankAccountEntity(
     @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "user_id") val user: String,
     @ColumnInfo(name = "name") val name: String,

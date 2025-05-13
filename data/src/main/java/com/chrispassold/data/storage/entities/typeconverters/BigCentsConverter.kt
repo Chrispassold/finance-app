@@ -3,7 +3,7 @@ package com.chrispassold.data.storage.entities.typeconverters
 import androidx.room.TypeConverter
 import com.chrispassold.data.storage.entities.customtypes.BigCents
 
-class BigCentsConverter {
+internal class BigCentsConverter {
 
     @TypeConverter
     fun fromBigCents(value: BigCents?): Long? {
