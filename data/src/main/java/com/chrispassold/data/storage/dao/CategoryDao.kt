@@ -9,7 +9,6 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.chrispassold.data.storage.entities.CategoryEntity
 import com.chrispassold.data.storage.entities.CategoryWithUserAndSubCategoriesEntity
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CategoryDao {
@@ -24,13 +23,13 @@ interface CategoryDao {
 
     @Transaction
     @Query("SELECT * FROM categories WHERE id = :categoryId")
-    fun getCategoryWithUserAndSubCategories(categoryId: String): Flow<CategoryWithUserAndSubCategoriesEntity>
+    suspend fun getWithUserAndSubCategories(categoryId: String): CategoryWithUserAndSubCategoriesEntity?
 
     @Transaction
     @Query("SELECT * FROM categories WHERE user_id = :userId")
-    fun getCategoriesWithUserAndSubCategoriesByUserId(userId: String): Flow<List<CategoryWithUserAndSubCategoriesEntity>>
+    suspend fun getWithUserAndSubCategoriesByUserId(userId: String): List<CategoryWithUserAndSubCategoriesEntity>
 
     @Transaction
     @Query("SELECT * FROM categories ORDER BY name ASC")
-    fun getAllCategoriesWithUserAndSubCategories(): Flow<List<CategoryWithUserAndSubCategoriesEntity>>
+    suspend fun getAllWithUserAndSubCategories(): List<CategoryWithUserAndSubCategoriesEntity>
 }

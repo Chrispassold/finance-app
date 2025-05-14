@@ -4,8 +4,8 @@ import com.chrispassold.domain.models.User
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
-    fun register(user: User): Flow<Unit>
-    fun login(email: String, password: String): Flow<Unit>
-    fun logout(): Flow<Unit>
-    fun currentUser(): Flow<User?>
+    suspend fun register(user: User)
+    suspend fun login(email: String, password: String): Flow<User>
+    suspend fun logout()
+    suspend fun currentUser(): Flow<User?>
 }

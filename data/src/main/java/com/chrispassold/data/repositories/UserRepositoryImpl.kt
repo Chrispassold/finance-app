@@ -1,30 +1,42 @@
 package com.chrispassold.data.repositories
 
-import com.chrispassold.data.storage.dao.UserDao
+import com.chrispassold.data.flowCatching
+import com.chrispassold.data.repositories.datasources.user.UserLocalDataSource
+import com.chrispassold.domain.models.DatabaseException
 import com.chrispassold.domain.models.User
+import com.chrispassold.domain.models.UserNotFoundException
 import com.chrispassold.domain.repositories.UserRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
-    val userDao: UserDao
+    val userLocalDataSource: UserLocalDataSource,
 ) : UserRepository {
-    override fun register(user: User): Flow<Unit> {
-        TODO("Not yet implemented")
+    override suspend fun register(user: User) {
+        runCatching {
+            userLocalDataSource.insert(user)
+        }.onFailure {
+            throw DatabaseException(it)
+        }
     }
 
-    override fun login(
+    override suspend fun login(
         email: String,
         password: String,
-    ): Flow<Unit> {
+    ): Flow<User> = flowCatching {
+        val user = userLocalDataSource.get(email)
+        if (user != null && user.password.value == password) {
+            emit(user)
+        } else {
+            throw UserNotFoundException()
+        }
+    }
+
+    override suspend fun logout() {
         TODO("Not yet implemented")
     }
 
-    override fun logout(): Flow<Unit> {
-        TODO("Not yet implemented")
-    }
-
-    override fun currentUser(): Flow<User?> {
+    override suspend fun currentUser(): Flow<User?> {
         TODO("Not yet implemented")
     }
 }

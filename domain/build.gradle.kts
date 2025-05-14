@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+    implementation(libs.kotlinx.datetime)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

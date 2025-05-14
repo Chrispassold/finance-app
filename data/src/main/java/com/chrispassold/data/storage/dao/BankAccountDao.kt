@@ -9,7 +9,6 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.chrispassold.data.storage.entities.BankAccountEntity
 import com.chrispassold.data.storage.entities.BankAccountWithUserEntity
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BankAccountDao {
@@ -24,9 +23,9 @@ interface BankAccountDao {
 
     @Transaction
     @Query("SELECT * FROM bank_account")
-    fun getAllBankAccountsWithUser(): Flow<List<BankAccountWithUserEntity>>
+    suspend fun getAllWithUser(): List<BankAccountWithUserEntity>
 
     @Transaction
     @Query("SELECT * FROM bank_account WHERE id = :bankAccountId")
-    fun getBankAccountWithUser(bankAccountId: String): Flow<BankAccountWithUserEntity?>
+    suspend fun getWithUser(bankAccountId: String): BankAccountWithUserEntity?
 }

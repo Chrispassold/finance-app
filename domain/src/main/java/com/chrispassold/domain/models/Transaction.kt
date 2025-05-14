@@ -1,12 +1,12 @@
 package com.chrispassold.domain.models
 
-import java.util.Date
+import kotlinx.datetime.Instant
 
 data class Transaction(
     val id: String,
-    val type: String,
+    val type: TransactionType,
     val amount: Money,
-    val date: Date,
+    val transactionDate: Instant,
     val description: String,
-    val categoryId: TransactionType,
+    val category: Category,
 )

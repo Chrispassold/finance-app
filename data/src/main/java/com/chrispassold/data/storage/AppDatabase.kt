@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.chrispassold.data.storage.dao.BankAccountDao
 import com.chrispassold.data.storage.dao.CategoryDao
-import com.chrispassold.data.storage.dao.NegotiationDao
+import com.chrispassold.data.storage.dao.TransactionDao
 import com.chrispassold.data.storage.dao.UserDao
 import com.chrispassold.data.storage.entities.BankAccountEntity
 import com.chrispassold.data.storage.entities.CategoryEntity
@@ -13,7 +13,7 @@ import com.chrispassold.data.storage.entities.TransactionEntity
 import com.chrispassold.data.storage.entities.UserEntity
 import com.chrispassold.data.storage.entities.typeconverters.BigCentsConverter
 import com.chrispassold.data.storage.entities.typeconverters.BigDecimalConverter
-import com.chrispassold.data.storage.entities.typeconverters.DateConverter
+import com.chrispassold.data.storage.entities.typeconverters.InstantConverter
 
 @Database(
     entities = [UserEntity::class, BankAccountEntity::class, CategoryEntity::class, TransactionEntity::class],
@@ -23,11 +23,11 @@ import com.chrispassold.data.storage.entities.typeconverters.DateConverter
 @TypeConverters(
     BigDecimalConverter::class,
     BigCentsConverter::class,
-    DateConverter::class,
+    InstantConverter::class,
 )
-internal abstract class AppDatabase : RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun bankAccountDao(): BankAccountDao
     abstract fun categoryDao(): CategoryDao
-    abstract fun negotiationDao(): NegotiationDao
+    abstract fun negotiationDao(): TransactionDao
 }

@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.chrispassold.data.storage.AppDatabase
 import com.chrispassold.data.storage.dao.BankAccountDao
 import com.chrispassold.data.storage.dao.CategoryDao
-import com.chrispassold.data.storage.dao.NegotiationDao
+import com.chrispassold.data.storage.dao.TransactionDao
 import com.chrispassold.data.storage.dao.UserDao
 import dagger.Module
 import dagger.Provides
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object DatabaseModule {
+object DatabaseModule {
 
     @Provides
     @Singleton
@@ -39,7 +39,7 @@ internal object DatabaseModule {
     }
 
     @Provides
-    fun provideNegotiationDao(db: AppDatabase): NegotiationDao {
+    fun provideNegotiationDao(db: AppDatabase): TransactionDao {
         return db.negotiationDao()
     }
 
