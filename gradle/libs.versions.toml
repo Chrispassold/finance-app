@@ -1,6 +1,7 @@
 [versions]
 agp = "8.9.2"
 coilCompose = "3.1.0"
+datastorePreferences = "1.1.6"
 koinAndroid = "4.0.4"
 kotlin = "2.0.21"
 kotlinxDatetime = "0.6.2"
@@ -23,6 +24,7 @@ hilt = "2.56.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-navigation-compose = { group = "androidx.navigation", name="navigation-compose", version.ref="composeNavigation" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }

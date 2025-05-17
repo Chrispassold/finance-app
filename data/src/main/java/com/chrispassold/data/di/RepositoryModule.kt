@@ -1,9 +1,11 @@
 package com.chrispassold.data.di
 
+import com.chrispassold.data.repositories.BankAccountRepositoryImpl
 import com.chrispassold.data.repositories.UserRepositoryImpl
+import com.chrispassold.domain.repositories.BankAccountRepository
 import com.chrispassold.domain.repositories.UserRepository
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
@@ -11,9 +13,14 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
 
-    @Provides
-    abstract fun provideUserRepository(
+    @Binds
+    abstract fun bindUserRepository(
         userRepositoryImpl: UserRepositoryImpl,
     ): UserRepository
+
+    @Binds
+    abstract fun bindBankAccountRepository(
+        bankAccountRepositoryImpl: BankAccountRepositoryImpl,
+    ): BankAccountRepository
 
 }

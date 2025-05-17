@@ -1,9 +1,9 @@
-package com.chrispassold.domain.models
+package com.chrispassold.data.models
 
 import java.math.BigDecimal
 
-data class BankAccount(
-    val id: String?,
+data class BankAccountData(
+    val id: String,
     val name: String,
     val initialAmount: BigDecimal,
     val hideFromBalance: Boolean,

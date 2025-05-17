@@ -5,10 +5,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
 import com.chrispassold.data.storage.entities.BankAccountEntity
-import com.chrispassold.data.storage.entities.BankAccountWithUserEntity
 
 @Dao
 interface BankAccountDao {
@@ -21,11 +19,10 @@ interface BankAccountDao {
     @Delete
     suspend fun delete(bankAccountEntity: BankAccountEntity)
 
-    @Transaction
-    @Query("SELECT * FROM bank_account")
-    suspend fun getAllWithUser(): List<BankAccountWithUserEntity>
+    @Query("SELECT * FROM bank_account WHERE id = :id")
+    suspend fun get(id: String): BankAccountEntity?
 
-    @Transaction
-    @Query("SELECT * FROM bank_account WHERE id = :bankAccountId")
-    suspend fun getWithUser(bankAccountId: String): BankAccountWithUserEntity?
+    @Query("SELECT * FROM bank_account ORDER BY name ASC")
+    suspend fun getAll(): List<BankAccountEntity>
+
 }

@@ -8,7 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.chrispassold.data.storage.entities.CategoryEntity
-import com.chrispassold.data.storage.entities.CategoryWithUserAndSubCategoriesEntity
+import com.chrispassold.data.storage.entities.CategoryWithSubCategoriesEntity
 
 @Dao
 interface CategoryDao {
@@ -23,13 +23,13 @@ interface CategoryDao {
 
     @Transaction
     @Query("SELECT * FROM categories WHERE id = :categoryId")
-    suspend fun getWithUserAndSubCategories(categoryId: String): CategoryWithUserAndSubCategoriesEntity?
+    suspend fun getWithUserAndSubCategories(categoryId: String): CategoryWithSubCategoriesEntity?
 
     @Transaction
     @Query("SELECT * FROM categories WHERE user_id = :userId")
-    suspend fun getWithUserAndSubCategoriesByUserId(userId: String): List<CategoryWithUserAndSubCategoriesEntity>
+    suspend fun getWithUserAndSubCategoriesByUserId(userId: String): List<CategoryWithSubCategoriesEntity>
 
     @Transaction
     @Query("SELECT * FROM categories ORDER BY name ASC")
-    suspend fun getAllWithUserAndSubCategories(): List<CategoryWithUserAndSubCategoriesEntity>
+    suspend fun getAllWithUserAndSubCategories(): List<CategoryWithSubCategoriesEntity>
 }

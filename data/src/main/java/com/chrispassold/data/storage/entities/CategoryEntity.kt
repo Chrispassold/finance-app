@@ -10,12 +10,6 @@ import androidx.room.PrimaryKey
     tableName = "categories",
     foreignKeys = [
         ForeignKey(
-            entity = UserEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["user_id"],
-            onDelete = ForeignKey.CASCADE,
-        ),
-        ForeignKey(
             entity = CategoryEntity::class,
             parentColumns = ["id"],
             childColumns = ["parent_category_id"],

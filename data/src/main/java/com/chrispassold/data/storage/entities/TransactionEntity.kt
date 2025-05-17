@@ -13,12 +13,6 @@ import java.math.BigDecimal
     tableName = "transactions",
     foreignKeys = [
         ForeignKey(
-            entity = UserEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["user_id"],
-            onDelete = ForeignKey.CASCADE,
-        ),
-        ForeignKey(
             entity = CategoryEntity::class,
             parentColumns = ["id"],
             childColumns = ["category_id"],

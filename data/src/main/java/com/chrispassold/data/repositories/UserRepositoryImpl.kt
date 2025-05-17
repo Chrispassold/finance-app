@@ -1,42 +1,44 @@
 package com.chrispassold.data.repositories
 
-import com.chrispassold.data.flowCatching
+import com.chrispassold.core.Mapper
+import com.chrispassold.data.models.UserData
 import com.chrispassold.data.repositories.datasources.user.UserLocalDataSource
-import com.chrispassold.domain.models.DatabaseException
+import com.chrispassold.domain.models.Email
+import com.chrispassold.domain.models.Password
 import com.chrispassold.domain.models.User
-import com.chrispassold.domain.models.UserNotFoundException
 import com.chrispassold.domain.repositories.UserRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     val userLocalDataSource: UserLocalDataSource,
+    val userToUserDataMapper: Mapper<User, UserData>,
+    val userDataToUserMapper: Mapper<UserData, User>,
 ) : UserRepository {
+    override val currentUser: Flow<User?> =
+        userLocalDataSource.user.map { userDataToUserMapper.mapToNullable(it) }
+
+    private val testUser = User(
+        id = "b9d3587b-66cd-4618-bc32-63191cf7f290",
+        email = Email("chris@h.com"),
+        password = Password("123456"),
+        fullName = "Chris Passold",
+    )
+
     override suspend fun register(user: User) {
-        runCatching {
-            userLocalDataSource.insert(user)
-        }.onFailure {
-            throw DatabaseException(it)
-        }
+        TODO("Not yet implemented")
     }
 
     override suspend fun login(
         email: String,
         password: String,
-    ): Flow<User> = flowCatching {
-        val user = userLocalDataSource.get(email)
-        if (user != null && user.password.value == password) {
-            emit(user)
-        } else {
-            throw UserNotFoundException()
-        }
+    ) {
+        userLocalDataSource.registerUser(userToUserDataMapper.mapTo(testUser))
     }
 
     override suspend fun logout() {
-        TODO("Not yet implemented")
+        userLocalDataSource.unregisterCurrentUser()
     }
 
-    override suspend fun currentUser(): Flow<User?> {
-        TODO("Not yet implemented")
-    }
 }

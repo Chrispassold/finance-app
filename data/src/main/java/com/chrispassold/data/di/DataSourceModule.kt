@@ -1,19 +1,28 @@
 package com.chrispassold.data.di
 
-import com.chrispassold.data.repositories.datasources.user.RoomUserLocalDataSource
+import com.chrispassold.data.repositories.datasources.bankaccount.BankAccountLocalDataSource
+import com.chrispassold.data.repositories.datasources.bankaccount.RoomBankAccountLocalDataSource
+import com.chrispassold.data.repositories.datasources.user.MemoryUserLocalDataSource
 import com.chrispassold.data.repositories.datasources.user.UserLocalDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataSourceModule {
 
     @Binds
-    abstract fun provideUserLocalDataSource(
-        roomUserLocalDataSource: RoomUserLocalDataSource,
+    @Singleton
+    abstract fun bindUserLocalDataSource(
+        memoryUserLocalDataSource: MemoryUserLocalDataSource,
     ): UserLocalDataSource
+
+    @Binds
+    abstract fun bindBankAccountLocalDataSource(
+        roomBankAccountLocalDataSource: RoomBankAccountLocalDataSource,
+    ): BankAccountLocalDataSource
 
 }

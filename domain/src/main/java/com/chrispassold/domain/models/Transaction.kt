@@ -3,7 +3,7 @@ package com.chrispassold.domain.models
 import kotlinx.datetime.Instant
 
 data class Transaction(
-    val id: String,
+    val id: String?,
     val type: TransactionType,
     val amount: Money,
     val transactionDate: Instant,

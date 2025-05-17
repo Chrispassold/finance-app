@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.retrofit)
     testImplementation(libs.junit)

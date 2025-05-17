@@ -21,3 +21,6 @@ class AuthenticationException(message: String? = null, cause: Throwable? = null)
 
 class UserNotFoundException(message: String? = null, cause: Throwable? = null) :
     DomainException(message ?: "Invalid credentials", cause)
+
+class DataNotFoundException(message: String? = null, cause: Throwable? = null) :
+    DomainException(message ?: "Data not found", cause)
