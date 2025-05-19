@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.chrispassold.domain.models.TransactionType
 
 @Entity(
     tableName = "categories",
@@ -13,7 +14,7 @@ import androidx.room.PrimaryKey
             entity = CategoryEntity::class,
             parentColumns = ["id"],
             childColumns = ["parent_category_id"],
-            onDelete = ForeignKey.SET_NULL,
+            onDelete = ForeignKey.CASCADE,
         ),
     ],
     indices = [
@@ -27,6 +28,6 @@ data class CategoryEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "image") val image: String,
     @ColumnInfo(name = "color") val color: String,
-    @ColumnInfo(name = "negotiation_type") val type: String,
+    @ColumnInfo(name = "transaction_type") val type: TransactionType,
     @ColumnInfo(name = "parent_category_id") val parentCategoryId: String?,
 )

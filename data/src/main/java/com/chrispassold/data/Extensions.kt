@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.UUID
+
+internal fun newLocalId(): String = UUID.randomUUID().toString()
 
 internal fun <T> flowCatching(block: suspend FlowCollector<T>.() -> Unit): Flow<T> = flow(
     block = block,

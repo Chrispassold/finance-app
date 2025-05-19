@@ -1,14 +1,13 @@
 package com.chrispassold.data.storage.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.chrispassold.data.storage.entities.CategoryEntity
-import com.chrispassold.data.storage.entities.CategoryWithSubCategoriesEntity
+import com.chrispassold.data.storage.entities.CategoryWithDetailsEntity
 
 @Dao
 interface CategoryDao {
@@ -18,18 +17,19 @@ interface CategoryDao {
     @Update
     suspend fun update(categoryEntity: CategoryEntity)
 
-    @Delete
-    suspend fun delete(categoryEntity: CategoryEntity)
+    @Query("DELETE FROM categories WHERE id = :id")
+    suspend fun deleteById(id: String)
 
     @Transaction
-    @Query("SELECT * FROM categories WHERE id = :categoryId")
-    suspend fun getWithUserAndSubCategories(categoryId: String): CategoryWithSubCategoriesEntity?
+    @Query("SELECT * FROM categories WHERE parent_category_id IS NULL")
+    suspend fun getCategories(): List<CategoryWithDetailsEntity>
 
     @Transaction
-    @Query("SELECT * FROM categories WHERE user_id = :userId")
-    suspend fun getWithUserAndSubCategoriesByUserId(userId: String): List<CategoryWithSubCategoriesEntity>
+    @Query("SELECT * FROM categories WHERE id = :id")
+    suspend fun getCategory(id: String): CategoryWithDetailsEntity?
 
     @Transaction
-    @Query("SELECT * FROM categories ORDER BY name ASC")
-    suspend fun getAllWithUserAndSubCategories(): List<CategoryWithSubCategoriesEntity>
+    @Query("SELECT * FROM categories WHERE parent_category_id = :parentId")
+    suspend fun getSubCategoriesFor(parentId: String): List<CategoryWithDetailsEntity>
+
 }

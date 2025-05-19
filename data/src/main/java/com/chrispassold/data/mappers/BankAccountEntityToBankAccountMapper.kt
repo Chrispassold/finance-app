@@ -1,18 +1,19 @@
 package com.chrispassold.data.mappers
 
 import com.chrispassold.core.Mapper
-import com.chrispassold.data.models.BankAccountData
+import com.chrispassold.data.storage.entities.BankAccountEntity
 import com.chrispassold.domain.models.BankAccount
 
-class BankAccountToBankAccountDataMapper : Mapper<BankAccount, BankAccountData> {
-    override fun mapTo(from: BankAccount): BankAccountData {
-        return BankAccountData(
+class BankAccountEntityToBankAccountMapper : Mapper<BankAccountEntity, BankAccount> {
+    override fun mapTo(from: BankAccountEntity): BankAccount {
+        return BankAccount(
             id = from.id,
             name = from.name,
             initialAmount = from.initialAmount,
             hideFromBalance = from.hideFromBalance,
             image = from.image,
-            userId = from.userId
+            userId = from.userId,
         )
     }
+
 }

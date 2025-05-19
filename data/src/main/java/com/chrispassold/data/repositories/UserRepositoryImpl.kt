@@ -1,23 +1,17 @@
 package com.chrispassold.data.repositories
 
-import com.chrispassold.core.Mapper
-import com.chrispassold.data.models.UserData
 import com.chrispassold.data.repositories.datasources.user.UserLocalDataSource
 import com.chrispassold.domain.models.Email
 import com.chrispassold.domain.models.Password
 import com.chrispassold.domain.models.User
 import com.chrispassold.domain.repositories.UserRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     val userLocalDataSource: UserLocalDataSource,
-    val userToUserDataMapper: Mapper<User, UserData>,
-    val userDataToUserMapper: Mapper<UserData, User>,
 ) : UserRepository {
-    override val currentUser: Flow<User?> =
-        userLocalDataSource.user.map { userDataToUserMapper.mapToNullable(it) }
+    override val currentUser: Flow<User?> = userLocalDataSource.user
 
     private val testUser = User(
         id = "b9d3587b-66cd-4618-bc32-63191cf7f290",
@@ -34,7 +28,7 @@ class UserRepositoryImpl @Inject constructor(
         email: String,
         password: String,
     ) {
-        userLocalDataSource.registerUser(userToUserDataMapper.mapTo(testUser))
+        userLocalDataSource.registerUser(testUser)
     }
 
     override suspend fun logout() {

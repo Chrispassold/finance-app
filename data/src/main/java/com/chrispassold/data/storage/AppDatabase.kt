@@ -12,6 +12,7 @@ import com.chrispassold.data.storage.entities.TransactionEntity
 import com.chrispassold.data.storage.entities.typeconverters.BigCentsConverter
 import com.chrispassold.data.storage.entities.typeconverters.BigDecimalConverter
 import com.chrispassold.data.storage.entities.typeconverters.InstantConverter
+import com.chrispassold.data.storage.entities.typeconverters.TransactionTypeConverter
 
 @Database(
     entities = [BankAccountEntity::class, CategoryEntity::class, TransactionEntity::class],
@@ -22,9 +23,10 @@ import com.chrispassold.data.storage.entities.typeconverters.InstantConverter
     BigDecimalConverter::class,
     BigCentsConverter::class,
     InstantConverter::class,
+    TransactionTypeConverter::class,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bankAccountDao(): BankAccountDao
     abstract fun categoryDao(): CategoryDao
-    abstract fun negotiationDao(): TransactionDao
+    abstract fun transactionDao(): TransactionDao
 }

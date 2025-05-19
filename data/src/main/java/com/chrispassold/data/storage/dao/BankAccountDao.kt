@@ -16,8 +16,8 @@ interface BankAccountDao {
     @Update
     suspend fun update(bankAccountEntity: BankAccountEntity)
 
-    @Delete
-    suspend fun delete(bankAccountEntity: BankAccountEntity)
+    @Query("DELETE FROM bank_account WHERE id = :id")
+    suspend fun deleteById(id: String)
 
     @Query("SELECT * FROM bank_account WHERE id = :id")
     suspend fun get(id: String): BankAccountEntity?
