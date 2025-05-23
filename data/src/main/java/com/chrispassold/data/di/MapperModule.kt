@@ -3,13 +3,18 @@ package com.chrispassold.data.di
 import com.chrispassold.core.Mapper
 import com.chrispassold.data.mappers.BankAccountEntityToBankAccountMapper
 import com.chrispassold.data.mappers.BankAccountToBankAccountEntityMapper
-import com.chrispassold.data.mappers.CategoryWithDetailsEntityToCategoryMapper
 import com.chrispassold.data.mappers.CategoryToCategoryEntityMapper
+import com.chrispassold.data.mappers.CategoryWithDetailsEntityToCategoryMapper
+import com.chrispassold.data.mappers.TransactionToTransactionEntityMapper
+import com.chrispassold.data.mappers.TransactionWithDetailsEntityToTransactionMapper
 import com.chrispassold.data.storage.entities.BankAccountEntity
 import com.chrispassold.data.storage.entities.CategoryEntity
 import com.chrispassold.data.storage.entities.CategoryWithDetailsEntity
+import com.chrispassold.data.storage.entities.TransactionEntity
+import com.chrispassold.data.storage.entities.TransactionWithDetailsEntity
 import com.chrispassold.domain.models.BankAccount
 import com.chrispassold.domain.models.Category
+import com.chrispassold.domain.models.Transaction
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -39,6 +44,14 @@ abstract class MapperModule {
         categoryWithDetailsEntityToCategoryMapper: CategoryWithDetailsEntityToCategoryMapper,
     ): Mapper<CategoryWithDetailsEntity, Category>
 
+    @Binds
+    abstract fun bindTransactionToTransactionEntityMapper(
+        transactionToTransactionEntityMapper: TransactionToTransactionEntityMapper,
+    ): Mapper<Transaction, TransactionEntity>
 
+    @Binds
+    abstract fun bindTransactionWithDetailsEntityToTransactionMapper(
+        transactionWithDetailsEntityToTransactionMapper: TransactionWithDetailsEntityToTransactionMapper,
+    ): Mapper<TransactionWithDetailsEntity, Transaction>
 
 }

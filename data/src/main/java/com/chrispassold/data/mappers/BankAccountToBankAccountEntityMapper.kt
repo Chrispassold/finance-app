@@ -7,7 +7,7 @@ import com.chrispassold.domain.models.BankAccount
 class BankAccountToBankAccountEntityMapper : Mapper<BankAccount, BankAccountEntity> {
     override fun mapTo(from: BankAccount): BankAccountEntity {
         return BankAccountEntity(
-            id = from.id!!,
+            id = from.id,
             name = from.name,
             initialAmount = from.initialAmount,
             hideFromBalance = from.hideFromBalance,

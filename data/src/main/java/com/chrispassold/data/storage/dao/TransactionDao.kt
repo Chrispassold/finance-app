@@ -19,12 +19,13 @@ interface TransactionDao {
     @Update
     suspend fun update(transactionEntity: TransactionEntity)
 
-    @Delete
-    suspend fun delete(transactionEntity: TransactionEntity)
+    @Transaction
+    @Query("DELETE FROM transactions WHERE id = :id")
+    suspend fun deleteById(id: String)
 
     @Transaction
     @Query("SELECT * FROM transactions WHERE id = :transactionId")
-    suspend fun getWithDetails(transactionId: String): TransactionWithDetailsEntity
+    suspend fun getWithDetails(transactionId: String): TransactionWithDetailsEntity?
 
     @Transaction
     @Query("SELECT * FROM transactions WHERE user_id = :userId ORDER BY transaction_date DESC")

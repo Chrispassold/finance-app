@@ -7,7 +7,7 @@ import com.chrispassold.domain.models.Category
 class CategoryToCategoryEntityMapper : Mapper<Category, CategoryEntity> {
     override fun mapTo(from: Category): CategoryEntity {
         return CategoryEntity(
-            id = from.id!!,
+            id = from.id,
             name = from.name,
             image = from.image,
             userId = from.userId,

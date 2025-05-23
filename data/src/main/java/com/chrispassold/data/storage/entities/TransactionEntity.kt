@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.chrispassold.data.storage.entities.customtypes.BigCents
+import com.chrispassold.domain.models.TransactionType
 import kotlinx.datetime.Instant
 import java.math.BigDecimal
 
@@ -34,7 +35,7 @@ import java.math.BigDecimal
 data class TransactionEntity(
     @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "user_id") val userId: String,
-    @ColumnInfo(name = "transaction_type") val type: String,
+    @ColumnInfo(name = "transaction_type") val type: TransactionType,
     @ColumnInfo(name = "amount") val amount: BigDecimal,
     @ColumnInfo(name = "transaction_date") val transactionDate: Instant,
     @ColumnInfo(name = "description") val description: String,

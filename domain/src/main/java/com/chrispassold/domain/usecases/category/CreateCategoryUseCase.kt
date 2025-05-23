@@ -13,7 +13,7 @@ class CreateCategoryUseCase @Inject constructor(
     )
 
     suspend fun invoke(params: Params): Result<Unit> = runCatching {
-        categoryRepository.insertOrUpdate(params.category)
+        categoryRepository.insert(params.category)
     }
 
 }

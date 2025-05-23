@@ -7,6 +7,9 @@ import com.chrispassold.domain.usecases.category.CreateCategoryUseCase
 import com.chrispassold.domain.usecases.category.GetCategoryUseCase
 import com.chrispassold.domain.usecases.category.ListCategoriesUseCase
 import com.chrispassold.domain.usecases.login.SignInUseCase
+import com.chrispassold.domain.usecases.transaction.CreateTransactionUseCase
+import com.chrispassold.domain.usecases.transaction.GetTransactionUseCase
+import com.chrispassold.domain.usecases.transaction.ListTransactionsUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -59,4 +62,22 @@ abstract class UseCaseModule {
     ): GetCategoryUseCase
 
     // endregion: Category
+    // region: Transactions
+
+    @Binds
+    abstract fun bindCreateTransactionUseCase(
+        createTransactionUseCase: CreateTransactionUseCase,
+    ): CreateTransactionUseCase
+
+    @Binds
+    abstract fun bindListTransactionsUseCase(
+        listTransactionsUseCase: ListTransactionsUseCase,
+    ): ListTransactionsUseCase
+
+    @Binds
+    abstract fun bindGetTransactionUseCase(
+        getTransactionUseCase: GetTransactionUseCase,
+    ): GetTransactionUseCase
+
+    // endregion: Transactions
 }

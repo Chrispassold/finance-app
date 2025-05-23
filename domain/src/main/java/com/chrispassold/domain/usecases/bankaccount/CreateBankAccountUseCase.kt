@@ -13,7 +13,7 @@ class CreateBankAccountUseCase @Inject constructor(
     )
 
     suspend fun invoke(params: Params): Result<Unit> = runCatching {
-        bankAccountRepository.insertOrUpdate(params.bankAccount)
+        bankAccountRepository.insert(params.bankAccount)
     }
 
 }

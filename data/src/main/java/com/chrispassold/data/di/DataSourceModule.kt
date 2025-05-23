@@ -4,6 +4,8 @@ import com.chrispassold.data.repositories.datasources.bankaccount.BankAccountLoc
 import com.chrispassold.data.repositories.datasources.bankaccount.RoomBankAccountLocalDataSource
 import com.chrispassold.data.repositories.datasources.category.CategoryLocalDataSource
 import com.chrispassold.data.repositories.datasources.category.RoomCategoryLocalDataSource
+import com.chrispassold.data.repositories.datasources.transaction.RoomTransactionLocalDataSource
+import com.chrispassold.data.repositories.datasources.transaction.TransactionLocalDataSource
 import com.chrispassold.data.repositories.datasources.user.MemoryUserLocalDataSource
 import com.chrispassold.data.repositories.datasources.user.UserLocalDataSource
 import dagger.Binds
@@ -31,5 +33,11 @@ abstract class DataSourceModule {
     abstract fun bindCategoryLocalDataSource(
         roomCategoryLocalDataSource: RoomCategoryLocalDataSource,
     ): CategoryLocalDataSource
+
+    @Binds
+    abstract fun bindTransactionLocalDataSource(
+        roomTransactionLocalDataSource: RoomTransactionLocalDataSource,
+    ): TransactionLocalDataSource
+
 
 }
