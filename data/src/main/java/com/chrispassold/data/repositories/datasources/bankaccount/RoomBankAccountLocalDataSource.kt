@@ -1,6 +1,6 @@
 package com.chrispassold.data.repositories.datasources.bankaccount
 
-import com.chrispassold.core.Mapper
+import com.chrispassold.core.common.Mapper
 import com.chrispassold.data.storage.dao.BankAccountDao
 import com.chrispassold.data.storage.entities.BankAccountEntity
 import com.chrispassold.domain.models.BankAccount

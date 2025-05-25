@@ -52,6 +52,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+    implementation(libs.hilt.androidx.compose)
+    ksp(libs.hilt.androidx.compiler)
     implementation(libs.kotlinx.datetime)
 
     implementation(libs.androidx.appcompat)

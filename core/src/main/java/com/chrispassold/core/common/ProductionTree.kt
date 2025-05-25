@@ -1,4 +1,4 @@
-package com.chrispassold.core
+package com.chrispassold.core.common
 
 import android.util.Log
 import timber.log.Timber
@@ -15,7 +15,7 @@ class ProductionTree : Timber.Tree() {
     /**
      * Logs a message with the specified priority, tag, message, and throwable.
      *
-     * This implementation sends log messages with priority [android.util.Log.ERROR] or higher, and any
+     * This implementation sends log messages with priority [Log.ERROR] or higher, and any
      * associated Throwables, as non-fatal crash reports to Firebase Crashlytics.
      * Lower priority messages are ignored.
      *

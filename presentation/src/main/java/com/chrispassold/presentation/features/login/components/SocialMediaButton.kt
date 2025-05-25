@@ -1,6 +1,7 @@
 package com.chrispassold.presentation.features.login.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import com.chrispassold.domain.models.SocialMediaOption
 import com.chrispassold.presentation.R
 import com.chrispassold.presentation.extensions.LocalUiMode
 import com.chrispassold.presentation.extensions.PreviewUiModes
@@ -28,8 +30,7 @@ import com.chrispassold.presentation.extensions.choose
 import com.chrispassold.presentation.extensions.ifTrue
 import com.chrispassold.presentation.theme.AppTheme
 
-// todo: turn this into private and use some domain model to represent the social media
-enum class SocialMedia(
+private enum class SocialMedia(
     val imageLight: Int,
     val imageDark: Int,
     val label: String,
@@ -48,50 +49,52 @@ enum class SocialMedia(
         imageLight = R.drawable.ic_facebook_login,
         imageDark = R.drawable.ic_facebook_login,
         label = "Facebook",
-    )
+    );
+
+    companion object {
+        fun fromSocialMediaOptions(socialMediaOption: SocialMediaOption): SocialMedia =
+            when (socialMediaOption) {
+                SocialMediaOption.Apple -> Apple
+                SocialMediaOption.Facebook -> Facebook
+                SocialMediaOption.Google -> Google
+            }
+    }
 }
 
-typealias OnSocialMediaButtonClick = (SocialMedia) -> Unit
+private typealias OnSocialMediaButtonClick = (SocialMediaOption) -> Unit
 
 @Composable
 fun SocialMediaGroup(
     textFormat: String,
+    socialMediaOptions: List<SocialMediaOption>,
     onSocialMediaClick: OnSocialMediaButtonClick,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        SocialMediaButton(
-            textFormat = textFormat,
-            socialMedia = SocialMedia.Google,
-            onClick = onSocialMediaClick,
-        )
-        Spacer(modifier = Modifier.padding(8.dp))
-        SocialMediaButton(
-            textFormat = textFormat,
-            socialMedia = SocialMedia.Apple,
-            onClick = onSocialMediaClick,
-        )
-        Spacer(modifier = Modifier.padding(8.dp))
-        SocialMediaButton(
-            textFormat = textFormat,
-            socialMedia = SocialMedia.Facebook,
-            onClick = onSocialMediaClick,
-        )
+        socialMediaOptions.forEach {
+            SocialMediaButton(
+                textFormat = textFormat,
+                socialMediaOption = it,
+                onClick = onSocialMediaClick,
+            )
+        }
     }
 }
 
 @Composable
-fun SocialMediaButton(
-    socialMedia: SocialMedia,
+private fun SocialMediaButton(
+    socialMediaOption: SocialMediaOption,
     modifier: Modifier = Modifier,
-    textFormat: String = "",
-    showLabel: Boolean = true,
     onClick: OnSocialMediaButtonClick,
+    textFormat: String? = null,
+    showLabel: Boolean = true,
 ) {
+    val socialMedia = SocialMedia.fromSocialMediaOptions(socialMediaOption)
     Button(
-        onClick = { onClick(socialMedia) },
+        onClick = { onClick(socialMediaOption) },
         modifier = modifier.ifTrue(showLabel) { fillMaxWidth() },
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant, // Example background color
@@ -113,7 +116,7 @@ fun SocialMediaButton(
                 contentDescription = socialMedia.label,
                 modifier = Modifier.size(24.dp),
             )
-            if (showLabel && textFormat.isNotEmpty()) {
+            if (showLabel && textFormat?.isNotEmpty() == true) {
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = textFormat.format(socialMedia.label),
@@ -124,22 +127,26 @@ fun SocialMediaButton(
     }
 }
 
-private class SocialMediaParameters : PreviewParameterProvider<SocialMedia> {
-    override val values: Sequence<SocialMedia>
-        get() = SocialMedia.entries.asSequence()
+private class SocialMediaOptionsParameters : PreviewParameterProvider<SocialMediaOption> {
+    override val values: Sequence<SocialMediaOption>
+        get() = sequenceOf(
+            SocialMediaOption.Google,
+            SocialMediaOption.Apple,
+            SocialMediaOption.Facebook,
+        )
 }
 
 @PreviewUiModes
 @Composable
 private fun PreviewShowingLabel(
-    @PreviewParameter(SocialMediaParameters::class) socialMedia: SocialMedia,
+    @PreviewParameter(SocialMediaOptionsParameters::class) socialMediaOption: SocialMediaOption,
 ) {
     AppTheme {
         Column(
             modifier = Modifier.padding(24.dp),
         ) {
             SocialMediaButton(
-                socialMedia = socialMedia,
+                socialMediaOption = socialMediaOption,
                 showLabel = true,
                 onClick = {},
                 textFormat = stringResource(R.string.sign_in_with),
@@ -151,17 +158,17 @@ private fun PreviewShowingLabel(
 @PreviewUiModes
 @Composable
 private fun PreviewHiddingLabel(
-    @PreviewParameter(SocialMediaParameters::class) socialMedia: SocialMedia,
+    @PreviewParameter(SocialMediaOptionsParameters::class) socialMediaOption: SocialMediaOption,
 ) {
     AppTheme {
         Column(
             modifier = Modifier.padding(24.dp),
         ) {
             SocialMediaButton(
-                socialMedia = socialMedia,
+                socialMediaOption = socialMediaOption,
                 showLabel = false,
                 onClick = {},
-                textFormat = "",
+                textFormat = null,
             )
         }
     }

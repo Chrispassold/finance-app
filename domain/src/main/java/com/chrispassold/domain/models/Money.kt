@@ -1,51 +1,24 @@
 package com.chrispassold.domain.models
 
-import timber.log.Timber
+import com.chrispassold.core.DEFAULT_CURRENCY_LOCALE
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.text.NumberFormat
-import java.text.ParseException
 import java.util.Currency
 import java.util.Locale
 
-private fun Locale.getCurrency(): Currency = Currency.getInstance(this)
+@ConsistentCopyVisibility
+data class Money private constructor(val amount: BigDecimal, val locale: Locale) :
+    Comparable<Money> {
 
-/**
- * Represents an immutable amount of money in a specific currency.
- *
- * @property amount The monetary amount, represented as a BigDecimal for precision.
- * @property currency The currency of the money, represented by a Currency object.
- */
-data class Money(val amount: BigDecimal, val locale: Locale) : Comparable<Money> {
+    val currency: Currency = Currency.getInstance(locale)
 
-    private val currency: Currency = locale.getCurrency()
+    companion object {
+        fun zero() = Money(BigDecimal.ZERO)
+    }
 
-    constructor(amount: BigDecimal) : this(amount = amount, locale = DEFAULT_CURRENCY_LOCALE)
+    constructor(amount: BigDecimal) : this(amount, DEFAULT_CURRENCY_LOCALE)
 
-    constructor(amount: Double, locale: Locale = DEFAULT_CURRENCY_LOCALE) : this(
-        BigDecimal.valueOf(
-            amount,
-        ),
-        locale,
-    )
-
-    /**
-     * Creates a Money object from a String representation of an amount,
-     * using the currency and locale for parsing.
-     *
-     * @param amount The String representation of the amount.
-     * @throws ParseException if the amount string is not in a parsable format according to the specified locale.
-     */
-    private constructor(
-        amount: String,
-        locale: Locale = DEFAULT_CURRENCY_LOCALE,
-    ) : this(
-        parseAmount(amount, locale).setScale(
-            locale.getCurrency().defaultFractionDigits,
-            RoundingMode.HALF_UP,
-        ),
-        locale,
-    )
+    constructor(amount: Double) : this(BigDecimal.valueOf(amount))
 
     init {
         // This check might need adjustment if you are parsing strings with different scales
@@ -56,31 +29,6 @@ data class Money(val amount: BigDecimal, val locale: Locale) : Comparable<Money>
     }
 
     /**
-     * Formats the money value according to the specified locale and includes or excludes the currency symbol based on the [withCurrencyPrefix] parameter.
-     *
-     * @param locale The locale to use for formatting. Defaults to the system's default locale.
-     * @param withCurrencyPrefix If true, includes the currency symbol in the formatted string. If false, excludes it. Defaults to true.
-     * @return The formatted money string, with or without the currency symbol based on the [withCurrencyPrefix] parameter.
-     */
-    fun format(
-        locale: Locale = DEFAULT_CURRENCY_LOCALE,
-        withCurrencyPrefix: Boolean = true,
-    ): String {
-        val format: NumberFormat
-        if (withCurrencyPrefix) {
-            format = NumberFormat.getCurrencyInstance(locale)
-            format.currency = currency
-        } else {
-            format = NumberFormat.getNumberInstance(locale)
-            format.maximumFractionDigits = currency.defaultFractionDigits
-            format.minimumFractionDigits = currency.defaultFractionDigits
-            format.isGroupingUsed =
-                true // Typically you want grouping (e.g., commas) for larger numbers
-        }
-        return format.format(amount)
-    }
-
-    /**
      * Adds another Money object to this one.
      *
      * @param other The Money object to add.
@@ -88,8 +36,7 @@ data class Money(val amount: BigDecimal, val locale: Locale) : Comparable<Money>
      * @throws IllegalArgumentException if the currencies are different.
      */
     operator fun plus(other: Money): Money {
-        require(locale == other.locale) { "Locale must be the same for addition" }
-        return Money(amount + other.amount, locale)
+        return Money(amount + other.amount)
     }
 
     /**
@@ -100,8 +47,7 @@ data class Money(val amount: BigDecimal, val locale: Locale) : Comparable<Money>
      * @throws IllegalArgumentException if the currencies are different.
      */
     operator fun minus(other: Money): Money {
-        require(locale == other.locale) { "Locale must be the same for subtraction" }
-        return Money(amount - other.amount, locale)
+        return Money(amount - other.amount)
     }
 
     /**
@@ -111,7 +57,7 @@ data class Money(val amount: BigDecimal, val locale: Locale) : Comparable<Money>
      * @return A new Money object representing the product.
      */
     operator fun times(scalar: BigDecimal): Money {
-        return Money(amount * scalar, locale)
+        return Money(amount * scalar)
     }
 
     /**
@@ -128,7 +74,6 @@ data class Money(val amount: BigDecimal, val locale: Locale) : Comparable<Money>
                 currency.defaultFractionDigits,
                 RoundingMode.HALF_UP,
             ),
-            locale,
         )
     }
 
@@ -140,7 +85,6 @@ data class Money(val amount: BigDecimal, val locale: Locale) : Comparable<Money>
      * @throws IllegalArgumentException if the currencies are different.
      */
     override fun compareTo(other: Money): Int {
-        require(locale == other.locale) { "Currencies must be the same for comparison" }
         return amount.compareTo(other.amount)
     }
 
@@ -157,48 +101,6 @@ data class Money(val amount: BigDecimal, val locale: Locale) : Comparable<Money>
      * @return The formatted money string with default locale.
      */
     override fun toString(): String {
-        return this.format(withCurrencyPrefix = false)
-    }
-
-    companion object {
-        val DEFAULT_CURRENCY_LOCALE = Locale("pt", "BR")
-        fun zero(locale: Locale = DEFAULT_CURRENCY_LOCALE) = Money(BigDecimal.ZERO, locale)
-
-        /**
-         * Parses a string representation of a monetary amount into a BigDecimal.
-         *
-         * @param amountString The string to parse.
-         * @param locale The locale to use for parsing.
-         * @return The parsed BigDecimal amount.
-         * @throws ParseException if the amount string is not in a parsable format.
-         */
-        private fun parseAmount(amountString: String, locale: Locale): BigDecimal {
-            if (amountString.isEmpty()) return BigDecimal.ZERO
-            val format = NumberFormat.getNumberInstance(locale)
-            val number = format.parse(amountString)
-            return when (number) {
-                null -> BigDecimal.ZERO
-                is BigDecimal -> number
-                else -> BigDecimal(number.toString())
-            }
-        }
-
-        /**
-         * Creates a Money object from a String representation of an amount.
-         *
-         * @param amount The String representation of the amount.
-         * @param currency The currency of the money.
-         * @return A new Money object.
-         * @throws ParseException if the amount string is not in a parsable format.
-         */
-        fun fromString(amount: String, locale: Locale = DEFAULT_CURRENCY_LOCALE): Money {
-            return runCatching {
-                Money(amount, locale)
-            }.onFailure {
-                Timber.e(it, "Error parsing amount: $amount")
-                // Rethrow or handle the exception as appropriate for your application
-                throw it
-            }.getOrThrow()
-        }
+        return amount.toPlainString()
     }
 }

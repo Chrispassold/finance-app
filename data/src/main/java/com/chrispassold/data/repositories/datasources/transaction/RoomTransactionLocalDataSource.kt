@@ -1,6 +1,6 @@
 package com.chrispassold.data.repositories.datasources.transaction
 
-import com.chrispassold.core.Mapper
+import com.chrispassold.core.common.Mapper
 import com.chrispassold.data.storage.dao.TransactionDao
 import com.chrispassold.data.storage.entities.TransactionEntity
 import com.chrispassold.data.storage.entities.TransactionWithDetailsEntity

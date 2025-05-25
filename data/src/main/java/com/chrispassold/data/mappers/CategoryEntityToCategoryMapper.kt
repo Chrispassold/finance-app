@@ -4,9 +4,9 @@ import com.chrispassold.core.common.Mapper
 import com.chrispassold.data.storage.entities.CategoryEntity
 import com.chrispassold.domain.models.Category
 
-class CategoryToCategoryEntityMapper : Mapper<Category, CategoryEntity> {
-    override fun mapTo(from: Category): CategoryEntity {
-        return CategoryEntity(
+class CategoryEntityToCategoryMapper : Mapper<CategoryEntity, Category> {
+    override fun mapTo(from: CategoryEntity): Category {
+        return Category(
             id = from.id,
             name = from.name,
             image = from.image,

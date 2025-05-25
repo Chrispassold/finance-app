@@ -7,6 +7,7 @@ data class Category(
     val color: String,
     val type: TransactionType,
     val userId: String,
-    val parentCategory: Category?,
-    val subCategories: List<Category> = emptyList(),
-)
+    val parentCategoryId: String?,
+) {
+    var subCategories: List<Category> = emptyList()
+}

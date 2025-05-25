@@ -7,7 +7,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.chrispassold.data.storage.entities.CategoryEntity
-import com.chrispassold.data.storage.entities.CategoryWithDetailsEntity
 
 @Dao
 interface CategoryDao {
@@ -22,14 +21,14 @@ interface CategoryDao {
 
     @Transaction
     @Query("SELECT * FROM categories WHERE parent_category_id IS NULL")
-    suspend fun getCategories(): List<CategoryWithDetailsEntity>
+    suspend fun getCategories(): List<CategoryEntity>
 
     @Transaction
     @Query("SELECT * FROM categories WHERE id = :id")
-    suspend fun getCategory(id: String): CategoryWithDetailsEntity?
+    suspend fun getCategory(id: String): CategoryEntity?
 
     @Transaction
     @Query("SELECT * FROM categories WHERE parent_category_id = :parentId")
-    suspend fun getSubCategoriesFor(parentId: String): List<CategoryWithDetailsEntity>
+    suspend fun getSubCategoriesFor(parentId: String): List<CategoryEntity>
 
 }

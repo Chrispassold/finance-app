@@ -38,7 +38,7 @@ object DatabaseModule {
     }
 
     @Provides
-    fun provideNegotiationDao(db: AppDatabase): TransactionDao {
-        return db.negotiationDao()
+    fun provideTransactionDao(db: AppDatabase): TransactionDao {
+        return db.transactionDao()
     }
 }

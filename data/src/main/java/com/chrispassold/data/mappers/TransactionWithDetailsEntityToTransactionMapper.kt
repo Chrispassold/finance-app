@@ -1,6 +1,6 @@
 package com.chrispassold.data.mappers
 
-import com.chrispassold.core.Mapper
+import com.chrispassold.core.common.Mapper
 import com.chrispassold.data.storage.entities.BankAccountEntity
 import com.chrispassold.data.storage.entities.CategoryEntity
 import com.chrispassold.data.storage.entities.TransactionWithDetailsEntity

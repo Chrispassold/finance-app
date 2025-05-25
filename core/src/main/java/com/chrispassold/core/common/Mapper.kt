@@ -1,4 +1,4 @@
-package com.chrispassold.core
+package com.chrispassold.core.common
 
 interface Mapper<From, To> {
     fun mapTo(from: From): To

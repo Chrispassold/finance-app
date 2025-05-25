@@ -1,5 +1,6 @@
 package com.chrispassold.presentation.features.login
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -20,11 +21,13 @@ private data object SignUpDestination
 private data object ForgetPasswordDestination
 
 fun NavGraphBuilder.login(navController: NavController) {
-    navigation<LoginEntryDestination>(startDestination = SignInDestination) {
+    navigation<LoginEntryDestination>(
+        startDestination = SignInDestination,
+    ) {
         signInScreen(
-            onNavigateToSignUp = { navController.navigateToSignUp() },
-            onForgetPassword = { navController.navigateToForgetPassword() },
-            onSignIn = { /*todo: go to home screen*/  navController.navigateToProfile() },
+            navigateToSignUp = { navController.navigateToSignUp() },
+            navigateToForgetPassword = { navController.navigateToForgetPassword() },
+            navigateToHome = { /*todo: go to home screen*/  navController.navigateToProfile() },
         )
 
         signUpScreen(
@@ -37,15 +40,16 @@ fun NavGraphBuilder.login(navController: NavController) {
 
 
 private fun NavGraphBuilder.signInScreen(
-    onNavigateToSignUp: () -> Unit,
-    onForgetPassword: () -> Unit,
-    onSignIn: () -> Unit,
+    navigateToSignUp: () -> Unit,
+    navigateToForgetPassword: () -> Unit,
+    navigateToHome: () -> Unit,
 ) {
     composable<SignInDestination> {
         SignInScreen(
-            onNavigateToSignUp = onNavigateToSignUp,
-            onForgetPassword = onForgetPassword,
-            onSignIn = onSignIn,
+            viewModel = hiltViewModel(),
+            navigateToSignUp = navigateToSignUp,
+            navigateToForgetPassword = navigateToForgetPassword,
+            navigateToHome = navigateToHome,
         )
     }
 }
@@ -56,8 +60,9 @@ private fun NavGraphBuilder.signUpScreen(
 ) {
     composable<SignUpDestination> {
         SignUpScreen(
-            onNavigationToSignIn = onNavigationToSignIn,
-            onSignUp = onSignUp,
+            viewModel = hiltViewModel(),
+            onAlreadyHaveAccount = onNavigationToSignIn,
+            navigateOnSignUp = onSignUp,
         )
     }
 }

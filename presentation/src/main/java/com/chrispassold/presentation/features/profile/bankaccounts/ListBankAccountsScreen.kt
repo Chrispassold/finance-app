@@ -32,6 +32,7 @@ import com.chrispassold.domain.models.Money
 import com.chrispassold.presentation.extensions.PreviewUiModes
 import com.chrispassold.presentation.components.containers.ScreenContainer
 import com.chrispassold.presentation.components.tags.Tag
+import com.chrispassold.presentation.formatters.MoneyFormatter
 import com.chrispassold.presentation.theme.AppTheme
 
 @Composable
@@ -99,7 +100,7 @@ private fun BankAccount(
             Tag(text = category)
         },
         trailingContent = {
-            Text(text = value.format(), style = MaterialTheme.typography.labelLarge)
+            Text(text = MoneyFormatter.format(value), style = MaterialTheme.typography.labelLarge)
         },
     )
 }
@@ -123,7 +124,7 @@ private fun TotalAmountAccounts(
                 text = stringResource(R.string.total_amount_in_accounts),
                 style = MaterialTheme.typography.titleSmall,
             )
-            Text(text = totalAmount.format(), style = MaterialTheme.typography.headlineLarge)
+            Text(text = MoneyFormatter.format(totalAmount), style = MaterialTheme.typography.headlineLarge)
         }
     }
 }

@@ -1,15 +1,14 @@
 package com.chrispassold.data.di
 
-import com.chrispassold.core.Mapper
+import com.chrispassold.core.common.Mapper
 import com.chrispassold.data.mappers.BankAccountEntityToBankAccountMapper
 import com.chrispassold.data.mappers.BankAccountToBankAccountEntityMapper
 import com.chrispassold.data.mappers.CategoryToCategoryEntityMapper
-import com.chrispassold.data.mappers.CategoryWithDetailsEntityToCategoryMapper
+import com.chrispassold.data.mappers.CategoryEntityToCategoryMapper
 import com.chrispassold.data.mappers.TransactionToTransactionEntityMapper
 import com.chrispassold.data.mappers.TransactionWithDetailsEntityToTransactionMapper
 import com.chrispassold.data.storage.entities.BankAccountEntity
 import com.chrispassold.data.storage.entities.CategoryEntity
-import com.chrispassold.data.storage.entities.CategoryWithDetailsEntity
 import com.chrispassold.data.storage.entities.TransactionEntity
 import com.chrispassold.data.storage.entities.TransactionWithDetailsEntity
 import com.chrispassold.domain.models.BankAccount
@@ -40,9 +39,9 @@ abstract class MapperModule {
     ): Mapper<Category, CategoryEntity>
 
     @Binds
-    abstract fun bindCategoryWithDetailsEntityToCategoryMapper(
-        categoryWithDetailsEntityToCategoryMapper: CategoryWithDetailsEntityToCategoryMapper,
-    ): Mapper<CategoryWithDetailsEntity, Category>
+    abstract fun bindCategoryEntityToCategoryMapper(
+        categoryEntityToCategoryMapper: CategoryEntityToCategoryMapper,
+    ): Mapper<CategoryEntity, Category>
 
     @Binds
     abstract fun bindTransactionToTransactionEntityMapper(

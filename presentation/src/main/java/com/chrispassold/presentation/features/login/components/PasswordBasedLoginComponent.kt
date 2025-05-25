@@ -22,10 +22,16 @@ import com.chrispassold.presentation.components.texts.TextLink
 import com.chrispassold.presentation.extensions.PreviewUiModes
 import com.chrispassold.presentation.theme.AppTheme
 
+data class PasswordBasedLoginUiModel(
+    val email: String,
+    val password: String,
+)
+
 @Composable
 fun PasswordBasedLoginComponent(
     buttonText: String,
-    onSubmit: () -> Unit,
+    onSubmit: (PasswordBasedLoginUiModel) -> Unit,
+    isLoading: Boolean = false,
     onForgetPassword: (() -> Unit)? = null,
 ) {
     var username by remember { mutableStateOf(TextFieldValue()) }
@@ -44,7 +50,7 @@ fun PasswordBasedLoginComponent(
             value = password,
             onValueChange = { password = it },
         )
-        if (onForgetPassword != null){
+        if (onForgetPassword != null) {
             TextLink(
                 text = stringResource(R.string.ask_forgot_password),
                 modifier = Modifier.align(Alignment.End),
@@ -55,7 +61,15 @@ fun PasswordBasedLoginComponent(
         PrimaryButton(
             modifier = Modifier.fillMaxWidth(),
             text = buttonText,
-            onClick = onSubmit,
+            isLoading = isLoading,
+            onClick = {
+                onSubmit(
+                    PasswordBasedLoginUiModel(
+                        email = username.text,
+                        password = password.text,
+                    ),
+                )
+            },
         )
     }
 }
@@ -68,6 +82,21 @@ private fun Preview() {
             PasswordBasedLoginComponent(
                 onForgetPassword = {},
                 onSubmit = {},
+                buttonText = stringResource(R.string.sign_in),
+            )
+        }
+    }
+}
+
+@PreviewUiModes
+@Composable
+private fun PreviewLoading() {
+    AppTheme {
+        Column(modifier = Modifier.padding(24.dp)) {
+            PasswordBasedLoginComponent(
+                onForgetPassword = {},
+                onSubmit = {},
+                isLoading = true,
                 buttonText = stringResource(R.string.sign_in),
             )
         }

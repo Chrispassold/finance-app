@@ -8,4 +8,5 @@ interface CategoryLocalDataSource {
     suspend fun delete(id: String)
     suspend fun get(id: String): Category?
     suspend fun getAll(): List<Category>
+    suspend fun getSubCategoriesFor(parentId: String): List<Category>
 }

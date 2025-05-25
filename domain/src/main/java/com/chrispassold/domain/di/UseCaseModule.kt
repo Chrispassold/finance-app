@@ -1,5 +1,9 @@
 package com.chrispassold.domain.di
 
+import com.chrispassold.domain.repositories.BankAccountRepository
+import com.chrispassold.domain.repositories.CategoryRepository
+import com.chrispassold.domain.repositories.TransactionRepository
+import com.chrispassold.domain.repositories.UserRepository
 import com.chrispassold.domain.usecases.bankaccount.CreateBankAccountUseCase
 import com.chrispassold.domain.usecases.bankaccount.GetBankAccountUseCase
 import com.chrispassold.domain.usecases.bankaccount.ListBankAccountsUseCase
@@ -7,77 +11,127 @@ import com.chrispassold.domain.usecases.category.CreateCategoryUseCase
 import com.chrispassold.domain.usecases.category.GetCategoryUseCase
 import com.chrispassold.domain.usecases.category.ListCategoriesUseCase
 import com.chrispassold.domain.usecases.login.SignInUseCase
+import com.chrispassold.domain.usecases.login.SignUpUseCase
 import com.chrispassold.domain.usecases.transaction.CreateTransactionUseCase
 import com.chrispassold.domain.usecases.transaction.GetTransactionUseCase
 import com.chrispassold.domain.usecases.transaction.ListTransactionsUseCase
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class UseCaseModule {
+object UseCaseModule {
 
     // region: Login
-    @Binds
-    abstract fun bindSignInUseCase(
-        signInUseCase: SignInUseCase,
-    ): SignInUseCase
+    @Provides
+    fun provideSignInUseCase(
+        userRepository: UserRepository,
+    ): SignInUseCase {
+        return SignInUseCase(
+            userRepository = userRepository,
+        )
+    }
+
+    @Provides
+    fun provideSignUpUseCase(
+        userRepository: UserRepository,
+    ): SignUpUseCase {
+        return SignUpUseCase(
+            userRepository = userRepository,
+        )
+    }
 
     // endregion: Login
     // region: BankAccounts
 
-    @Binds
-    abstract fun bindCreateBankAccountUseCase(
-        createBankAccountUseCase: CreateBankAccountUseCase,
-    ): CreateBankAccountUseCase
+    @Provides
+    fun provideCreateBankAccountUseCase(
+        bankAccountRepository: BankAccountRepository,
+    ): CreateBankAccountUseCase {
+        return CreateBankAccountUseCase(
+            bankAccountRepository = bankAccountRepository,
+        )
+    }
 
-    @Binds
-    abstract fun bindListBankAccountsUseCase(
-        listBankAccountsUseCase: ListBankAccountsUseCase,
-    ): ListBankAccountsUseCase
+    @Provides
+    fun provideListBankAccountsUseCase(
+        bankAccountRepository: BankAccountRepository,
+    ): ListBankAccountsUseCase {
+        return ListBankAccountsUseCase(
+            bankAccountRepository = bankAccountRepository,
+        )
+    }
 
-    @Binds
-    abstract fun bindGetBankAccountUseCase(
-        getBankAccountUseCase: GetBankAccountUseCase,
-    ): GetBankAccountUseCase
+    @Provides
+    fun provideGetBankAccountUseCase(
+        bankAccountRepository: BankAccountRepository,
+    ): GetBankAccountUseCase {
+        return GetBankAccountUseCase(
+            bankAccountRepository = bankAccountRepository,
+        )
+    }
 
     // endregion: BankAccounts
     // region: Category
 
-    @Binds
-    abstract fun bindCreateCategoryUseCase(
-        createCategoryUseCase: CreateCategoryUseCase,
-    ): CreateCategoryUseCase
+    @Provides
+    fun provideCreateCategoryUseCase(
+        categoryRepository: CategoryRepository,
+    ): CreateCategoryUseCase {
+        return CreateCategoryUseCase(
+            categoryRepository = categoryRepository,
+        )
+    }
 
-    @Binds
-    abstract fun bindListCategoriesUseCase(
-        listCategoriesUseCase: ListCategoriesUseCase,
-    ): ListCategoriesUseCase
+    @Provides
+    fun provideListCategoriesUseCase(
+        categoryRepository: CategoryRepository,
+    ): ListCategoriesUseCase {
+        return ListCategoriesUseCase(
+            categoryRepository = categoryRepository,
+        )
+    }
 
-    @Binds
-    abstract fun bindGetCategoryUseCase(
-        getCategoryUseCase: GetCategoryUseCase,
-    ): GetCategoryUseCase
+    @Provides
+    fun provideGetCategoryUseCase(
+        categoryRepository: CategoryRepository,
+    ): GetCategoryUseCase {
+        return GetCategoryUseCase(
+            categoryRepository = categoryRepository,
+        )
+    }
 
     // endregion: Category
     // region: Transactions
 
-    @Binds
-    abstract fun bindCreateTransactionUseCase(
-        createTransactionUseCase: CreateTransactionUseCase,
-    ): CreateTransactionUseCase
+    @Provides
+    fun provideCreateTransactionUseCase(
+        transactionRepository: TransactionRepository,
+    ): CreateTransactionUseCase {
+        return CreateTransactionUseCase(
+            transactionRepository = transactionRepository,
+        )
+    }
 
-    @Binds
-    abstract fun bindListTransactionsUseCase(
-        listTransactionsUseCase: ListTransactionsUseCase,
-    ): ListTransactionsUseCase
+    @Provides
+    fun provideListTransactionsUseCase(
+        transactionRepository: TransactionRepository,
+    ): ListTransactionsUseCase {
+        return ListTransactionsUseCase(
+            transactionRepository = transactionRepository,
+        )
+    }
 
-    @Binds
-    abstract fun bindGetTransactionUseCase(
-        getTransactionUseCase: GetTransactionUseCase,
-    ): GetTransactionUseCase
+    @Provides
+    fun provideGetTransactionUseCase(
+        transactionRepository: TransactionRepository,
+    ): GetTransactionUseCase {
+        return GetTransactionUseCase(
+            transactionRepository = transactionRepository,
+        )
+    }
 
     // endregion: Transactions
 }

@@ -19,10 +19,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import com.chrispassold.core.appLogger
 import com.chrispassold.domain.models.Money
 import com.chrispassold.presentation.extensions.PreviewUiModes
+import com.chrispassold.presentation.formatters.MoneyFormatter
 import com.chrispassold.presentation.theme.AppTheme
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,9 +49,9 @@ fun MoneyInput(
             val filteredValue = newValue.text.filter { it.isDigit() || it == '.' || it == ',' }
             textFieldValueState = newValue.copy(text = filteredValue)
             val newMoneyValue = try {
-                Money.fromString(filteredValue, locale = value.locale)
+                MoneyFormatter.fromString(filteredValue)
             } catch (e: Exception) {
-                Timber.e(e, "Error parsing filtered value to Money: $filteredValue")
+                appLogger.e(e, "Error parsing filtered value to Money: $filteredValue")
                 value
             }
             onValueChange(newMoneyValue)

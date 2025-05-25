@@ -21,10 +21,16 @@ class CategoryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getAll(): List<Category> {
-        return categoryLocalDataSource.getAll()
+        return categoryLocalDataSource.getAll().map {
+            it.apply {
+                subCategories = categoryLocalDataSource.getSubCategoriesFor(it.id)
+            }
+        }
     }
 
     override suspend fun get(id: String): Category? {
-        return categoryLocalDataSource.get(id)
+        return categoryLocalDataSource.get(id)?.apply {
+            subCategories = categoryLocalDataSource.getSubCategoriesFor(id)
+        }
     }
 }
