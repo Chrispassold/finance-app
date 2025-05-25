@@ -10,8 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -93,13 +92,9 @@ private fun SocialMediaButton(
     showLabel: Boolean = true,
 ) {
     val socialMedia = SocialMedia.fromSocialMediaOptions(socialMediaOption)
-    Button(
+    FilledTonalButton(
         onClick = { onClick(socialMediaOption) },
         modifier = modifier.ifTrue(showLabel) { fillMaxWidth() },
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant, // Example background color
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant, // Example content color
-        ),
         contentPadding = PaddingValues(
             horizontal = 24.dp,
             vertical = 12.dp,
