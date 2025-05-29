@@ -6,6 +6,7 @@ import com.chrispassold.data.storage.entities.CategoryEntity
 import com.chrispassold.data.storage.entities.TransactionWithDetailsEntity
 import com.chrispassold.domain.models.BankAccount
 import com.chrispassold.domain.models.Category
+import com.chrispassold.domain.models.Money
 import com.chrispassold.domain.models.Transaction
 import javax.inject.Inject
 
@@ -16,7 +17,7 @@ class TransactionWithDetailsEntityToTransactionMapper @Inject constructor(
     override fun mapTo(from: TransactionWithDetailsEntity): Transaction {
         return Transaction(
             id = from.transactionEntity.id,
-            amount = from.transactionEntity.amount,
+            amount = Money(from.transactionEntity.amount),
             transactionDate = from.transactionEntity.transactionDate,
             description = from.transactionEntity.description,
             category = categoryMapper.mapTo(from.categoryEntity),

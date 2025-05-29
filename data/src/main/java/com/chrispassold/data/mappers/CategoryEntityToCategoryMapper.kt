@@ -3,8 +3,9 @@ package com.chrispassold.data.mappers
 import com.chrispassold.core.common.Mapper
 import com.chrispassold.data.storage.entities.CategoryEntity
 import com.chrispassold.domain.models.Category
+import javax.inject.Inject
 
-class CategoryEntityToCategoryMapper : Mapper<CategoryEntity, Category> {
+class CategoryEntityToCategoryMapper @Inject constructor() : Mapper<CategoryEntity, Category> {
     override fun mapTo(from: CategoryEntity): Category {
         return Category(
             id = from.id,

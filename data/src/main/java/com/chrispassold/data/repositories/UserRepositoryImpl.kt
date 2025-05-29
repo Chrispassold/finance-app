@@ -6,14 +6,12 @@ import com.chrispassold.domain.models.LoginOption
 import com.chrispassold.domain.models.Password
 import com.chrispassold.domain.models.User
 import com.chrispassold.domain.repositories.UserRepository
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 // todo: Improve
 class UserRepositoryImpl @Inject constructor(
     val userLocalDataSource: UserLocalDataSource,
 ) : UserRepository {
-    override val currentUser: Flow<User?> = userLocalDataSource.user
 
     private val testUser by lazy {
         User(
@@ -22,6 +20,10 @@ class UserRepositoryImpl @Inject constructor(
             password = Password("123456789"),
             fullName = "Chris Passold",
         )
+    }
+
+    override suspend fun getCurrentUser(): User? {
+        return userLocalDataSource.getLoggedUser()
     }
 
     override suspend fun register(user: User) {

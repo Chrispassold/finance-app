@@ -1,10 +1,10 @@
 package com.chrispassold.data.di
 
 import com.chrispassold.core.common.Mapper
-import com.chrispassold.data.mappers.BankAccountEntityToBankAccountMapper
 import com.chrispassold.data.mappers.BankAccountToBankAccountEntityMapper
-import com.chrispassold.data.mappers.CategoryToCategoryEntityMapper
+import com.chrispassold.data.mappers.BankAccountEntityToBankAccountMapper
 import com.chrispassold.data.mappers.CategoryEntityToCategoryMapper
+import com.chrispassold.data.mappers.CategoryToCategoryEntityMapper
 import com.chrispassold.data.mappers.TransactionToTransactionEntityMapper
 import com.chrispassold.data.mappers.TransactionWithDetailsEntityToTransactionMapper
 import com.chrispassold.data.storage.entities.BankAccountEntity

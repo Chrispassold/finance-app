@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.chrispassold.data.storage.entities.customtypes.BigCents
+import com.chrispassold.domain.models.BankAccountType
 import java.math.BigDecimal
 
 @Entity(
@@ -19,7 +20,8 @@ data class BankAccountEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "initial_amount") val initialAmount: BigDecimal,
     @ColumnInfo(name = "hide_from_balance") val hideFromBalance: Boolean,
-    @ColumnInfo(name = "image") val image: String,
+    @ColumnInfo(name = "type") val type: BankAccountType,
+    @ColumnInfo(name = "image") val image: String?,
 ) {
     @ColumnInfo(name = "initial_amount_in_cents")
     var initialAmountInCents: BigCents = BigCents(initialAmount)

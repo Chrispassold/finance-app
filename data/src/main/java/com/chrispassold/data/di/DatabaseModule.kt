@@ -2,6 +2,7 @@ package com.chrispassold.data.di
 
 import android.content.Context
 import androidx.room.Room
+import com.chrispassold.data.BuildConfig
 import com.chrispassold.data.storage.AppDatabase
 import com.chrispassold.data.storage.dao.BankAccountDao
 import com.chrispassold.data.storage.dao.CategoryDao
@@ -23,8 +24,8 @@ object DatabaseModule {
         return Room.databaseBuilder(
             appContext,
             AppDatabase::class.java,
-            "ask_buddy_database",
-        ).build()
+            "finance_app_database",
+        ).fallbackToDestructiveMigration(BuildConfig.DEBUG).build()
     }
 
     @Provides
