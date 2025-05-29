@@ -49,9 +49,11 @@ object UseCaseModule {
     @Provides
     fun provideCreateBankAccountUseCase(
         bankAccountRepository: BankAccountRepository,
+        userRepository: UserRepository,
     ): CreateBankAccountUseCase {
         return CreateBankAccountUseCase(
             bankAccountRepository = bankAccountRepository,
+            userRepository = userRepository,
         )
     }
 

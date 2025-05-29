@@ -16,7 +16,7 @@ data class Money private constructor(val amount: BigDecimal, val locale: Locale)
         fun zero() = Money(BigDecimal.ZERO)
     }
 
-    constructor(amount: BigDecimal) : this(amount, DEFAULT_CURRENCY_LOCALE)
+    constructor(amount: BigDecimal?) : this(amount ?: BigDecimal.ZERO, DEFAULT_CURRENCY_LOCALE)
 
     constructor(amount: Double) : this(BigDecimal.valueOf(amount))
 
