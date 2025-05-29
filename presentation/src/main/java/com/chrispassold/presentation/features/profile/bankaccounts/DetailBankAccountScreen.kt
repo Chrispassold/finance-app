@@ -11,11 +11,16 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -23,9 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.chrispassold.presentation.R
+import com.chrispassold.domain.models.BankAccountType
 import com.chrispassold.domain.models.Money
-import com.chrispassold.presentation.extensions.PreviewUiModes
+import com.chrispassold.presentation.R
 import com.chrispassold.presentation.components.avatars.Avatar
 import com.chrispassold.presentation.components.avatars.AvatarImage
 import com.chrispassold.presentation.components.avatars.AvatarSize
@@ -33,19 +38,41 @@ import com.chrispassold.presentation.components.buttons.PrimaryButton
 import com.chrispassold.presentation.components.containers.ScreenContainer
 import com.chrispassold.presentation.components.inputs.MoneyInput
 import com.chrispassold.presentation.components.inputs.TextInput
+import com.chrispassold.presentation.extensions.PreviewUiModes
+import com.chrispassold.presentation.formatters.BankAccountTypeFormatter
 import com.chrispassold.presentation.theme.AppTheme
 
 @Composable
 fun DetailBankAccountScreen(
+    state: DetailBankAccountUiState,
+    onEvent: (DetailBankAccountUiEvent) -> Unit,
+    effect: DetailBankAccountUiEffect?,
     onBack: () -> Unit,
 ) {
-    var bankAccountName by remember { mutableStateOf(TextFieldValue("")) }
-    var initialValue by remember { mutableStateOf(Money.zero()) }
-    var hideFromBalanceCheck by remember { mutableStateOf(false) }
+    val bankAccountName =
+        remember(state.bankAccountName) { TextFieldValue(state.bankAccountName ?: "") }
+    val initialValueMoney = remember(state.initialValue) { Money(state.initialValue) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(effect) {
+        when (effect) {
+            DetailBankAccountUiEffect.NavigateBack -> {
+                onBack()
+            }
+
+            is DetailBankAccountUiEffect.ShowSnackBar -> {
+                snackbarHostState.showSnackbar(effect.message)
+            }
+
+            else -> Unit
+        }
+    }
 
     ScreenContainer(
         appBarTitle = stringResource(R.string.bank_accounts_screen_title),
-        onBack = onBack,
+        onBack = {
+            onEvent(DetailBankAccountUiEvent.OnBackClicked)
+        },
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         Column(
@@ -60,24 +87,64 @@ fun DetailBankAccountScreen(
             TextInput(
                 label = stringResource(R.string.label_bank_account_name),
                 value = bankAccountName,
-                onValueChange = { bankAccountName = it },
+                onValueChange = {
+                    onEvent(DetailBankAccountUiEvent.BankAccountNameChanged(it.text))
+                },
             )
             MoneyInput(
                 label = stringResource(R.string.label_initial_value),
-                value = initialValue,
-                onValueChange = { initialValue = it },
+                value = initialValueMoney,
+                onValueChange = {
+                    onEvent(DetailBankAccountUiEvent.InitialValueChanged(it.amount))
+                },
+            )
+            BankAccountTypeChooser(
+                options = BankAccountType.entries,
+                selected = state.type,
+                onChange = {
+                    onEvent(DetailBankAccountUiEvent.TypeChanged(it))
+                },
             )
             TextWithSwitch(
                 label = stringResource(R.string.hide_from_balance),
-                checked = hideFromBalanceCheck,
+                checked = state.hideFromBalanceCheck,
                 onCheckedChange = {
-                    hideFromBalanceCheck = it
+                    onEvent(DetailBankAccountUiEvent.HideFromBalanceCheckChanged(it))
                 },
             )
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(R.string.save),
-                onClick = onBack,
+                onClick = {
+                    onEvent(DetailBankAccountUiEvent.Submit)
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun BankAccountTypeChooser(
+    options: List<BankAccountType>,
+    selected: BankAccountType,
+    onChange: (BankAccountType) -> Unit,
+) {
+    var selectedIndex by remember(selected) { mutableIntStateOf(options.indexOf(selected)) }
+
+    SingleChoiceSegmentedButtonRow(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        options.forEachIndexed { index, type ->
+            SegmentedButton(
+                shape = SegmentedButtonDefaults.itemShape(
+                    index = index,
+                    count = options.size,
+                ),
+                onClick = {
+                    onChange(options[index])
+                },
+                selected = index == selectedIndex,
+                label = { Text(BankAccountTypeFormatter.format(type)) },
             )
         }
     }
@@ -114,6 +181,9 @@ private fun TextWithSwitch(
 private fun Preview() {
     AppTheme {
         DetailBankAccountScreen(
+            state = DetailBankAccountUiState(),
+            onEvent = {},
+            effect = null,
             onBack = {},
         )
     }

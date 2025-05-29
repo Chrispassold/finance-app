@@ -1,11 +1,20 @@
 package com.chrispassold.presentation.features.profile
 
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.chrispassold.presentation.features.login.navigateToLogin
 import com.chrispassold.presentation.features.profile.bankaccounts.DetailBankAccountScreen
+import com.chrispassold.presentation.features.profile.bankaccounts.DetailBankAccountUiEffect
+import com.chrispassold.presentation.features.profile.bankaccounts.DetailBankAccountViewModel
+import com.chrispassold.presentation.features.profile.bankaccounts.ListBankAccountUiEffect
+import com.chrispassold.presentation.features.profile.bankaccounts.ListBankAccountViewModel
 import com.chrispassold.presentation.features.profile.bankaccounts.ListBankAccountsScreen
 import com.chrispassold.presentation.features.profile.categories.DetailCategoryScreen
 import com.chrispassold.presentation.features.profile.categories.ListCategoriesScreen
@@ -74,17 +83,38 @@ private fun NavGraphBuilder.profileHome(navController: NavController) {
 private fun NavGraphBuilder.bankAccounts(navController: NavController) {
     navigation<BankAccountsDestination>(startDestination = BankAccountsDestination.List) {
         composable<BankAccountsDestination.List> {
+            val viewModel = hiltViewModel<ListBankAccountViewModel>()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            val effect by viewModel.effect.collectAsState(ListBankAccountUiEffect.Idle)
+
+            LaunchedEffect(effect) {
+                when (effect) {
+                    ListBankAccountUiEffect.NavigateBack -> {
+                        navController.popBackStack()
+                    }
+
+                    ListBankAccountUiEffect.NavigateNewBankAccount -> {
+                        navController.navigate(BankAccountsDestination.Detail)
+                    }
+
+                    else -> Unit
+                }
+            }
+
             ListBankAccountsScreen(
-                onNewBankAccount = {
-                    navController.navigate(BankAccountsDestination.Detail)
-                },
-                onBack = {
-                    navController.popBackStack()
-                },
+                state = state,
+                onEvent = viewModel::onEvent,
+                effect = effect,
             )
         }
         composable<BankAccountsDestination.Detail> {
+            val viewModel = hiltViewModel<DetailBankAccountViewModel>()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            val effect by viewModel.effect.collectAsState(DetailBankAccountUiEffect.Idle)
             DetailBankAccountScreen(
+                state = state,
+                onEvent = viewModel::onEvent,
+                effect = effect,
                 onBack = {
                     navController.popBackStack()
                 },
@@ -102,7 +132,7 @@ private fun NavGraphBuilder.categories(navController: NavController) {
                 },
                 onBack = {
                     navController.popBackStack()
-                }
+                },
             )
         }
         composable<CategoriesDestination.Detail> {
