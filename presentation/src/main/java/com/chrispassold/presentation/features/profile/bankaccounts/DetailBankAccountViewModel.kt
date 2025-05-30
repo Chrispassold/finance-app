@@ -1,10 +1,13 @@
 package com.chrispassold.presentation.features.profile.bankaccounts
 
 import androidx.compose.runtime.Stable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chrispassold.core.appLogger
 import com.chrispassold.domain.models.BankAccountType
-import com.chrispassold.domain.usecases.bankaccount.CreateBankAccountUseCase
+import com.chrispassold.domain.usecases.bankaccount.CreateOrUpdateBankAccountUseCase
+import com.chrispassold.domain.usecases.bankaccount.GetBankAccountUseCase
 import com.chrispassold.presentation.common.UiEffectBehavior
 import com.chrispassold.presentation.common.UiEffectBehaviorImpl
 import com.chrispassold.presentation.common.UiEventBehavior
@@ -12,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -19,6 +23,7 @@ import javax.inject.Inject
 
 @Stable
 data class DetailBankAccountUiState(
+    val isLoading: Boolean = false,
     val bankAccountName: String? = null,
     val initialValue: BigDecimal? = null,
     val hideFromBalanceCheck: Boolean = false,
@@ -47,12 +52,18 @@ sealed interface DetailBankAccountUiEffect {
 
 @HiltViewModel
 class DetailBankAccountViewModel @Inject constructor(
-    private val createBankAccountUseCase: CreateBankAccountUseCase,
+    savedStateHandle: SavedStateHandle,
+    private val createOrUpdateBankAccountUseCase: CreateOrUpdateBankAccountUseCase,
+    private val getBankAccountUseCase: GetBankAccountUseCase,
 ) : ViewModel(), UiEffectBehavior<DetailBankAccountUiEffect> by UiEffectBehaviorImpl(),
     UiEventBehavior<DetailBankAccountUiEvent> {
 
+    private val bankAccountId: String? = savedStateHandle["bankAccountId"]
+
     private val _state = MutableStateFlow(DetailBankAccountUiState())
-    val state: StateFlow<DetailBankAccountUiState> = _state.stateIn(
+    val state: StateFlow<DetailBankAccountUiState> = _state.onStart {
+        bankAccountId?.let { loadBankAccount(it) }
+    }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = DetailBankAccountUiState(),
@@ -86,14 +97,38 @@ class DetailBankAccountViewModel @Inject constructor(
                 _state.value = _state.value.copy(type = event.type)
             }
 
-            DetailBankAccountUiEvent.Submit -> create()
+            DetailBankAccountUiEvent.Submit -> createOrUpdate()
         }
     }
 
-    private fun create() {
+    private fun loadBankAccount(id: String) {
         viewModelScope.launch {
-            createBankAccountUseCase.invoke(
-                CreateBankAccountUseCase.Params(
+            appLogger.d("Loading banking account with id: $id")
+            _state.value = _state.value.copy(isLoading = true)
+            getBankAccountUseCase.invoke(GetBankAccountUseCase.Params(bankAccountId = id))
+                .onSuccess { bankAccount ->
+                    appLogger.d("Loaded banking account: $bankAccount")
+                    _state.value = _state.value.copy(
+                        bankAccountName = bankAccount.name,
+                        initialValue = bankAccount.initialAmount.amount,
+                        hideFromBalanceCheck = bankAccount.hideFromBalance == true,
+                        image = bankAccount.image,
+                        type = bankAccount.type,
+                        isLoading = false,
+                    )
+                }.onFailure {
+                    _state.value = _state.value.copy(isLoading = false)
+                    sendEffect(DetailBankAccountUiEffect.ShowSnackBar("Error loading bank account: ${it.message}"))
+                }
+        }
+    }
+
+    private fun createOrUpdate() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true)
+            createOrUpdateBankAccountUseCase.invoke(
+                CreateOrUpdateBankAccountUseCase.Params(
+                    id = bankAccountId,
                     name = state.value.bankAccountName,
                     initialAmount = state.value.initialValue,
                     hideFromBalance = state.value.hideFromBalanceCheck,
@@ -101,8 +136,9 @@ class DetailBankAccountViewModel @Inject constructor(
                     type = state.value.type,
                 ),
             ).onSuccess {
-                sendEffect(DetailBankAccountUiEffect.ShowSnackBar("Success"))
+                sendEffect(DetailBankAccountUiEffect.NavigateBack)
             }.onFailure {
+                _state.value = _state.value.copy(isLoading = false)
                 sendEffect(DetailBankAccountUiEffect.ShowSnackBar("Error creating bank account: ${it.message}"))
             }
         }

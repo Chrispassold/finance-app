@@ -67,7 +67,7 @@ object MoneyFormatter {
     private fun parseAmount(amountString: String, locale: Locale): BigDecimal {
         if (amountString.isBlank()) return BigDecimal.ZERO
         val format = NumberFormat.getNumberInstance(locale)
-        val number = try {
+        val number: Number? = try {
             format.parse(amountString)
         } catch (e: java.text.ParseException) {
             // Log parsing errors for better diagnostics if needed

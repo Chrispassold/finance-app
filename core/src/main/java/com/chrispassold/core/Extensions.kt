@@ -10,5 +10,7 @@ suspend fun <T> resultWithContext(
 ): Result<T> {
     return runCatching {
         withContext(context, block)
+    }.onFailure {
+        appLogger.e(it, "Error executing use case")
     }
 }

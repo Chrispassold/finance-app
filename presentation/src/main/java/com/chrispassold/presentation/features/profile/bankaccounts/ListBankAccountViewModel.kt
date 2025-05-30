@@ -3,6 +3,7 @@ package com.chrispassold.presentation.features.profile.bankaccounts
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chrispassold.core.appLogger
 import com.chrispassold.domain.models.BankAccount
 import com.chrispassold.domain.models.Money
 import com.chrispassold.domain.usecases.bankaccount.ListBankAccountsUseCase
@@ -20,8 +21,14 @@ import javax.inject.Inject
 @Stable
 data class ListBankAccountUiState(
     val bankAccounts: List<BankAccount> = emptyList(),
+    val isLoading: Boolean = false,
 ) {
-    val totalAmount: Money = Money(bankAccounts.sumOf { it.initialAmount.amount })
+    val totalAmount: Money = Money(
+        bankAccounts.sumOf {
+            appLogger.i("Total amount: ${it.initialAmount.amount}")
+            it.initialAmount.amount
+        },
+    )
 }
 
 sealed interface ListBankAccountUiEvent {
@@ -34,6 +41,7 @@ sealed interface ListBankAccountUiEffect {
     object Idle : ListBankAccountUiEffect
     object NavigateBack : ListBankAccountUiEffect
     object NavigateNewBankAccount : ListBankAccountUiEffect
+    data class NavigateUpdateBankAccount(val bankAccount: BankAccount) : ListBankAccountUiEffect
     data class ShowSnackBar(val message: String) : ListBankAccountUiEffect
 }
 
@@ -62,12 +70,13 @@ class ListBankAccountViewModel @Inject constructor(
 
             is ListBankAccountUiEvent.OnBankAccountClicked -> {
                 viewModelScope.launch {
-                    sendEffect(ListBankAccountUiEffect.ShowSnackBar("Clicked on ${event.bankAccount.name}"))
+                    sendEffect(ListBankAccountUiEffect.NavigateUpdateBankAccount(event.bankAccount))
                 }
             }
+
             ListBankAccountUiEvent.OnNewBankAccountClicked -> {
                 viewModelScope.launch {
-                    sendEffect(ListBankAccountUiEffect.ShowSnackBar("Clicked on New Bank Account"))
+                    sendEffect(ListBankAccountUiEffect.NavigateNewBankAccount)
                 }
             }
         }
@@ -75,11 +84,13 @@ class ListBankAccountViewModel @Inject constructor(
 
     private fun list() {
         viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true)
             listBankAccountsUseCase.invoke(
                 ListBankAccountsUseCase.Params(),
             ).onSuccess {
-                _state.value = _state.value.copy(bankAccounts = it)
+                _state.value = _state.value.copy(bankAccounts = it, isLoading = false)
             }.onFailure {
+                _state.value = _state.value.copy(isLoading = false)
                 sendEffect(ListBankAccountUiEffect.ShowSnackBar("Error listing bank accounts: ${it.message}"))
             }
         }

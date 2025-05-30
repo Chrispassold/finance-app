@@ -33,7 +33,7 @@ private data object BankAccountsDestination {
     data object List
 
     @Serializable
-    data object Detail
+    data class Detail(val bankAccountId: String? = null)
 }
 
 @Serializable
@@ -94,7 +94,11 @@ private fun NavGraphBuilder.bankAccounts(navController: NavController) {
                     }
 
                     ListBankAccountUiEffect.NavigateNewBankAccount -> {
-                        navController.navigate(BankAccountsDestination.Detail)
+                        navController.navigate(BankAccountsDestination.Detail(null))
+                    }
+
+                    is ListBankAccountUiEffect.NavigateUpdateBankAccount -> {
+                        navController.navigate(BankAccountsDestination.Detail((effect as ListBankAccountUiEffect.NavigateUpdateBankAccount).bankAccount.id))
                     }
 
                     else -> Unit

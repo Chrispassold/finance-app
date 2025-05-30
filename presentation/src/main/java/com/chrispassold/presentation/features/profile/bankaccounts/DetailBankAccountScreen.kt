@@ -38,6 +38,7 @@ import com.chrispassold.presentation.components.buttons.PrimaryButton
 import com.chrispassold.presentation.components.containers.ScreenContainer
 import com.chrispassold.presentation.components.inputs.MoneyInput
 import com.chrispassold.presentation.components.inputs.TextInput
+import com.chrispassold.presentation.components.progress.FullScreenCircularIndicator
 import com.chrispassold.presentation.extensions.PreviewUiModes
 import com.chrispassold.presentation.formatters.BankAccountTypeFormatter
 import com.chrispassold.presentation.theme.AppTheme
@@ -69,9 +70,14 @@ fun DetailBankAccountScreen(
     }
 
     ScreenContainer(
+        snackbarHostState = snackbarHostState,
         appBarTitle = stringResource(R.string.bank_accounts_screen_title),
         onBack = {
             onEvent(DetailBankAccountUiEvent.OnBackClicked)
+        },
+        isLoading = state.isLoading,
+        onLoadingContent = {
+            FullScreenCircularIndicator()
         },
     ) {
         Spacer(modifier = Modifier.height(16.dp))
@@ -132,7 +138,7 @@ private fun BankAccountTypeChooser(
     var selectedIndex by remember(selected) { mutableIntStateOf(options.indexOf(selected)) }
 
     SingleChoiceSegmentedButtonRow(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         options.forEachIndexed { index, type ->
             SegmentedButton(

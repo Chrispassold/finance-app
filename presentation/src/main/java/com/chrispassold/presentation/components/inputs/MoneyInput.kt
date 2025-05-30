@@ -1,6 +1,8 @@
 package com.chrispassold.presentation.components.inputs
 
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
@@ -19,11 +21,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.dp
 import com.chrispassold.core.appLogger
 import com.chrispassold.domain.models.Money
 import com.chrispassold.presentation.extensions.PreviewUiModes
 import com.chrispassold.presentation.formatters.MoneyFormatter
-import com.chrispassold.presentation.theme.AppTheme
+import com.chrispassold.presentation.theme.AppThemePreview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,12 +94,17 @@ private class PreviewParameters : PreviewParameterProvider<Money> {
 @PreviewUiModes
 @Composable
 private fun Preview(@PreviewParameter(PreviewParameters::class) money: Money) {
-    AppTheme {
+    AppThemePreview {
         var amount by remember { mutableStateOf(money) }
         MoneyInput(
             value = amount,
             onValueChange = { amount = it },
             label = "Amount",
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = amount.toString(), style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground,
         )
     }
 }

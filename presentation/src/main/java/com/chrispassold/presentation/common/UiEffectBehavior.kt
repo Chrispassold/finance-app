@@ -1,5 +1,6 @@
 package com.chrispassold.presentation.common
 
+import com.chrispassold.core.appLogger
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -66,6 +67,7 @@ internal class UiEffectBehaviorImpl<T> : UiEffectBehavior<T> {
      * @param effect The effect to be sent.
      */
     override suspend fun sendEffect(effect: T) {
+        effect?.let { appLogger.d("sendEffect: ${it::class.simpleName}") }
         _effect.send(effect)
     }
 }

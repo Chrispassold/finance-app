@@ -30,10 +30,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.chrispassold.core.appLogger
 import com.chrispassold.domain.models.BankAccountType
 import com.chrispassold.domain.models.Money
 import com.chrispassold.presentation.R
 import com.chrispassold.presentation.components.containers.ScreenContainer
+import com.chrispassold.presentation.components.progress.FullScreenCircularIndicator
 import com.chrispassold.presentation.components.tags.Tag
 import com.chrispassold.presentation.extensions.PreviewUiModes
 import com.chrispassold.presentation.formatters.BankAccountTypeFormatter
@@ -60,6 +62,7 @@ fun ListBankAccountsScreen(
     }
 
     ScreenContainer(
+        snackbarHostState = snackbarHostState,
         appBarTitle = stringResource(R.string.bank_accounts_screen_title),
         onBack = {
             onEvent(ListBankAccountUiEvent.OnBackClicked)
@@ -69,18 +72,23 @@ fun ListBankAccountsScreen(
         onRightAction = {
             onEvent(ListBankAccountUiEvent.OnNewBankAccountClicked)
         },
+        isLoading = state.isLoading,
+        onLoadingContent = {
+            FullScreenCircularIndicator()
+        },
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             TotalAmountAccounts(state.totalAmount)
-            state.bankAccounts.forEach {
+            state.bankAccounts.forEach { account ->
+                appLogger.v("${account.name} - ${account.id}")
                 BankAccount(
-                    bankName = it.name,
-                    type = it.type,
-                    value = it.initialAmount,
+                    bankName = account.name,
+                    type = account.type,
+                    value = account.initialAmount,
                     icon = Icons.Filled.Home, //todo add icon from domain
                     onClick = {
-                        onEvent(ListBankAccountUiEvent.OnBankAccountClicked(it))
+                        onEvent(ListBankAccountUiEvent.OnBankAccountClicked(account))
                     },
                 )
             }
