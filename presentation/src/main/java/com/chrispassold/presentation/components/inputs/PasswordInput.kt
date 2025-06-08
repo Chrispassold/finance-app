@@ -30,8 +30,8 @@ import java.util.regex.Pattern
 
 @Composable
 fun PasswordInput(
-    value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
+    value: String,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     label: String = "Enter your password",
     errorText: String = "Password not valid",
@@ -120,18 +120,17 @@ private fun PasswordVisibilityToggleIcon(
  *
  * @return `true` if the password is valid, `false` otherwise.
  */
-private fun TextFieldValue.isValidPassword(): Boolean {
-    val password = text
+private fun String.isValidPassword(): Boolean {
     val passwordRegex =
         Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")
 
-    return password.matches((passwordRegex).toRegex())
+    return this.matches((passwordRegex).toRegex())
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun PasswordInputPreview() {
-    var password by remember { mutableStateOf(TextFieldValue()) }
+    var password by remember { mutableStateOf("") }
     Column(modifier = Modifier.padding(16.dp)) {
         PasswordInput(
             value = password,

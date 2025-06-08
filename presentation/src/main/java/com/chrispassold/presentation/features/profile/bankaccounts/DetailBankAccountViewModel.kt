@@ -25,7 +25,7 @@ import javax.inject.Inject
 data class DetailBankAccountUiState(
     val isLoading: Boolean = false,
     val bankAccountName: String? = null,
-    val initialValue: BigDecimal? = null,
+    val initialValue: BigDecimal = BigDecimal.ZERO,
     val hideFromBalanceCheck: Boolean = false,
     val image: String? = null,
     val type: BankAccountType = BankAccountType.CHECKING_ACCOUNT,
@@ -110,7 +110,7 @@ class DetailBankAccountViewModel @Inject constructor(
                     appLogger.d("Loaded banking account: $bankAccount")
                     _state.value = _state.value.copy(
                         bankAccountName = bankAccount.name,
-                        initialValue = bankAccount.initialAmount.amount,
+                        initialValue = bankAccount.initialAmount,
                         hideFromBalanceCheck = bankAccount.hideFromBalance == true,
                         image = bankAccount.image,
                         type = bankAccount.type,

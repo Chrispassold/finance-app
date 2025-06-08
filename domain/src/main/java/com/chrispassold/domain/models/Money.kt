@@ -6,8 +6,9 @@ import java.math.RoundingMode
 import java.util.Currency
 import java.util.Locale
 
+// For the future
 @ConsistentCopyVisibility
-data class Money private constructor(val amount: BigDecimal, val locale: Locale) :
+private data class Money private constructor(val amount: BigDecimal, val locale: Locale) :
     Comparable<Money> {
 
     val currency: Currency = Currency.getInstance(locale)

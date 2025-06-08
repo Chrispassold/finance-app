@@ -55,7 +55,7 @@ enum class CategoryType(
 fun DetailCategoryScreen(
     onBack: () -> Unit,
 ) {
-    var categoryName by remember { mutableStateOf(TextFieldValue("")) }
+    var categoryName by remember { mutableStateOf("") }
     var categoryType by remember { mutableStateOf(CategoryType.EXPENSE) }
     val subCategories = remember { mutableStateListOf<String>("teste") }
 

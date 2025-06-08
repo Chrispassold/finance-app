@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TextInput(
     label: String,
-    value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
+    value: String,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     errorMessage: String? = null,
     isError: Boolean = false,
@@ -34,7 +34,6 @@ fun TextInput(
         },
         isError = isError,
         supportingText = {
-            // Display error text if the password is not valid
             if (isError && errorMessage != null) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
@@ -52,7 +51,7 @@ fun TextInput(
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
-    var text by remember { mutableStateOf(TextFieldValue()) }
+    var text by remember { mutableStateOf("") }
     var isError by remember { mutableStateOf(false) }
     Column(modifier = Modifier.padding(16.dp)) {
         TextInput(

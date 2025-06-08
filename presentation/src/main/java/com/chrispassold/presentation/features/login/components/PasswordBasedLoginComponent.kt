@@ -34,8 +34,8 @@ fun PasswordBasedLoginComponent(
     isLoading: Boolean = false,
     onForgetPassword: (() -> Unit)? = null,
 ) {
-    var username by remember { mutableStateOf(TextFieldValue()) }
-    var password by remember { mutableStateOf(TextFieldValue()) }
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         TextInput(
@@ -65,8 +65,8 @@ fun PasswordBasedLoginComponent(
             onClick = {
                 onSubmit(
                     PasswordBasedLoginUiModel(
-                        email = username.text,
-                        password = password.text,
+                        email = username,
+                        password = password,
                     ),
                 )
             },

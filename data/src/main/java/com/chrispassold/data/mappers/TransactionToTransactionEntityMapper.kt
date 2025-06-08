@@ -11,7 +11,7 @@ class TransactionToTransactionEntityMapper @Inject constructor() : Mapper<Transa
             id = from.id,
             userId = from.userId,
             type = from.type,
-            amount = from.amount.amount,
+            amount = from.amount,
             transactionDate = from.transactionDate,
             description = from.description,
             categoryId = from.category.id,

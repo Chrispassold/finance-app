@@ -10,7 +10,7 @@ class BankAccountToBankAccountEntityMapper @Inject constructor() : Mapper<BankAc
         return BankAccountEntity(
             id = from.id,
             name = from.name,
-            initialAmount = from.initialAmount.amount,
+            initialAmount = from.initialAmount,
             hideFromBalance = from.hideFromBalance,
             image = from.image,
             userId = from.userId,

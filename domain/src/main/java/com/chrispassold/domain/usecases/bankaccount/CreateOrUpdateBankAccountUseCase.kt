@@ -3,7 +3,6 @@ package com.chrispassold.domain.usecases.bankaccount
 import com.chrispassold.core.resultWithContext
 import com.chrispassold.domain.models.BankAccount
 import com.chrispassold.domain.models.BankAccountType
-import com.chrispassold.domain.models.Money
 import com.chrispassold.domain.repositories.BankAccountRepository
 import com.chrispassold.domain.repositories.UserRepository
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +18,7 @@ class CreateOrUpdateBankAccountUseCase @Inject constructor(
 
     data class Params(
         val name: String?,
-        val initialAmount: BigDecimal?,
+        val initialAmount: BigDecimal,
         val hideFromBalance: Boolean,
         val type: BankAccountType?,
         val image: String?,
@@ -35,7 +34,7 @@ class CreateOrUpdateBankAccountUseCase @Inject constructor(
         if (params.id != null) {
             getBankAccountUseCase.invoke(GetBankAccountUseCase.Params(params.id)).getOrThrow().copy(
                 name = params.name,
-                initialAmount = Money(params.initialAmount),
+                initialAmount = params.initialAmount,
                 hideFromBalance = params.hideFromBalance,
                 image = params.image,
                 type = params.type,
@@ -44,7 +43,7 @@ class CreateOrUpdateBankAccountUseCase @Inject constructor(
             BankAccount(
                 id = UUID.randomUUID().toString(),
                 name = params.name,
-                initialAmount = Money(params.initialAmount),
+                initialAmount = params.initialAmount,
                 hideFromBalance = params.hideFromBalance,
                 image = params.image,
                 userId = user.id,

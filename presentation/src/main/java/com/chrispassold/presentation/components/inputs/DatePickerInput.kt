@@ -33,7 +33,7 @@ fun DatePickerInput(
     val datePickerState = rememberDatePickerState()
     val inputValue by remember {
         derivedStateOf {
-            TextFieldValue(convertMillisToDate(datePickerState.selectedDateMillis))
+            convertMillisToDate(datePickerState.selectedDateMillis)
         }
     }
 

@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chrispassold.core.appLogger
 import com.chrispassold.domain.models.BankAccount
-import com.chrispassold.domain.models.Money
 import com.chrispassold.domain.usecases.bankaccount.ListBankAccountsUseCase
 import com.chrispassold.presentation.common.UiEffectBehavior
 import com.chrispassold.presentation.common.UiEffectBehaviorImpl
@@ -16,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @Stable
@@ -23,12 +23,10 @@ data class ListBankAccountUiState(
     val bankAccounts: List<BankAccount> = emptyList(),
     val isLoading: Boolean = false,
 ) {
-    val totalAmount: Money = Money(
-        bankAccounts.sumOf {
-            appLogger.i("Total amount: ${it.initialAmount.amount}")
-            it.initialAmount.amount
-        },
-    )
+    val totalAmount: BigDecimal = bankAccounts.sumOf {
+        appLogger.i("Total amount: ${it.initialAmount}")
+        it.initialAmount
+    }
 }
 
 sealed interface ListBankAccountUiEvent {

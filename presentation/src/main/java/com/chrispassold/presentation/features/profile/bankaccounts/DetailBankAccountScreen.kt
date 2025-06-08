@@ -29,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.chrispassold.domain.models.BankAccountType
-import com.chrispassold.domain.models.Money
 import com.chrispassold.presentation.R
 import com.chrispassold.presentation.components.avatars.Avatar
 import com.chrispassold.presentation.components.avatars.AvatarImage
@@ -50,9 +49,6 @@ fun DetailBankAccountScreen(
     effect: DetailBankAccountUiEffect?,
     onBack: () -> Unit,
 ) {
-    val bankAccountName =
-        remember(state.bankAccountName) { TextFieldValue(state.bankAccountName ?: "") }
-    val initialValueMoney = remember(state.initialValue) { Money(state.initialValue) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(effect) {
@@ -92,16 +88,16 @@ fun DetailBankAccountScreen(
             )
             TextInput(
                 label = stringResource(R.string.label_bank_account_name),
-                value = bankAccountName,
+                value = state.bankAccountName ?: "",
                 onValueChange = {
-                    onEvent(DetailBankAccountUiEvent.BankAccountNameChanged(it.text))
+                    onEvent(DetailBankAccountUiEvent.BankAccountNameChanged(it))
                 },
             )
             MoneyInput(
                 label = stringResource(R.string.label_initial_value),
-                value = initialValueMoney,
+                value = state.initialValue,
                 onValueChange = {
-                    onEvent(DetailBankAccountUiEvent.InitialValueChanged(it.amount))
+                    onEvent(DetailBankAccountUiEvent.InitialValueChanged(it))
                 },
             )
             BankAccountTypeChooser(
@@ -150,7 +146,12 @@ private fun BankAccountTypeChooser(
                     onChange(options[index])
                 },
                 selected = index == selectedIndex,
-                label = { Text(BankAccountTypeFormatter.format(type)) },
+                label = {
+                    Text(
+                        BankAccountTypeFormatter.format(type),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                },
             )
         }
     }

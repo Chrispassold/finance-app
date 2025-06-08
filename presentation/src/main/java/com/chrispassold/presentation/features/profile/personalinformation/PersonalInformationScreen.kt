@@ -76,10 +76,10 @@ private fun Header() {
 
 @Composable
 private fun Content() {
-    var name by remember { mutableStateOf(TextFieldValue()) }
-    var email by remember { mutableStateOf(TextFieldValue()) }
+    var name by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var birthDate by remember { mutableLongStateOf(0L) }
-    var password by remember { mutableStateOf(TextFieldValue()) }
+    var password by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier.fillMaxWidth(),

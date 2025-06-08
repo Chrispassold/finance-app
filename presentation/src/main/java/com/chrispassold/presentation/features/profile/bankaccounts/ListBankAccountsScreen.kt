@@ -32,7 +32,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.chrispassold.core.appLogger
 import com.chrispassold.domain.models.BankAccountType
-import com.chrispassold.domain.models.Money
 import com.chrispassold.presentation.R
 import com.chrispassold.presentation.components.containers.ScreenContainer
 import com.chrispassold.presentation.components.progress.FullScreenCircularIndicator
@@ -41,6 +40,7 @@ import com.chrispassold.presentation.extensions.PreviewUiModes
 import com.chrispassold.presentation.formatters.BankAccountTypeFormatter
 import com.chrispassold.presentation.formatters.MoneyFormatter
 import com.chrispassold.presentation.theme.AppTheme
+import java.math.BigDecimal
 
 @Composable
 fun ListBankAccountsScreen(
@@ -100,7 +100,7 @@ fun ListBankAccountsScreen(
 private fun BankAccount(
     bankName: String,
     type: BankAccountType,
-    value: Money,
+    value: BigDecimal,
     icon: ImageVector,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -138,7 +138,7 @@ private fun BankAccount(
 
 @Composable
 private fun TotalAmountAccounts(
-    totalAmount: Money,
+    totalAmount: BigDecimal,
     modifier: Modifier = Modifier,
 ) {
     Card(
