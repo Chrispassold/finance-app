@@ -72,25 +72,25 @@ fun ListBankAccountsScreen(
         onRightAction = {
             onEvent(ListBankAccountUiEvent.OnNewBankAccountClicked)
         },
-        isLoading = state.isLoading,
-        onLoadingContent = {
-            FullScreenCircularIndicator()
-        },
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            TotalAmountAccounts(state.totalAmount)
-            state.bankAccounts.forEach { account ->
-                appLogger.v("${account.name} - ${account.id}")
-                BankAccount(
-                    bankName = account.name,
-                    type = account.type,
-                    value = account.initialAmount,
-                    icon = Icons.Filled.Home, //todo add icon from domain
-                    onClick = {
-                        onEvent(ListBankAccountUiEvent.OnBankAccountClicked(account))
-                    },
-                )
+        if (state.isLoading) {
+            FullScreenCircularIndicator()
+        } else {
+            Spacer(modifier = Modifier.height(16.dp))
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                TotalAmountAccounts(state.totalAmount)
+                state.bankAccounts.forEach { account ->
+                    appLogger.v("${account.name} - ${account.id}")
+                    BankAccount(
+                        bankName = account.name,
+                        type = account.type,
+                        value = account.initialAmount,
+                        icon = Icons.Filled.Home, //todo add icon from domain
+                        onClick = {
+                            onEvent(ListBankAccountUiEvent.OnBankAccountClicked(account))
+                        },
+                    )
+                }
             }
         }
     }

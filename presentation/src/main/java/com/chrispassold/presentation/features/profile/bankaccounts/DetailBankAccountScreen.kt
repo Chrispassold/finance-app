@@ -26,7 +26,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.chrispassold.domain.models.BankAccountType
 import com.chrispassold.presentation.R
@@ -71,56 +70,56 @@ fun DetailBankAccountScreen(
         onBack = {
             onEvent(DetailBankAccountUiEvent.OnBackClicked)
         },
-        isLoading = state.isLoading,
-        onLoadingContent = {
-            FullScreenCircularIndicator()
-        },
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Avatar(
-                image = AvatarImage.Icon(icon = Icons.Filled.Home),
-                avatarSize = AvatarSize.Large,
-            )
-            TextInput(
-                label = stringResource(R.string.label_bank_account_name),
-                value = state.bankAccountName ?: "",
-                onValueChange = {
-                    onEvent(DetailBankAccountUiEvent.BankAccountNameChanged(it))
-                },
-            )
-            MoneyInput(
-                label = stringResource(R.string.label_initial_value),
-                value = state.initialValue,
-                onValueChange = {
-                    onEvent(DetailBankAccountUiEvent.InitialValueChanged(it))
-                },
-            )
-            BankAccountTypeChooser(
-                options = BankAccountType.entries,
-                selected = state.type,
-                onChange = {
-                    onEvent(DetailBankAccountUiEvent.TypeChanged(it))
-                },
-            )
-            TextWithSwitch(
-                label = stringResource(R.string.hide_from_balance),
-                checked = state.hideFromBalanceCheck,
-                onCheckedChange = {
-                    onEvent(DetailBankAccountUiEvent.HideFromBalanceCheckChanged(it))
-                },
-            )
-            PrimaryButton(
+        if (state.isLoading) {
+            FullScreenCircularIndicator()
+        } else {
+            Spacer(modifier = Modifier.height(16.dp))
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                text = stringResource(R.string.save),
-                onClick = {
-                    onEvent(DetailBankAccountUiEvent.Submit)
-                },
-            )
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Avatar(
+                    image = AvatarImage.Icon(icon = Icons.Filled.Home),
+                    avatarSize = AvatarSize.Large,
+                )
+                TextInput(
+                    label = stringResource(R.string.label_bank_account_name),
+                    value = state.bankAccountName ?: "",
+                    onValueChange = {
+                        onEvent(DetailBankAccountUiEvent.BankAccountNameChanged(it))
+                    },
+                )
+                MoneyInput(
+                    label = stringResource(R.string.label_initial_value),
+                    value = state.initialValue,
+                    onValueChange = {
+                        onEvent(DetailBankAccountUiEvent.InitialValueChanged(it))
+                    },
+                )
+                BankAccountTypeChooser(
+                    options = BankAccountType.entries,
+                    selected = state.type,
+                    onChange = {
+                        onEvent(DetailBankAccountUiEvent.TypeChanged(it))
+                    },
+                )
+                TextWithSwitch(
+                    label = stringResource(R.string.hide_from_balance),
+                    checked = state.hideFromBalanceCheck,
+                    onCheckedChange = {
+                        onEvent(DetailBankAccountUiEvent.HideFromBalanceCheckChanged(it))
+                    },
+                )
+                PrimaryButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(R.string.save),
+                    onClick = {
+                        onEvent(DetailBankAccountUiEvent.Submit)
+                    },
+                )
+            }
         }
     }
 }

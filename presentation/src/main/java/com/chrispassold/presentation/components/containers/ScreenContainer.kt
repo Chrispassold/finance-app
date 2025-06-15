@@ -37,8 +37,6 @@ fun ScreenContainer(
     rightActionIcon: ImageVector? = null,
     rightActionIconContentDescription: String? = null,
     snackbarHostState: SnackbarHostState? = null,
-    isLoading: Boolean = false,
-    onLoadingContent: @Composable ColumnScope.() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit,
 ) {
 
@@ -66,7 +64,7 @@ fun ScreenContainer(
                     .padding(innerPadding)
                     .fillMaxSize()
                     .padding(horizontal = 24.dp),
-                content = if (isLoading) onLoadingContent else content,
+                content = content,
             )
         }
     }
