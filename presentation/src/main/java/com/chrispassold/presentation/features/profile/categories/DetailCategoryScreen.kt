@@ -1,102 +1,205 @@
 package com.chrispassold.presentation.features.profile.categories
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.chrispassold.domain.models.TransactionType
 import com.chrispassold.presentation.R
-import com.chrispassold.presentation.extensions.PreviewUiModes
 import com.chrispassold.presentation.components.avatars.Avatar
 import com.chrispassold.presentation.components.avatars.AvatarImage
 import com.chrispassold.presentation.components.avatars.AvatarSize
 import com.chrispassold.presentation.components.buttons.PrimaryButton
 import com.chrispassold.presentation.components.containers.ScreenContainer
 import com.chrispassold.presentation.components.inputs.TextInput
+import com.chrispassold.presentation.components.progress.FullScreenCircularIndicator
+import com.chrispassold.presentation.extensions.PreviewUiModes
+import com.chrispassold.presentation.formatters.TransactionTypeFormatter
 import com.chrispassold.presentation.theme.AppThemePreview
-import java.util.UUID
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
-enum class CategoryType(
-    @StringRes val title: Int,
-) {
-    INCOME(title = R.string.category_type_name_income), EXPENSE(title = R.string.category_type_name_expense),
-}
+private typealias OnEvent = (DetailCategoryUiEvent) -> Unit
 
 @Composable
 fun DetailCategoryScreen(
-    onBack: () -> Unit,
+    state: DetailCategoryUiState,
+    onEvent: OnEvent,
+    effect: DetailCategoryUiEffect,
 ) {
-    var categoryName by remember { mutableStateOf("") }
-    var categoryType by remember { mutableStateOf(CategoryType.EXPENSE) }
-    val subCategories = remember { mutableStateListOf<String>("teste") }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(effect) {
+        when (effect) {
+            is DetailCategoryUiEffect.ShowSnackBar -> snackbarHostState.showSnackbar(effect.message)
+            else -> Unit
+        }
+    }
 
     ScreenContainer(
+        snackbarHostState = snackbarHostState,
         appBarTitle = stringResource(R.string.category_detail_screen_title),
-        onBack = onBack,
+        onBack = {
+            onEvent(DetailCategoryUiEvent.OnBack)
+        },
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        Column(
+        if (state.isLoading) {
+            FullScreenCircularIndicator()
+        } else {
+            DetailComponent(
+                state = state,
+                onEvent = onEvent,
+                effect = effect,
+            )
+        }
+    }
+}
+
+@Composable
+private fun DetailComponent(
+    state: DetailCategoryUiState,
+    onEvent: OnEvent,
+    effect: DetailCategoryUiEffect,
+) {
+    var showBottomSheet by remember { mutableStateOf(false) }
+
+    LaunchedEffect(effect) {
+        when (effect) {
+            DetailCategoryUiEffect.ShowSubCategoryAddModal -> showBottomSheet = true
+            DetailCategoryUiEffect.HideSubCategoryAddModal -> showBottomSheet = false
+            else -> Unit
+        }
+    }
+
+    Spacer(modifier = Modifier.height(16.dp))
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Avatar(
+            image = AvatarImage.Icon(icon = Icons.Filled.Home),
+            avatarSize = AvatarSize.Large,
+        )
+        TextInput(
+            label = stringResource(R.string.category_name_placeholder),
+            value = state.categoryName,
+            onValueChange = {
+                onEvent(DetailCategoryUiEvent.CategoryNameChanged(it))
+            },
+        )
+        CategoryTypeSelector(
+            selectedType = state.type,
+            onTypeSelected = {
+                onEvent(DetailCategoryUiEvent.TypeChanged(it))
+            },
+        )
+        SubCategories(
+            subCategories = state.subCategories,
+            onAddClick = {
+                onEvent(DetailCategoryUiEvent.ShowSubCategoryAddModal)
+            },
+            onRemoveClick = {
+                onEvent(DetailCategoryUiEvent.SubCategoryRemove(it))
+            },
+        )
+        PrimaryButton(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            text = stringResource(R.string.save),
+            onClick = {
+                onEvent(DetailCategoryUiEvent.Submit)
+            },
+        )
+    }
+    if (showBottomSheet) {
+        SubCategoryModal(
+            onEvent = onEvent,
+            onClose = {
+                onEvent(DetailCategoryUiEvent.HideSubCategoryAddModal)
+            },
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SubCategoryModal(
+    onEvent: OnEvent,
+    onClose: () -> Unit,
+) {
+    val sheetState: SheetState = rememberModalBottomSheetState()
+    val scope: CoroutineScope = rememberCoroutineScope()
+    var newSubCategoryName by remember { mutableStateOf("") }
+    ModalBottomSheet(
+        onDismissRequest = onClose,
+        sheetState = sheetState,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp), // Padding for content within the sheet
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Avatar(
-                image = AvatarImage.Icon(icon = Icons.Filled.Home),
-                avatarSize = AvatarSize.Large,
+            Text(
+                stringResource(R.string.modal_title_new_sub_category),
+                style = MaterialTheme.typography.titleLarge,
             )
             TextInput(
-                label = stringResource(R.string.category_name_placeholder),
-                value = categoryName,
-                onValueChange = { categoryName = it },
-            )
-            CategoryTypeSelector(
-                selectedType = categoryType,
-                onTypeSelected = {
-                    categoryType = it
-                },
-            )
-            SubCategories(
-                subCategories = subCategories,
-                onAdd = {
-                    subCategories.add(UUID.randomUUID().toString())
-                },
-                onRemove = {
-                    subCategories.remove(it)
-                },
+                label = stringResource(R.string.category_name),
+                value = newSubCategoryName,
+                onValueChange = { newSubCategoryName = it },
+                modifier = Modifier.fillMaxWidth(),
             )
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
-                text = stringResource(R.string.save),
-                onClick = onBack,
+                text = stringResource(R.string.add),
+                enabled = newSubCategoryName.isNotBlank(),
+                onClick = {
+                    if (newSubCategoryName.isNotBlank()) {
+                        onEvent(DetailCategoryUiEvent.SubCategoryAdd(newSubCategoryName))
+                    }
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            onClose()
+                        }
+                    }
+                },
             )
         }
     }
@@ -104,9 +207,9 @@ fun DetailCategoryScreen(
 
 @Composable
 private fun SubCategories(
-    subCategories: List<String>,
-    onAdd: () -> Unit,
-    onRemove: (String) -> Unit,
+    subCategories: List<DetailCategoryUiState.SubCategory>,
+    onAddClick: () -> Unit,
+    onRemoveClick: (DetailCategoryUiState.SubCategory) -> Unit,
 ) {
     Column {
         Row(
@@ -119,7 +222,7 @@ private fun SubCategories(
                 style = MaterialTheme.typography.bodyMedium,
             )
             FilledTonalIconButton(
-                onClick = { onAdd() },
+                onClick = onAddClick,
                 colors = IconButtonDefaults.filledTonalIconButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -134,28 +237,28 @@ private fun SubCategories(
         Spacer(modifier = Modifier.height(16.dp))
         SubCategoriesList(
             data = subCategories,
-            onRemove = onRemove,
+            onRemove = onRemoveClick,
         )
     }
 }
 
 @Composable
 private fun SubCategoriesList(
-    data: List<String>,
-    onRemove: (String) -> Unit,
+    data: List<DetailCategoryUiState.SubCategory>,
+    onRemove: (DetailCategoryUiState.SubCategory) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        items(count = data.size, key = { index -> data[index] }) {
+        items(count = data.size, key = { index -> data[index].name }) {
             ListItem(
                 modifier = Modifier.clip(MaterialTheme.shapes.small),
                 colors = ListItemDefaults.colors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                 ),
                 headlineContent = {
-                    Text(text = data[it], style = MaterialTheme.typography.bodyMedium)
+                    Text(text = data[it].name, style = MaterialTheme.typography.bodyMedium)
                 },
                 trailingContent = {
                     FilledTonalIconButton(
@@ -180,10 +283,17 @@ private fun SubCategoriesList(
 
 @Composable
 private fun CategoryTypeSelector(
-    selectedType: CategoryType,
-    onTypeSelected: (CategoryType) -> Unit,
+    selectedType: TransactionType,
+    onTypeSelected: (TransactionType) -> Unit,
 ) {
-    val options by remember { mutableStateOf(listOf(CategoryType.EXPENSE, CategoryType.INCOME)) }
+    val options by remember {
+        mutableStateOf(
+            listOf(
+                TransactionType.EXPENSE,
+                TransactionType.INCOME,
+            ),
+        )
+    }
 
     SingleChoiceSegmentedButtonRow(
         modifier = Modifier.fillMaxWidth(),
@@ -198,7 +308,7 @@ private fun CategoryTypeSelector(
                 selected = type == selectedType,
                 label = {
                     Text(
-                        text = stringResource(type.title),
+                        text = TransactionTypeFormatter.format(type),
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 },
@@ -212,7 +322,9 @@ private fun CategoryTypeSelector(
 private fun Preview() {
     AppThemePreview {
         DetailCategoryScreen(
-            onBack = {},
+            state = DetailCategoryUiState(),
+            onEvent = {},
+            effect = DetailCategoryUiEffect.Idle,
         )
     }
 }

@@ -45,7 +45,7 @@ internal interface UiEffectBehavior<T> {
  *
  * @param T The type of the effect that will be handled.
  */
-internal class UiEffectBehaviorImpl<T> : UiEffectBehavior<T> {
+internal class DefaultUiEffectBehavior<T> : UiEffectBehavior<T> {
     /**
      * The underlying [Channel] used to send and receive effects.
      * It's configured as a rendezvous channel by default (no buffering), meaning `send` will suspend
@@ -67,7 +67,7 @@ internal class UiEffectBehaviorImpl<T> : UiEffectBehavior<T> {
      * @param effect The effect to be sent.
      */
     override suspend fun sendEffect(effect: T) {
-        effect?.let { appLogger.d("sendEffect: ${it::class.simpleName}") }
+        effect?.let { appLogger.v("sendEffect: ${it::class.simpleName}") }
         _effect.send(effect)
     }
 }

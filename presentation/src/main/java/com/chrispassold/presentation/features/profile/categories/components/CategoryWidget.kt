@@ -22,8 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.chrispassold.presentation.extensions.PreviewUiModes
 import com.chrispassold.presentation.components.containers.Widget
+import com.chrispassold.presentation.extensions.PreviewUiModes
 import com.chrispassold.presentation.theme.AppThemePreview
 
 @Composable
@@ -32,12 +32,10 @@ fun CategoryWidget(
     iconContentDescription: String,
     subCategoriesCount: Int,
     name: String,
-    onClick: (name: String) -> Unit,
+    onClick: () -> Unit,
 ) {
     Widget(
-        onClick = {
-            onClick(name)
-        },
+        onClick = onClick,
     ) {
         Column(
             modifier = Modifier

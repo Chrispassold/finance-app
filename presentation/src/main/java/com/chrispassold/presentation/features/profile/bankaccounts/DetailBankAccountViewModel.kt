@@ -4,12 +4,11 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.chrispassold.core.appLogger
 import com.chrispassold.domain.models.BankAccountType
 import com.chrispassold.domain.usecases.bankaccount.CreateOrUpdateBankAccountUseCase
 import com.chrispassold.domain.usecases.bankaccount.GetBankAccountUseCase
+import com.chrispassold.presentation.common.DefaultUiEffectBehavior
 import com.chrispassold.presentation.common.UiEffectBehavior
-import com.chrispassold.presentation.common.UiEffectBehaviorImpl
 import com.chrispassold.presentation.common.UiEventBehavior
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,7 +54,7 @@ class DetailBankAccountViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val createOrUpdateBankAccountUseCase: CreateOrUpdateBankAccountUseCase,
     private val getBankAccountUseCase: GetBankAccountUseCase,
-) : ViewModel(), UiEffectBehavior<DetailBankAccountUiEffect> by UiEffectBehaviorImpl(),
+) : ViewModel(), UiEffectBehavior<DetailBankAccountUiEffect> by DefaultUiEffectBehavior(),
     UiEventBehavior<DetailBankAccountUiEvent> {
 
     private val bankAccountId: String? = savedStateHandle["bankAccountId"]
@@ -66,7 +65,7 @@ class DetailBankAccountViewModel @Inject constructor(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = DetailBankAccountUiState(),
+        initialValue = DetailBankAccountUiState(isLoading = true),
     )
 
     override fun onEvent(event: DetailBankAccountUiEvent) {
@@ -103,11 +102,9 @@ class DetailBankAccountViewModel @Inject constructor(
 
     private fun loadBankAccount(id: String) {
         viewModelScope.launch {
-            appLogger.d("Loading banking account with id: $id")
             _state.value = _state.value.copy(isLoading = true)
             getBankAccountUseCase.invoke(GetBankAccountUseCase.Params(bankAccountId = id))
                 .onSuccess { bankAccount ->
-                    appLogger.d("Loaded banking account: $bankAccount")
                     _state.value = _state.value.copy(
                         bankAccountName = bankAccount.name,
                         initialValue = bankAccount.initialAmount,

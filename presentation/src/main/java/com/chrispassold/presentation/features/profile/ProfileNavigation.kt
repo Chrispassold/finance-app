@@ -17,7 +17,11 @@ import com.chrispassold.presentation.features.profile.bankaccounts.ListBankAccou
 import com.chrispassold.presentation.features.profile.bankaccounts.ListBankAccountViewModel
 import com.chrispassold.presentation.features.profile.bankaccounts.ListBankAccountsScreen
 import com.chrispassold.presentation.features.profile.categories.DetailCategoryScreen
+import com.chrispassold.presentation.features.profile.categories.DetailCategoryUiEffect
+import com.chrispassold.presentation.features.profile.categories.DetailCategoryViewModel
 import com.chrispassold.presentation.features.profile.categories.ListCategoriesScreen
+import com.chrispassold.presentation.features.profile.categories.ListCategoriesUiEffect
+import com.chrispassold.presentation.features.profile.categories.ListCategoriesViewModel
 import com.chrispassold.presentation.features.profile.personalinformation.PersonalInformationScreen
 import kotlinx.serialization.Serializable
 
@@ -42,7 +46,7 @@ private data object CategoriesDestination {
     data object List
 
     @Serializable
-    data object Detail
+    data class Detail(val categoryId: String? = null)
 }
 
 @Serializable
@@ -130,20 +134,54 @@ private fun NavGraphBuilder.bankAccounts(navController: NavController) {
 private fun NavGraphBuilder.categories(navController: NavController) {
     navigation<CategoriesDestination>(startDestination = CategoriesDestination.List) {
         composable<CategoriesDestination.List> {
+            val viewModel = hiltViewModel<ListCategoriesViewModel>()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            val effect by viewModel.effect.collectAsState(ListCategoriesUiEffect.Idle)
+
+            LaunchedEffect(effect) {
+                when (effect) {
+                    ListCategoriesUiEffect.NavigateBack -> {
+                        navController.popBackStack()
+                    }
+
+                    ListCategoriesUiEffect.NavigateNewCategory -> {
+                        navController.navigate(CategoriesDestination.Detail(null))
+                    }
+
+                    is ListCategoriesUiEffect.NavigateUpdateCategory -> {
+                        navController.navigate(CategoriesDestination.Detail((effect as ListCategoriesUiEffect.NavigateUpdateCategory).category.id))
+                    }
+
+                    else -> Unit
+                }
+            }
+
             ListCategoriesScreen(
-                onNewCategory = {
-                    navController.navigate(CategoriesDestination.Detail)
-                },
-                onBack = {
-                    navController.popBackStack()
-                },
+                state = state,
+                onEvent = viewModel::onEvent,
+                effect = effect,
             )
         }
+
         composable<CategoriesDestination.Detail> {
+            val viewModel = hiltViewModel<DetailCategoryViewModel>()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            val effect by viewModel.effect.collectAsState(DetailCategoryUiEffect.Idle)
+
+            LaunchedEffect(effect) {
+                when (effect) {
+                    DetailCategoryUiEffect.NavigateBack -> {
+                        navController.popBackStack()
+                    }
+
+                    else -> Unit
+                }
+            }
+
             DetailCategoryScreen(
-                onBack = {
-                    navController.popBackStack()
-                },
+                state = state,
+                onEvent = viewModel::onEvent,
+                effect = effect,
             )
         }
     }

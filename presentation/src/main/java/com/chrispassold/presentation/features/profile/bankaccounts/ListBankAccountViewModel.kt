@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.chrispassold.core.appLogger
 import com.chrispassold.domain.models.BankAccount
 import com.chrispassold.domain.usecases.bankaccount.ListBankAccountsUseCase
+import com.chrispassold.presentation.common.DefaultUiEffectBehavior
 import com.chrispassold.presentation.common.UiEffectBehavior
-import com.chrispassold.presentation.common.UiEffectBehaviorImpl
 import com.chrispassold.presentation.common.UiEventBehavior
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,16 +46,14 @@ sealed interface ListBankAccountUiEffect {
 @HiltViewModel
 class ListBankAccountViewModel @Inject constructor(
     private val listBankAccountsUseCase: ListBankAccountsUseCase,
-) : ViewModel(), UiEffectBehavior<ListBankAccountUiEffect> by UiEffectBehaviorImpl(),
+) : ViewModel(), UiEffectBehavior<ListBankAccountUiEffect> by DefaultUiEffectBehavior(),
     UiEventBehavior<ListBankAccountUiEvent> {
 
     private val _state = MutableStateFlow(ListBankAccountUiState())
-    val state = _state.onStart {
-        list()
-    }.stateIn(
+    val state = _state.onStart { list() }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = ListBankAccountUiState(),
+        initialValue = ListBankAccountUiState( isLoading = true),
     )
 
     override fun onEvent(event: ListBankAccountUiEvent) {
@@ -80,17 +78,15 @@ class ListBankAccountViewModel @Inject constructor(
         }
     }
 
-    private fun list() {
-        viewModelScope.launch {
-            _state.value = _state.value.copy(isLoading = true)
-            listBankAccountsUseCase.invoke(
-                ListBankAccountsUseCase.Params(),
-            ).onSuccess {
-                _state.value = _state.value.copy(bankAccounts = it, isLoading = false)
-            }.onFailure {
-                _state.value = _state.value.copy(isLoading = false)
-                sendEffect(ListBankAccountUiEffect.ShowSnackBar("Error listing bank accounts: ${it.message}"))
-            }
+    private suspend fun list() {
+        _state.value = _state.value.copy(isLoading = true)
+        listBankAccountsUseCase.invoke(
+            ListBankAccountsUseCase.Params(),
+        ).onSuccess {
+            _state.value = _state.value.copy(bankAccounts = it, isLoading = false)
+        }.onFailure {
+            _state.value = _state.value.copy(isLoading = false)
+            sendEffect(ListBankAccountUiEffect.ShowSnackBar("Error listing bank accounts: ${it.message}"))
         }
     }
 
