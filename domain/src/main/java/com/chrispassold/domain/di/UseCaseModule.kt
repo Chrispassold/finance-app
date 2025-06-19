@@ -4,7 +4,8 @@ import com.chrispassold.domain.repositories.BankAccountRepository
 import com.chrispassold.domain.repositories.CategoryRepository
 import com.chrispassold.domain.repositories.TransactionRepository
 import com.chrispassold.domain.repositories.UserRepository
-import com.chrispassold.domain.usecases.bankaccount.CreateOrUpdateBankAccountUseCase
+import com.chrispassold.domain.usecases.bankaccount.CreateBankAccountUseCase
+import com.chrispassold.domain.usecases.bankaccount.UpdateBankAccountUseCase
 import com.chrispassold.domain.usecases.bankaccount.GetBankAccountUseCase
 import com.chrispassold.domain.usecases.bankaccount.ListBankAccountsUseCase
 import com.chrispassold.domain.usecases.category.CreateCategoryUseCase
@@ -50,9 +51,18 @@ object UseCaseModule {
     fun provideCreateBankAccountUseCase(
         bankAccountRepository: BankAccountRepository,
         userRepository: UserRepository,
+    ): CreateBankAccountUseCase = CreateBankAccountUseCase(
+        bankAccountRepository = bankAccountRepository,
+        userRepository = userRepository,
+    )
+
+    @Provides
+    fun provideUpdateBankAccountUseCase(
+        bankAccountRepository: BankAccountRepository,
+        userRepository: UserRepository,
         getBankAccountUseCase: GetBankAccountUseCase,
-    ): CreateOrUpdateBankAccountUseCase {
-        return CreateOrUpdateBankAccountUseCase(
+    ): UpdateBankAccountUseCase {
+        return UpdateBankAccountUseCase(
             bankAccountRepository = bankAccountRepository,
             userRepository = userRepository,
             getBankAccountUseCase = getBankAccountUseCase,

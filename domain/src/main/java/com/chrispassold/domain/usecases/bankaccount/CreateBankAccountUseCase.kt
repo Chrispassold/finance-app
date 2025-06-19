@@ -10,9 +10,8 @@ import java.math.BigDecimal
 import java.util.UUID
 import javax.inject.Inject
 
-class CreateOrUpdateBankAccountUseCase @Inject constructor(
+class CreateBankAccountUseCase @Inject constructor(
     private val userRepository: UserRepository,
-    private val getBankAccountUseCase: GetBankAccountUseCase,
     private val bankAccountRepository: BankAccountRepository,
 ) {
 
@@ -22,7 +21,6 @@ class CreateOrUpdateBankAccountUseCase @Inject constructor(
         val hideFromBalance: Boolean,
         val type: BankAccountType?,
         val image: String?,
-        val id: String? = null,
     )
 
     suspend fun invoke(params: Params): Result<Unit> = resultWithContext(Dispatchers.IO) {
@@ -31,25 +29,15 @@ class CreateOrUpdateBankAccountUseCase @Inject constructor(
 
         val user = userRepository.getCurrentUser() ?: error("User not logged in")
 
-        if (params.id != null) {
-            getBankAccountUseCase.invoke(GetBankAccountUseCase.Params(params.id)).getOrThrow().copy(
-                name = params.name,
-                initialAmount = params.initialAmount,
-                hideFromBalance = params.hideFromBalance,
-                image = params.image,
-                type = params.type,
-            ).let { bankAccountRepository.update(it) }
-        } else {
-            BankAccount(
-                id = UUID.randomUUID().toString(),
-                name = params.name,
-                initialAmount = params.initialAmount,
-                hideFromBalance = params.hideFromBalance,
-                image = params.image,
-                userId = user.id,
-                type = params.type,
-            ).let { bankAccountRepository.insert(it) }
-        }
+        BankAccount(
+            id = UUID.randomUUID().toString(),
+            name = params.name,
+            initialAmount = params.initialAmount,
+            hideFromBalance = params.hideFromBalance,
+            image = params.image,
+            userId = user.id,
+            type = params.type,
+        ).let { bankAccountRepository.insert(it) }
     }
 
 }

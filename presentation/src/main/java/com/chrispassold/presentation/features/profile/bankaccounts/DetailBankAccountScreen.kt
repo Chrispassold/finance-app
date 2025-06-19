@@ -86,7 +86,7 @@ fun DetailBankAccountScreen(
                 )
                 TextInput(
                     label = stringResource(R.string.label_bank_account_name),
-                    value = state.bankAccountName ?: "",
+                    value = state.bankAccountName,
                     onValueChange = {
                         onEvent(DetailBankAccountUiEvent.BankAccountNameChanged(it))
                     },

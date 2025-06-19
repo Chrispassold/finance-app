@@ -5,8 +5,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chrispassold.domain.models.BankAccountType
-import com.chrispassold.domain.usecases.bankaccount.CreateOrUpdateBankAccountUseCase
+import com.chrispassold.domain.usecases.bankaccount.CreateBankAccountUseCase
 import com.chrispassold.domain.usecases.bankaccount.GetBankAccountUseCase
+import com.chrispassold.domain.usecases.bankaccount.UpdateBankAccountUseCase
 import com.chrispassold.presentation.common.DefaultUiEffectBehavior
 import com.chrispassold.presentation.common.UiEffectBehavior
 import com.chrispassold.presentation.common.UiEventBehavior
@@ -23,7 +24,7 @@ import javax.inject.Inject
 @Stable
 data class DetailBankAccountUiState(
     val isLoading: Boolean = false,
-    val bankAccountName: String? = null,
+    val bankAccountName: String = "",
     val initialValue: BigDecimal = BigDecimal.ZERO,
     val hideFromBalanceCheck: Boolean = false,
     val image: String? = null,
@@ -52,7 +53,8 @@ sealed interface DetailBankAccountUiEffect {
 @HiltViewModel
 class DetailBankAccountViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val createOrUpdateBankAccountUseCase: CreateOrUpdateBankAccountUseCase,
+    private val updateBankAccountUseCase: UpdateBankAccountUseCase,
+    private val createBankAccountUseCase: CreateBankAccountUseCase,
     private val getBankAccountUseCase: GetBankAccountUseCase,
 ) : ViewModel(), UiEffectBehavior<DetailBankAccountUiEffect> by DefaultUiEffectBehavior(),
     UiEventBehavior<DetailBankAccountUiEvent> {
@@ -96,7 +98,9 @@ class DetailBankAccountViewModel @Inject constructor(
                 _state.value = _state.value.copy(type = event.type)
             }
 
-            DetailBankAccountUiEvent.Submit -> createOrUpdate()
+            DetailBankAccountUiEvent.Submit -> if (bankAccountId == null) createBankAccount() else updateBankAccount(
+                bankAccountId,
+            )
         }
     }
 
@@ -120,12 +124,11 @@ class DetailBankAccountViewModel @Inject constructor(
         }
     }
 
-    private fun createOrUpdate() {
+    private fun createBankAccount() {
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true)
-            createOrUpdateBankAccountUseCase.invoke(
-                CreateOrUpdateBankAccountUseCase.Params(
-                    id = bankAccountId,
+            createBankAccountUseCase.invoke(
+                CreateBankAccountUseCase.Params(
                     name = state.value.bankAccountName,
                     initialAmount = state.value.initialValue,
                     hideFromBalance = state.value.hideFromBalanceCheck,
@@ -135,8 +138,31 @@ class DetailBankAccountViewModel @Inject constructor(
             ).onSuccess {
                 sendEffect(DetailBankAccountUiEffect.NavigateBack)
             }.onFailure {
-                _state.value = _state.value.copy(isLoading = false)
                 sendEffect(DetailBankAccountUiEffect.ShowSnackBar("Error creating bank account: ${it.message}"))
+            }.also {
+                _state.value = _state.value.copy(isLoading = false)
+            }
+        }
+    }
+
+    private fun updateBankAccount(id: String) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true)
+            updateBankAccountUseCase.invoke(
+                UpdateBankAccountUseCase.Params(
+                    id = id,
+                    name = state.value.bankAccountName,
+                    initialAmount = state.value.initialValue,
+                    hideFromBalance = state.value.hideFromBalanceCheck,
+                    image = state.value.image,
+                    type = state.value.type,
+                ),
+            ).onSuccess {
+                sendEffect(DetailBankAccountUiEffect.NavigateBack)
+            }.onFailure {
+                sendEffect(DetailBankAccountUiEffect.ShowSnackBar("Error creating bank account: ${it.message}"))
+            }.also {
+                _state.value = _state.value.copy(isLoading = false)
             }
         }
     }
