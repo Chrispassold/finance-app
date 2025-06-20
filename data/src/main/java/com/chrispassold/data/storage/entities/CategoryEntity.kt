@@ -5,6 +5,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.chrispassold.domain.models.IconTint
+import com.chrispassold.domain.models.IconType
 import com.chrispassold.domain.models.TransactionType
 
 @Entity(
@@ -26,8 +28,8 @@ data class CategoryEntity(
     @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "user_id") val userId: String,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "image") val image: String,
-    @ColumnInfo(name = "color") val color: String,
+    @ColumnInfo(name = "image") val image: IconType,
+    @ColumnInfo(name = "color") val color: IconTint,
     @ColumnInfo(name = "transaction_type") val type: TransactionType,
     @ColumnInfo(name = "parent_category_id") val parentCategoryId: String?,
 )

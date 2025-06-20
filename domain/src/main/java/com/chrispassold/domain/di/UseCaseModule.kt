@@ -5,12 +5,14 @@ import com.chrispassold.domain.repositories.CategoryRepository
 import com.chrispassold.domain.repositories.TransactionRepository
 import com.chrispassold.domain.repositories.UserRepository
 import com.chrispassold.domain.usecases.bankaccount.CreateBankAccountUseCase
-import com.chrispassold.domain.usecases.bankaccount.UpdateBankAccountUseCase
 import com.chrispassold.domain.usecases.bankaccount.GetBankAccountUseCase
 import com.chrispassold.domain.usecases.bankaccount.ListBankAccountsUseCase
+import com.chrispassold.domain.usecases.bankaccount.UpdateBankAccountUseCase
 import com.chrispassold.domain.usecases.category.CreateCategoryUseCase
+import com.chrispassold.domain.usecases.category.DeleteCategoryUseCase
 import com.chrispassold.domain.usecases.category.GetCategoryUseCase
 import com.chrispassold.domain.usecases.category.ListCategoriesUseCase
+import com.chrispassold.domain.usecases.category.UpdateCategoryUseCase
 import com.chrispassold.domain.usecases.login.SignInUseCase
 import com.chrispassold.domain.usecases.login.SignUpUseCase
 import com.chrispassold.domain.usecases.transaction.CreateTransactionUseCase
@@ -93,9 +95,31 @@ object UseCaseModule {
     @Provides
     fun provideCreateCategoryUseCase(
         categoryRepository: CategoryRepository,
+        userRepository: UserRepository,
     ): CreateCategoryUseCase {
         return CreateCategoryUseCase(
             categoryRepository = categoryRepository,
+            userRepository = userRepository,
+        )
+    }
+
+    @Provides
+    fun provideDeleteCategoryUseCase(
+        categoryRepository: CategoryRepository,
+    ): DeleteCategoryUseCase {
+        return DeleteCategoryUseCase(
+            categoryRepository = categoryRepository,
+        )
+    }
+
+    @Provides
+    fun provideUpdateCategoryUseCase(
+        categoryRepository: CategoryRepository,
+        userRepository: UserRepository,
+    ): UpdateCategoryUseCase {
+        return UpdateCategoryUseCase(
+            categoryRepository = categoryRepository,
+            userRepository = userRepository,
         )
     }
 

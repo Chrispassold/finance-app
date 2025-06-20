@@ -12,6 +12,8 @@ import com.chrispassold.data.storage.entities.TransactionEntity
 import com.chrispassold.data.storage.entities.typeconverters.BankAccountTypeConverter
 import com.chrispassold.data.storage.entities.typeconverters.BigCentsConverter
 import com.chrispassold.data.storage.entities.typeconverters.BigDecimalConverter
+import com.chrispassold.data.storage.entities.typeconverters.IconTintConverter
+import com.chrispassold.data.storage.entities.typeconverters.IconTypeConverter
 import com.chrispassold.data.storage.entities.typeconverters.InstantConverter
 import com.chrispassold.data.storage.entities.typeconverters.TransactionTypeConverter
 
@@ -26,6 +28,8 @@ import com.chrispassold.data.storage.entities.typeconverters.TransactionTypeConv
     InstantConverter::class,
     TransactionTypeConverter::class,
     BankAccountTypeConverter::class,
+    IconTintConverter::class,
+    IconTypeConverter::class,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bankAccountDao(): BankAccountDao

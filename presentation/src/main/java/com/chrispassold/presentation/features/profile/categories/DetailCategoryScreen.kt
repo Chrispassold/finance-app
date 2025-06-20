@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
@@ -49,6 +48,8 @@ import com.chrispassold.presentation.components.containers.ScreenContainer
 import com.chrispassold.presentation.components.inputs.TextInput
 import com.chrispassold.presentation.components.progress.FullScreenCircularIndicator
 import com.chrispassold.presentation.extensions.PreviewUiModes
+import com.chrispassold.presentation.formatters.IconTintFormatter
+import com.chrispassold.presentation.formatters.IconTypeFormatter
 import com.chrispassold.presentation.formatters.TransactionTypeFormatter
 import com.chrispassold.presentation.theme.AppThemePreview
 import kotlinx.coroutines.CoroutineScope
@@ -113,8 +114,9 @@ private fun DetailComponent(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Avatar(
-            image = AvatarImage.Icon(icon = Icons.Filled.Home),
+            image = AvatarImage.Icon(icon = IconTypeFormatter.format(state.image)),
             avatarSize = AvatarSize.Large,
+            color = IconTintFormatter.format(state.color),
         )
         TextInput(
             label = stringResource(R.string.category_name_placeholder),

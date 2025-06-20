@@ -4,25 +4,29 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chrispassold.domain.models.IconTint
+import com.chrispassold.domain.models.IconType
 import com.chrispassold.domain.models.TransactionType
+import com.chrispassold.domain.usecases.category.CreateCategoryUseCase
 import com.chrispassold.domain.usecases.category.GetCategoryUseCase
+import com.chrispassold.domain.usecases.category.UpdateCategoryUseCase
 import com.chrispassold.presentation.common.DefaultUiEffectBehavior
 import com.chrispassold.presentation.common.UiEffectBehavior
 import com.chrispassold.presentation.common.UiEventBehavior
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @Stable
 data class DetailCategoryUiState(
     val isLoading: Boolean = false,
     val categoryName: String = "",
-    val image: String? = null,
-    val color: String? = null,
+    val image: IconType = IconType.Generic,
+    val color: IconTint = IconTint.DEFAULT,
     val type: TransactionType = TransactionType.EXPENSE,
     val subCategories: List<SubCategory> = emptyList(),
 ) {
@@ -35,8 +39,8 @@ data class DetailCategoryUiState(
 sealed interface DetailCategoryUiEvent {
     data object OnBack : DetailCategoryUiEvent
     data class CategoryNameChanged(val categoryName: String) : DetailCategoryUiEvent
-    data class ImageChanged(val image: String) : DetailCategoryUiEvent
-    data class ColorChanged(val color: String) : DetailCategoryUiEvent
+    data class ImageChanged(val image: IconType) : DetailCategoryUiEvent
+    data class ColorChanged(val color: IconTint) : DetailCategoryUiEvent
     data class TypeChanged(val type: TransactionType) : DetailCategoryUiEvent
     data object ShowSubCategoryAddModal : DetailCategoryUiEvent
     data object HideSubCategoryAddModal : DetailCategoryUiEvent
@@ -53,13 +57,15 @@ sealed interface DetailCategoryUiEffect {
     object NavigateBack : DetailCategoryUiEffect
     data object ShowSubCategoryAddModal : DetailCategoryUiEffect
     data object HideSubCategoryAddModal : DetailCategoryUiEffect
-    data class ShowSnackBar(val message: String) : DetailCategoryUiEffect
+    class ShowSnackBar(val message: String) : DetailCategoryUiEffect
 }
 
 @HiltViewModel
 class DetailCategoryViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getCategoryUseCase: GetCategoryUseCase,
+    private val updateCategoryUseCase: UpdateCategoryUseCase,
+    private val createCategoryUseCase: CreateCategoryUseCase,
 ) : ViewModel(), UiEventBehavior<DetailCategoryUiEvent>,
     UiEffectBehavior<DetailCategoryUiEffect> by DefaultUiEffectBehavior() {
 
@@ -122,7 +128,9 @@ class DetailCategoryViewModel @Inject constructor(
 
                 DetailCategoryUiEvent.ShowSubCategoryAddModal -> sendEffect(DetailCategoryUiEffect.ShowSubCategoryAddModal)
                 DetailCategoryUiEvent.HideSubCategoryAddModal -> sendEffect(DetailCategoryUiEffect.HideSubCategoryAddModal)
-                DetailCategoryUiEvent.Submit -> Unit //todo
+                DetailCategoryUiEvent.Submit -> if (categoryId.isNullOrBlank()) create() else update(
+                    categoryId
+                )
             }
         }
     }
@@ -151,7 +159,53 @@ class DetailCategoryViewModel @Inject constructor(
             }
     }
 
-    private fun create(){
-        // todo
+    private fun create() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true)
+            createCategoryUseCase.invoke(
+                params = CreateCategoryUseCase.Params(
+                    name = _state.value.categoryName,
+                    image = _state.value.image,
+                    color = _state.value.color,
+                    type = _state.value.type,
+                    subCategories = _state.value.subCategories.map {
+                        CreateCategoryUseCase.Params.SubCategory(
+                            name = it.name,
+                        )
+                    }),
+            ).onSuccess {
+                sendEffect(DetailCategoryUiEffect.NavigateBack)
+            }.onFailure {
+                sendEffect(DetailCategoryUiEffect.ShowSnackBar("Error creating category: ${it.message}"))
+            }.also {
+                _state.value = _state.value.copy(isLoading = false)
+            }
+        }
+    }
+
+    private fun update(id: String) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true)
+            updateCategoryUseCase.invoke(
+                params = UpdateCategoryUseCase.Params(
+                    id = id,
+                    name = _state.value.categoryName,
+                    image = _state.value.image,
+                    color = _state.value.color,
+                    type = _state.value.type,
+                    subCategories = _state.value.subCategories.map {
+                        UpdateCategoryUseCase.Params.SubCategory(
+                            id = it.id,
+                            name = it.name,
+                        )
+                    })
+            ).onSuccess {
+                sendEffect(DetailCategoryUiEffect.NavigateBack)
+            }.onFailure {
+                sendEffect(DetailCategoryUiEffect.ShowSnackBar("Error updating category: ${it.message}"))
+            }.also {
+                _state.value = _state.value.copy(isLoading = false)
+            }
+        }
     }
 }
