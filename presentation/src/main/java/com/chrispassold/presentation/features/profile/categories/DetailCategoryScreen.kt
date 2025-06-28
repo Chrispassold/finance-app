@@ -1,5 +1,6 @@
 package com.chrispassold.presentation.features.profile.categories
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -101,8 +102,8 @@ private fun DetailComponent(
 
     LaunchedEffect(effect) {
         when (effect) {
-            DetailCategoryUiEffect.ShowSubCategoryAddModal -> showBottomSheet = true
-            DetailCategoryUiEffect.HideSubCategoryAddModal -> showBottomSheet = false
+            is DetailCategoryUiEffect.ShowSubCategoryModal -> showBottomSheet = true
+            DetailCategoryUiEffect.HideSubCategoryModal -> showBottomSheet = false
             else -> Unit
         }
     }
@@ -131,15 +132,13 @@ private fun DetailComponent(
                 onEvent(DetailCategoryUiEvent.TypeChanged(it))
             },
         )
-        SubCategories(
-            subCategories = state.subCategories,
-            onAddClick = {
-                onEvent(DetailCategoryUiEvent.ShowSubCategoryAddModal)
-            },
-            onRemoveClick = {
-                onEvent(DetailCategoryUiEvent.SubCategoryRemove(it))
-            },
-        )
+        SubCategories(subCategories = state.subCategories, onAdd = {
+            onEvent(DetailCategoryUiEvent.ShowSubCategoryModal(null))
+        }, onRemove = {
+            onEvent(DetailCategoryUiEvent.SubCategoryRemove(it))
+        }, onEdit = {
+            onEvent(DetailCategoryUiEvent.ShowSubCategoryModal(it))
+        })
         PrimaryButton(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.save),
@@ -150,9 +149,10 @@ private fun DetailComponent(
     }
     if (showBottomSheet) {
         SubCategoryModal(
+            subCategory = (effect as? DetailCategoryUiEffect.ShowSubCategoryModal)?.subCategory,
             onEvent = onEvent,
             onClose = {
-                onEvent(DetailCategoryUiEvent.HideSubCategoryAddModal)
+                onEvent(DetailCategoryUiEvent.HideSubCategoryModal)
             },
         )
     }
@@ -161,12 +161,13 @@ private fun DetailComponent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SubCategoryModal(
+    subCategory: DetailCategoryUiState.SubCategory?,
     onEvent: OnEvent,
     onClose: () -> Unit,
 ) {
     val sheetState: SheetState = rememberModalBottomSheetState()
     val scope: CoroutineScope = rememberCoroutineScope()
-    var newSubCategoryName by remember { mutableStateOf("") }
+    var subCategoryName by remember { mutableStateOf(subCategory?.name ?: "") }
     ModalBottomSheet(
         onDismissRequest = onClose,
         sheetState = sheetState,
@@ -174,7 +175,7 @@ private fun SubCategoryModal(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp), // Padding for content within the sheet
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
@@ -184,17 +185,21 @@ private fun SubCategoryModal(
             )
             TextInput(
                 label = stringResource(R.string.category_name),
-                value = newSubCategoryName,
-                onValueChange = { newSubCategoryName = it },
+                value = subCategoryName,
+                onValueChange = { subCategoryName = it },
                 modifier = Modifier.fillMaxWidth(),
             )
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(R.string.add),
-                enabled = newSubCategoryName.isNotBlank(),
+                enabled = subCategoryName.isNotBlank(),
                 onClick = {
-                    if (newSubCategoryName.isNotBlank()) {
-                        onEvent(DetailCategoryUiEvent.SubCategoryAdd(newSubCategoryName))
+                    if (subCategoryName.isNotBlank()) {
+                        onEvent(
+                            DetailCategoryUiEvent.SubCategoryChange(
+                                subCategory?.id, subCategoryName
+                            )
+                        )
                     }
                     scope.launch { sheetState.hide() }.invokeOnCompletion {
                         if (!sheetState.isVisible) {
@@ -210,8 +215,9 @@ private fun SubCategoryModal(
 @Composable
 private fun SubCategories(
     subCategories: List<DetailCategoryUiState.SubCategory>,
-    onAddClick: () -> Unit,
-    onRemoveClick: (DetailCategoryUiState.SubCategory) -> Unit,
+    onAdd: () -> Unit,
+    onRemove: (DetailCategoryUiState.SubCategory) -> Unit,
+    onEdit: (DetailCategoryUiState.SubCategory) -> Unit
 ) {
     Column {
         Row(
@@ -224,7 +230,7 @@ private fun SubCategories(
                 style = MaterialTheme.typography.bodyMedium,
             )
             FilledTonalIconButton(
-                onClick = onAddClick,
+                onClick = onAdd,
                 colors = IconButtonDefaults.filledTonalIconButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -238,8 +244,7 @@ private fun SubCategories(
         }
         Spacer(modifier = Modifier.height(16.dp))
         SubCategoriesList(
-            data = subCategories,
-            onRemove = onRemoveClick,
+            data = subCategories, onRemove = onRemove, onEdit = onEdit
         )
     }
 }
@@ -248,6 +253,7 @@ private fun SubCategories(
 private fun SubCategoriesList(
     data: List<DetailCategoryUiState.SubCategory>,
     onRemove: (DetailCategoryUiState.SubCategory) -> Unit,
+    onEdit: (DetailCategoryUiState.SubCategory) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
@@ -255,7 +261,11 @@ private fun SubCategoriesList(
     ) {
         items(count = data.size, key = { index -> data[index].name }) {
             ListItem(
-                modifier = Modifier.clip(MaterialTheme.shapes.small),
+                modifier = Modifier
+                    .clip(MaterialTheme.shapes.small)
+                    .clickable {
+                        onEdit(data[it])
+                    },
                 colors = ListItemDefaults.colors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                 ),

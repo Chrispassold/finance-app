@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chrispassold.domain.models.Category
 import com.chrispassold.domain.models.IconTint
 import com.chrispassold.domain.models.IconType
 import com.chrispassold.domain.models.TransactionType
@@ -17,7 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -42,9 +42,12 @@ sealed interface DetailCategoryUiEvent {
     data class ImageChanged(val image: IconType) : DetailCategoryUiEvent
     data class ColorChanged(val color: IconTint) : DetailCategoryUiEvent
     data class TypeChanged(val type: TransactionType) : DetailCategoryUiEvent
-    data object ShowSubCategoryAddModal : DetailCategoryUiEvent
-    data object HideSubCategoryAddModal : DetailCategoryUiEvent
-    data class SubCategoryAdd(val subCategoryName: String) : DetailCategoryUiEvent
+    data class ShowSubCategoryModal(val subCategory: DetailCategoryUiState.SubCategory?) :
+        DetailCategoryUiEvent
+
+    data object HideSubCategoryModal : DetailCategoryUiEvent
+    data class SubCategoryChange(val id: String? = null, val subCategoryName: String) :
+        DetailCategoryUiEvent
 
     data class SubCategoryRemove(val subCategory: DetailCategoryUiState.SubCategory) :
         DetailCategoryUiEvent
@@ -55,8 +58,11 @@ sealed interface DetailCategoryUiEvent {
 sealed interface DetailCategoryUiEffect {
     object Idle : DetailCategoryUiEffect
     object NavigateBack : DetailCategoryUiEffect
-    data object ShowSubCategoryAddModal : DetailCategoryUiEffect
-    data object HideSubCategoryAddModal : DetailCategoryUiEffect
+    data class ShowSubCategoryModal(
+        val subCategory: DetailCategoryUiState.SubCategory?
+    ) : DetailCategoryUiEffect
+
+    data object HideSubCategoryModal : DetailCategoryUiEffect
     class ShowSnackBar(val message: String) : DetailCategoryUiEffect
 }
 
@@ -72,11 +78,17 @@ class DetailCategoryViewModel @Inject constructor(
     private val categoryId: String? = savedStateHandle["categoryId"]
 
     private val _state = MutableStateFlow(DetailCategoryUiState())
-    val state = _state.onStart { loadCategory() }.stateIn(
+    val state = _state.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = DetailCategoryUiState(),
     )
+
+    init {
+        viewModelScope.launch {
+            loadCategory()
+        }
+    }
 
     override fun onEvent(event: DetailCategoryUiEvent) {
         viewModelScope.launch {
@@ -98,13 +110,16 @@ class DetailCategoryViewModel @Inject constructor(
                     _state.value = _state.value.copy(type = event.type)
                 }
 
-                is DetailCategoryUiEvent.SubCategoryAdd -> {
+                is DetailCategoryUiEvent.SubCategoryChange -> {
                     if (_state.value.subCategories.none { it.name == event.subCategoryName }) {
                         _state.value = _state.value.copy(
                             subCategories = _state.value.subCategories.toMutableList().apply {
+                                if (event.id != null) {
+                                    removeIf { it.id == event.id }
+                                }
                                 add(
                                     DetailCategoryUiState.SubCategory(
-                                        id = null,
+                                        id = event.id,
                                         name = event.subCategoryName,
                                     ),
                                 )
@@ -126,8 +141,13 @@ class DetailCategoryViewModel @Inject constructor(
                 }
 
 
-                DetailCategoryUiEvent.ShowSubCategoryAddModal -> sendEffect(DetailCategoryUiEffect.ShowSubCategoryAddModal)
-                DetailCategoryUiEvent.HideSubCategoryAddModal -> sendEffect(DetailCategoryUiEffect.HideSubCategoryAddModal)
+                is DetailCategoryUiEvent.ShowSubCategoryModal -> sendEffect(
+                    DetailCategoryUiEffect.ShowSubCategoryModal(
+                        event.subCategory
+                    )
+                )
+
+                DetailCategoryUiEvent.HideSubCategoryModal -> sendEffect(DetailCategoryUiEffect.HideSubCategoryModal)
                 DetailCategoryUiEvent.Submit -> if (categoryId.isNullOrBlank()) create() else update(
                     categoryId
                 )
@@ -138,25 +158,26 @@ class DetailCategoryViewModel @Inject constructor(
     private suspend fun loadCategory() {
         if (categoryId.isNullOrBlank()) return
         _state.value = _state.value.copy(isLoading = true)
-        getCategoryUseCase.invoke(GetCategoryUseCase.Params(categoryId = categoryId))
-            .onSuccess { category ->
-                _state.value = _state.value.copy(
-                    isLoading = false,
-                    categoryName = category.name,
-                    image = category.image,
-                    color = category.color,
-                    type = category.type,
-                    subCategories = category.subCategories.map { subCategory ->
-                        DetailCategoryUiState.SubCategory(
-                            id = subCategory.id,
-                            name = subCategory.name,
-                        )
-                    },
-                )
-            }.onFailure {
-                _state.value = _state.value.copy(isLoading = false)
-                sendEffect(DetailCategoryUiEffect.ShowSnackBar("Error loading category: ${it.message}"))
-            }
+        getCategoryUseCase.invoke(GetCategoryUseCase.Params(categoryId = categoryId)).onFailure {
+            sendEffect(DetailCategoryUiEffect.ShowSnackBar("Error loading category: ${it.message}"))
+            _state.value = _state.value.copy(isLoading = false)
+            _state.value
+        }.onSuccess { category: Category? ->
+            if (category == null) return
+            _state.value = _state.value.copy(
+                isLoading = false,
+                categoryName = category.name,
+                image = category.image,
+                color = category.color,
+                type = category.type,
+                subCategories = category.subCategories.map { subCategory ->
+                    DetailCategoryUiState.SubCategory(
+                        id = subCategory.id,
+                        name = subCategory.name,
+                    )
+                },
+            )
+        }
     }
 
     private fun create() {
@@ -176,9 +197,8 @@ class DetailCategoryViewModel @Inject constructor(
             ).onSuccess {
                 sendEffect(DetailCategoryUiEffect.NavigateBack)
             }.onFailure {
-                sendEffect(DetailCategoryUiEffect.ShowSnackBar("Error creating category: ${it.message}"))
-            }.also {
                 _state.value = _state.value.copy(isLoading = false)
+                sendEffect(DetailCategoryUiEffect.ShowSnackBar("Error creating category: ${it.message}"))
             }
         }
     }
@@ -202,9 +222,8 @@ class DetailCategoryViewModel @Inject constructor(
             ).onSuccess {
                 sendEffect(DetailCategoryUiEffect.NavigateBack)
             }.onFailure {
-                sendEffect(DetailCategoryUiEffect.ShowSnackBar("Error updating category: ${it.message}"))
-            }.also {
                 _state.value = _state.value.copy(isLoading = false)
+                sendEffect(DetailCategoryUiEffect.ShowSnackBar("Error updating category: ${it.message}"))
             }
         }
     }

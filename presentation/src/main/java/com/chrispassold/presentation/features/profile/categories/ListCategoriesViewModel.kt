@@ -10,12 +10,15 @@ import com.chrispassold.presentation.common.DefaultUiEffectBehavior
 import com.chrispassold.presentation.common.UiEffectBehavior
 import com.chrispassold.presentation.common.UiEventBehavior
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @Stable
 data class ListCategoriesUiState(
@@ -42,16 +45,22 @@ sealed interface ListCategoriesUiEffect {
 
 @HiltViewModel
 class ListCategoriesViewModel @Inject constructor(
-    private val listCategoriesUseCase: ListCategoriesUseCase,
+    listCategoriesUseCase: ListCategoriesUseCase,
 ) : ViewModel(), UiEventBehavior<ListCategoriesUiEvent>,
     UiEffectBehavior<ListCategoriesUiEffect> by DefaultUiEffectBehavior() {
 
     private val _state = MutableStateFlow(ListCategoriesUiState())
-    val state = _state.onStart { list() }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = ListCategoriesUiState(),
-    )
+    val state: StateFlow<ListCategoriesUiState> = listCategoriesUseCase.invoke()
+        .onStart { _state.value = _state.value.copy(isLoading = true) }
+        .map {
+            _state.value = _state.value.copy(categories = it, isLoading = false)
+            _state.value
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = ListCategoriesUiState(),
+        )
 
     override fun onEvent(event: ListCategoriesUiEvent) {
         viewModelScope.launch {
@@ -68,16 +77,6 @@ class ListCategoriesViewModel @Inject constructor(
 
                 ListCategoriesUiEvent.OnNewClicked -> sendEffect(ListCategoriesUiEffect.NavigateNewCategory)
             }
-        }
-    }
-
-    private suspend fun list() {
-        _state.value = _state.value.copy(isLoading = true)
-        listCategoriesUseCase.invoke(params = ListCategoriesUseCase.Params()).onSuccess {
-            _state.value = _state.value.copy(categories = it, isLoading = false)
-        }.onFailure {
-            _state.value = _state.value.copy(isLoading = false)
-            sendEffect(ListCategoriesUiEffect.ShowSnackBar("Error listing categories: ${it.message}"))
         }
     }
 }

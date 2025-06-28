@@ -17,7 +17,6 @@ class GetCategoryUseCase @Inject constructor(
 
     suspend fun invoke(params: Params): Result<Category> = resultWithContext(Dispatchers.IO) {
         categoryRepository.get(params.categoryId)
-            ?: throw DataNotFoundException("Bank account not found")
+            ?: throw DataNotFoundException("Category not found")
     }
-
 }
