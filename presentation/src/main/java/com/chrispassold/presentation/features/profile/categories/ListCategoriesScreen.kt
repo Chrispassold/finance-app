@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.House
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,6 +23,7 @@ import com.chrispassold.presentation.components.progress.FullScreenCircularIndic
 import com.chrispassold.presentation.extensions.PreviewUiModes
 import com.chrispassold.presentation.features.profile.categories.components.CategoryWidget
 import com.chrispassold.presentation.features.profile.categories.components.ExpensesIncomesTabs
+import com.chrispassold.presentation.formatters.IconTypeFormatter
 import com.chrispassold.presentation.theme.AppTheme
 
 @Composable
@@ -95,9 +95,10 @@ private fun CategoryItemsContent(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items.forEach { category ->
+                val img = IconTypeFormatter.format(category.image)
                 CategoryWidget(
-                    icon = Icons.Filled.House,
-                    iconContentDescription = "House",
+                    icon = img,
+                    iconContentDescription = img.name,
                     subCategoriesCount = category.subCategories.size,
                     name = category.name,
                     onClick = { onClick(category) },

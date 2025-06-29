@@ -60,14 +60,14 @@ fun CategoryWidget(
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                if (subCategoriesCount > 0) {
-                    Badge(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    ) {
-                        Text("$subCategoriesCount", style = MaterialTheme.typography.labelSmall)
-                    }
-                }
+//                if (subCategoriesCount > 0) {
+//                    Badge(
+//                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+//                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+//                    ) {
+//                        Text("$subCategoriesCount", style = MaterialTheme.typography.labelSmall)
+//                    }
+//                }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row {

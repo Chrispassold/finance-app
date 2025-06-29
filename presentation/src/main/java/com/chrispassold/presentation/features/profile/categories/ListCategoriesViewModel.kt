@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -51,12 +50,10 @@ class ListCategoriesViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(ListCategoriesUiState())
     val state: StateFlow<ListCategoriesUiState> = listCategoriesUseCase.invoke()
-        .onStart { _state.value = _state.value.copy(isLoading = true) }
-        .map {
+        .onStart { _state.value = _state.value.copy(isLoading = true) }.map {
             _state.value = _state.value.copy(categories = it, isLoading = false)
             _state.value
-        }
-        .stateIn(
+        }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = ListCategoriesUiState(),
