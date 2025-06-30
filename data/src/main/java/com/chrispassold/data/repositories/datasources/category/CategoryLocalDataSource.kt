@@ -8,5 +8,5 @@ interface CategoryLocalDataSource {
     suspend fun update(bankAccount: Category)
     suspend fun delete(id: String)
     suspend fun get(id: String): Category?
-    fun getAllRoot(): Flow<List<Category>>
+    fun getAll(): Flow<List<Category>>
 }

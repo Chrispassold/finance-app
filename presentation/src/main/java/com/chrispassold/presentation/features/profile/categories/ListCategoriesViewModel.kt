@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chrispassold.domain.models.Category
 import com.chrispassold.domain.models.TransactionType
-import com.chrispassold.domain.usecases.category.ListCategoriesUseCase
+import com.chrispassold.domain.usecases.category.GetRootCategoriesUseCase
 import com.chrispassold.presentation.common.DefaultUiEffectBehavior
 import com.chrispassold.presentation.common.UiEffectBehavior
 import com.chrispassold.presentation.common.UiEventBehavior
@@ -44,12 +44,12 @@ sealed interface ListCategoriesUiEffect {
 
 @HiltViewModel
 class ListCategoriesViewModel @Inject constructor(
-    listCategoriesUseCase: ListCategoriesUseCase,
+    getRootCategoriesUseCase: GetRootCategoriesUseCase,
 ) : ViewModel(), UiEventBehavior<ListCategoriesUiEvent>,
     UiEffectBehavior<ListCategoriesUiEffect> by DefaultUiEffectBehavior() {
 
     private val _state = MutableStateFlow(ListCategoriesUiState())
-    val state: StateFlow<ListCategoriesUiState> = listCategoriesUseCase.invoke()
+    val state: StateFlow<ListCategoriesUiState> = getRootCategoriesUseCase.invoke()
         .onStart { _state.value = _state.value.copy(isLoading = true) }.map {
             _state.value = _state.value.copy(categories = it, isLoading = false)
             _state.value

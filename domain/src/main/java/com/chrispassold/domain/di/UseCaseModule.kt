@@ -11,7 +11,7 @@ import com.chrispassold.domain.usecases.bankaccount.UpdateBankAccountUseCase
 import com.chrispassold.domain.usecases.category.CreateCategoryUseCase
 import com.chrispassold.domain.usecases.category.DeleteCategoryUseCase
 import com.chrispassold.domain.usecases.category.GetCategoryUseCase
-import com.chrispassold.domain.usecases.category.ListCategoriesUseCase
+import com.chrispassold.domain.usecases.category.GetRootCategoriesUseCase
 import com.chrispassold.domain.usecases.category.UpdateCategoryUseCase
 import com.chrispassold.domain.usecases.login.SignInUseCase
 import com.chrispassold.domain.usecases.login.SignUpUseCase
@@ -126,8 +126,8 @@ object UseCaseModule {
     @Provides
     fun provideListCategoriesUseCase(
         categoryRepository: CategoryRepository,
-    ): ListCategoriesUseCase {
-        return ListCategoriesUseCase(
+    ): GetRootCategoriesUseCase {
+        return GetRootCategoriesUseCase(
             categoryRepository = categoryRepository,
         )
     }

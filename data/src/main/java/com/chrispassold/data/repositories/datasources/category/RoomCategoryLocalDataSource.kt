@@ -48,9 +48,9 @@ class RoomCategoryLocalDataSource @Inject constructor(
         }
     }
 
-    override fun getAllRoot(): Flow<List<Category>> {
+    override fun getAll(): Flow<List<Category>> {
         return try {
-            categoryDao.getRootCategories().map { list ->
+            categoryDao.getCategories().map { list ->
                 list.map { category ->
                     category.toDomain()
                 }

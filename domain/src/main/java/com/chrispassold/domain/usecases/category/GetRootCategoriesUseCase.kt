@@ -6,9 +6,13 @@ import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 
-class ListCategoriesUseCase @Inject constructor(
+class GetRootCategoriesUseCase @Inject constructor(
     private val categoryRepository: CategoryRepository,
 ) {
-    fun invoke(): Flow<List<Category>> = categoryRepository.categories.flowOn(Dispatchers.IO)
+    fun invoke(): Flow<List<Category>> =
+        categoryRepository.categories.flowOn(Dispatchers.IO).map { list ->
+            list.filter { it.parentCategoryId == null }
+        }
 }

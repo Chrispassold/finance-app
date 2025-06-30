@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 class CategoryRepositoryImpl @Inject constructor(
     val categoryLocalDataSource: CategoryLocalDataSource,
 ) : CategoryRepository {
-    override val categories: Flow<List<Category>> = categoryLocalDataSource.getAllRoot()
+    override val categories: Flow<List<Category>> = categoryLocalDataSource.getAll()
 
     override suspend fun insert(category: Category) {
         categoryLocalDataSource.insert(category)

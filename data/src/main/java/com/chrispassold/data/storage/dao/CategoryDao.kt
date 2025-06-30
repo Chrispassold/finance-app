@@ -22,8 +22,8 @@ interface CategoryDao {
     suspend fun deleteById(id: String)
 
     @Transaction
-    @Query("SELECT * FROM categories WHERE parent_category_id IS NULL")
-    fun getRootCategories(): Flow<List<CategoryWithSubCategoriesEntity>>
+    @Query("SELECT * FROM categories")
+    fun getCategories(): Flow<List<CategoryWithSubCategoriesEntity>>
 
     @Transaction
     @Query("SELECT * FROM categories WHERE id = :id")
