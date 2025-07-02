@@ -18,8 +18,6 @@ dependencyResolutionManagement {
     }
 }
 
-include(":app")
-include(":data")
-include(":domain")
-include(":presentation")
-include(":core")
+include(
+    ":app", ":data", ":domain", ":presentation", ":core"
+)
