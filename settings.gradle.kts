@@ -2,6 +2,7 @@ rootProject.name = "AskBuddy"
 rootProject.buildFileName = "build.gradle.kts"
 
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         gradlePluginPortal()
         google()
