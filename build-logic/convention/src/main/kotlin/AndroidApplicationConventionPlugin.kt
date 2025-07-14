@@ -17,6 +17,7 @@
 import com.android.build.api.dsl.ApplicationExtension
 import com.chrispassold.gradle.convention.configureKotlinAndroid
 import com.chrispassold.gradle.convention.extensions.libs
+import com.chrispassold.gradle.convention.extensions.pluginId
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
@@ -26,9 +27,9 @@ import org.gradle.kotlin.dsl.dependencies
 class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            apply(plugin = libs.findPlugin("android-application").get().get().pluginId)
-            apply(plugin = "org.jetbrains.kotlin.android")
-            apply(plugin = libs.findPlugin("ksp").get().get().pluginId)
+            apply(plugin = libs.pluginId("android-application"))
+
+            apply(plugin = libs.pluginId("ksp"))
 
             dependencies {
                 "implementation"(libs.findLibrary("kotlinx.datetime").get())

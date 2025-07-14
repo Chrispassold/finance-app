@@ -3,6 +3,7 @@ import com.android.build.gradle.LibraryExtension
 import com.chrispassold.gradle.convention.configureKotlinAndroid
 import com.chrispassold.gradle.convention.disableUnnecessaryAndroidTests
 import com.chrispassold.gradle.convention.extensions.libs
+import com.chrispassold.gradle.convention.extensions.pluginId
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
@@ -12,8 +13,8 @@ import org.gradle.kotlin.dsl.dependencies
 class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            apply(plugin = "com.android.library")
-            apply(plugin = "org.jetbrains.kotlin.android")
+            apply(plugin = libs.pluginId("android-library"))
+            apply(plugin = libs.pluginId("kotlin-android"))
 
             extensions.configure<LibraryExtension> {
                 // The resource prefix is derived from the module name,
