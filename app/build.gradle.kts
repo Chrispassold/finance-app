@@ -1,65 +1,19 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.hilt.application)
+    alias(libs.plugins.convention.android.application)
+    alias(libs.plugins.convention.android.application.compose)
+    alias(libs.plugins.convention.android.hilt)
 }
 
 android {
-    namespace = "com.chrispassold.askbuddy"
-    compileSdk = ProjectConfig.compileSdk
-
-    defaultConfig {
-        applicationId = ProjectConfig.appId
-        minSdk = ProjectConfig.minSdk
-        targetSdk = ProjectConfig.targetSdk
-        versionCode = ProjectConfig.versionCode
-        versionName = ProjectConfig.versionName
-
-        testInstrumentationRunner = ProjectConfig.testInstrumentationRunner
-    }
-
-    buildTypes {
-        debug {
-            isMinifyEnabled = false
-            applicationIdSuffix = ".debug"
-            isDebuggable = true
-        }
-        release {
-            isMinifyEnabled = false
-            isDebuggable = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
-            )
-        }
-    }
-    compileOptions {
-        sourceCompatibility = ProjectConfig.sourceCompatibility
-        targetCompatibility = ProjectConfig.targetCompatibility
-    }
-    kotlinOptions {
-        jvmTarget = ProjectConfig.jvmTarget
-    }
-    buildFeatures {
-        compose = false
-        buildConfig = true
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
+    namespace = ProjectConfig.appId
 }
 
 dependencies {
-    core()
-    data()
-    domain()
-    presentation()
+    implementation(project(":core"))
+    implementation(project(":data"))
+    implementation(project(":domain"))
+    implementation(project(":presentation"))
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.timber)
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
+//    implementation(libs.androidx.core.ktx)
+//    implementation(libs.timber)
 }

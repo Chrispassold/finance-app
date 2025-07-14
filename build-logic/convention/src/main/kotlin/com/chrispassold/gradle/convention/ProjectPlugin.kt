@@ -1,4 +1,4 @@
-package com.chrispassold.gradle
+package com.chrispassold.gradle.convention
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project

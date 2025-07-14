@@ -1,59 +1,18 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.hilt.application)
+    alias(libs.plugins.convention.android.feature)
+    alias(libs.plugins.convention.android.library.compose)
 }
 
 android {
     namespace = "com.chrispassold.presentation"
-    compileSdk = ProjectConfig.compileSdk
-
-    defaultConfig {
-        minSdk = ProjectConfig.minSdk
-
-        testInstrumentationRunner = ProjectConfig.testInstrumentationRunner
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
-            )
-        }
-    }
-    compileOptions {
-        sourceCompatibility = ProjectConfig.sourceCompatibility
-        targetCompatibility = ProjectConfig.targetCompatibility
-    }
-    kotlinOptions {
-        jvmTarget = ProjectConfig.jvmTarget
-    }
-    buildFeatures {
-        compose = true
-        buildConfig = true
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
 }
-dependencies {
-    core()
-    domain()
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.timber)
+dependencies {
+    implementation(project(":core"))
+    implementation(project(":domain"))
+
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.androidx.compose)
-    ksp(libs.hilt.androidx.compiler)
     implementation(libs.kotlinx.datetime)
 
     implementation(libs.androidx.appcompat)
