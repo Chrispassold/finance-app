@@ -16,6 +16,7 @@
 
 import androidx.room.gradle.RoomExtension
 import com.chrispassold.gradle.convention.extensions.libs
+import com.chrispassold.gradle.convention.extensions.pluginId
 import com.google.devtools.ksp.gradle.KspExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -27,8 +28,8 @@ class AndroidRoomConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
-            apply(plugin = "androidx.room")
-            apply(plugin = "com.google.devtools.ksp")
+            apply(plugin = libs.pluginId("room"))
+            apply(plugin = libs.pluginId("ksp"))
 
             extensions.configure<KspExtension> {
                 arg("room.generateKotlin", "true")
@@ -42,9 +43,11 @@ class AndroidRoomConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-//                "implementation"(libs.findLibrary("room.runtime").get())
-//                "implementation"(libs.findLibrary("room.ktx").get())
-//                "ksp"(libs.findLibrary("room.compiler").get())
+                "implementation"(libs.findLibrary("androidx.room.runtime").get())
+                "implementation"(libs.findLibrary("androidx.room.ktx").get())
+                "implementation"(libs.findLibrary("kotlinx.serialization.json").get())
+                "testImplementation"(libs.findLibrary("androidx.room.testing").get())
+                "ksp"(libs.findLibrary("androidx.room.compiler").get())
             }
         }
     }

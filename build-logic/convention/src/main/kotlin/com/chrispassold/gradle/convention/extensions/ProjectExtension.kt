@@ -7,3 +7,5 @@ import org.gradle.kotlin.dsl.getByType
 
 val Project.libs
     get(): VersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
+
+fun VersionCatalog.pluginId(pluginId: String) = findPlugin(pluginId).get().get().pluginId

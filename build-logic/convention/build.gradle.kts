@@ -97,7 +97,7 @@ gradlePlugin {
     plugins {
         register("androidHilt") {
             id = libs.plugins.convention.android.hilt.get().pluginId
-            implementationClass = "HiltConventionPlugin"
+            implementationClass = "AndroidHiltConventionPlugin"
         }
     }
 
