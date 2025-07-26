@@ -33,7 +33,7 @@ import com.chrispassold.presentation.components.avatars.Avatar
 import com.chrispassold.presentation.components.avatars.AvatarImage
 import com.chrispassold.presentation.components.avatars.AvatarSize
 import com.chrispassold.presentation.components.buttons.PrimaryButton
-import com.chrispassold.presentation.components.containers.ScreenContainer
+import com.chrispassold.presentation.components.containers.AppScaffold
 import com.chrispassold.presentation.components.inputs.MoneyInput
 import com.chrispassold.presentation.components.inputs.TextInput
 import com.chrispassold.presentation.components.progress.FullScreenCircularIndicator
@@ -64,7 +64,7 @@ fun DetailBankAccountScreen(
         }
     }
 
-    ScreenContainer(
+    AppScaffold(
         snackbarHostState = snackbarHostState,
         appBarTitle = stringResource(R.string.bank_accounts_screen_title),
         onBack = {

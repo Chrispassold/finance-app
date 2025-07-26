@@ -12,14 +12,14 @@ import com.chrispassold.presentation.common.DefaultUiEffectBehavior
 import com.chrispassold.presentation.common.UiEffectBehavior
 import com.chrispassold.presentation.common.UiEventBehavior
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.math.BigDecimal
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
-import javax.inject.Inject
 
 @Stable
 data class DetailBankAccountUiState(
@@ -139,7 +139,6 @@ class DetailBankAccountViewModel @Inject constructor(
                 sendEffect(DetailBankAccountUiEffect.NavigateBack)
             }.onFailure {
                 sendEffect(DetailBankAccountUiEffect.ShowSnackBar("Error creating bank account: ${it.message}"))
-            }.also {
                 _state.value = _state.value.copy(isLoading = false)
             }
         }
@@ -161,7 +160,6 @@ class DetailBankAccountViewModel @Inject constructor(
                 sendEffect(DetailBankAccountUiEffect.NavigateBack)
             }.onFailure {
                 sendEffect(DetailBankAccountUiEffect.ShowSnackBar("Error creating bank account: ${it.message}"))
-            }.also {
                 _state.value = _state.value.copy(isLoading = false)
             }
         }

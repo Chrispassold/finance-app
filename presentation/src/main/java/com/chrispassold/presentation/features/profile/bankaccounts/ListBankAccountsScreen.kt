@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.chrispassold.core.appLogger
 import com.chrispassold.domain.models.BankAccountType
 import com.chrispassold.presentation.R
-import com.chrispassold.presentation.components.containers.ScreenContainer
+import com.chrispassold.presentation.components.containers.AppScaffold
 import com.chrispassold.presentation.components.progress.FullScreenCircularIndicator
 import com.chrispassold.presentation.components.tags.Tag
 import com.chrispassold.presentation.extensions.PreviewUiModes
@@ -61,7 +61,7 @@ fun ListBankAccountsScreen(
         }
     }
 
-    ScreenContainer(
+    AppScaffold(
         snackbarHostState = snackbarHostState,
         appBarTitle = stringResource(R.string.bank_accounts_screen_title),
         onBack = {

@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.chrispassold.domain.models.Category
 import com.chrispassold.presentation.R
-import com.chrispassold.presentation.components.containers.ScreenContainer
+import com.chrispassold.presentation.components.containers.AppScaffold
 import com.chrispassold.presentation.components.progress.FullScreenCircularIndicator
 import com.chrispassold.presentation.extensions.PreviewUiModes
 import com.chrispassold.presentation.features.profile.categories.components.CategoryWidget
@@ -44,7 +44,7 @@ fun ListCategoriesScreen(
         }
     }
 
-    ScreenContainer(
+    AppScaffold(
         snackbarHostState = snackbarHostState,
         appBarTitle = stringResource(R.string.categories),
         onBack = {

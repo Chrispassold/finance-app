@@ -29,7 +29,7 @@ import com.chrispassold.presentation.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScreenContainer(
+fun AppScaffold(
     modifier: Modifier = Modifier,
     appBarTitle: String? = null,
     onBack: (() -> Unit)? = null,
@@ -123,7 +123,7 @@ private fun AppBar(
 @Composable
 private fun Preview() {
     AppTheme {
-        ScreenContainer(
+        AppScaffold(
             appBarTitle = "My App Screen",
             onBack = { /* Handle back navigation */ },
             onRightAction = { /* Handle right action */ },

@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.chrispassold.domain.models.LoginOption
 import com.chrispassold.domain.models.SocialMediaOption
 import com.chrispassold.presentation.R
-import com.chrispassold.presentation.components.containers.ScreenContainer
+import com.chrispassold.presentation.components.containers.AppScaffold
 import com.chrispassold.presentation.components.separators.SeparatorWithText
 import com.chrispassold.presentation.extensions.PreviewUiModes
 import com.chrispassold.presentation.features.login.components.LoginFooterMessage
@@ -40,7 +40,7 @@ private fun InternalScreen(
     onAlreadyHaveAccount: () -> Unit,
     onSignUp: (LoginOption) -> Unit,
 ) {
-    ScreenContainer {
+    AppScaffold {
         Text(
             text = stringResource(R.string.sign_up_greeting),
             style = MaterialTheme.typography.displayMedium,

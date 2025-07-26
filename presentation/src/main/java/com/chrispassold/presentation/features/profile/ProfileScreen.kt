@@ -30,7 +30,7 @@ import com.chrispassold.presentation.extensions.whenPreview
 import com.chrispassold.presentation.components.avatars.Avatar
 import com.chrispassold.presentation.components.avatars.AvatarImage
 import com.chrispassold.presentation.components.avatars.AvatarSize
-import com.chrispassold.presentation.components.containers.ScreenContainer
+import com.chrispassold.presentation.components.containers.AppScaffold
 import com.chrispassold.presentation.components.items.ListItem
 import com.chrispassold.presentation.components.texts.TextLink
 import com.chrispassold.presentation.theme.AppTheme
@@ -43,7 +43,7 @@ fun ProfileScreen(
     onNavigateToCreditCards: () -> Unit,
     onExitApp: () -> Unit,
 ) {
-    ScreenContainer {
+    AppScaffold {
         Spacer(modifier = Modifier.height(24.dp))
         Header()
         Content(

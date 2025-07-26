@@ -45,7 +45,7 @@ import com.chrispassold.presentation.components.avatars.Avatar
 import com.chrispassold.presentation.components.avatars.AvatarImage
 import com.chrispassold.presentation.components.avatars.AvatarSize
 import com.chrispassold.presentation.components.buttons.PrimaryButton
-import com.chrispassold.presentation.components.containers.ScreenContainer
+import com.chrispassold.presentation.components.containers.AppScaffold
 import com.chrispassold.presentation.components.inputs.TextInput
 import com.chrispassold.presentation.components.progress.FullScreenCircularIndicator
 import com.chrispassold.presentation.extensions.PreviewUiModes
@@ -73,7 +73,7 @@ fun DetailCategoryScreen(
         }
     }
 
-    ScreenContainer(
+    AppScaffold(
         snackbarHostState = snackbarHostState,
         appBarTitle = stringResource(R.string.category_detail_screen_title),
         onBack = {

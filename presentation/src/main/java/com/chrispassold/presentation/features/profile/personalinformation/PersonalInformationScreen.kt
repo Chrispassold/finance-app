@@ -15,7 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.chrispassold.presentation.R
@@ -25,7 +24,7 @@ import com.chrispassold.presentation.components.avatars.Avatar
 import com.chrispassold.presentation.components.avatars.AvatarImage
 import com.chrispassold.presentation.components.avatars.AvatarSize
 import com.chrispassold.presentation.components.buttons.PrimaryButton
-import com.chrispassold.presentation.components.containers.ScreenContainer
+import com.chrispassold.presentation.components.containers.AppScaffold
 import com.chrispassold.presentation.components.inputs.DatePickerInput
 import com.chrispassold.presentation.components.inputs.PasswordInput
 import com.chrispassold.presentation.components.inputs.TextInput
@@ -36,7 +35,7 @@ import com.chrispassold.presentation.theme.AppTheme
 fun PersonalInformationScreen(
     onBack: () -> Unit,
 ) {
-    ScreenContainer(
+    AppScaffold(
         appBarTitle = stringResource(R.string.personal_information_screen_title),
         onBack = onBack,
     ) {
