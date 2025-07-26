@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.convention.android.application)
     alias(libs.plugins.convention.android.application.compose)
     alias(libs.plugins.convention.android.hilt)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -13,7 +14,4 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":presentation"))
-
-//    implementation(libs.androidx.core.ktx)
-//    implementation(libs.timber)
 }
