@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -29,11 +27,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.chrispassold.domain.models.BankAccountType
 import com.chrispassold.presentation.R
-import com.chrispassold.presentation.components.avatars.Avatar
-import com.chrispassold.presentation.components.avatars.AvatarImage
-import com.chrispassold.presentation.components.avatars.AvatarSize
 import com.chrispassold.presentation.components.buttons.PrimaryButton
 import com.chrispassold.presentation.components.containers.AppScaffold
+import com.chrispassold.presentation.components.inputs.IconSelector
 import com.chrispassold.presentation.components.inputs.MoneyInput
 import com.chrispassold.presentation.components.inputs.TextInput
 import com.chrispassold.presentation.components.progress.FullScreenCircularIndicator
@@ -80,10 +76,10 @@ fun DetailBankAccountScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Avatar(
-                    image = AvatarImage.Icon(icon = Icons.Filled.Home),
-                    avatarSize = AvatarSize.Large,
-                )
+                IconSelector(
+                    selectedIcon = state.image, onIconSelected = {
+                        onEvent(DetailBankAccountUiEvent.ImageChanged(it))
+                    })
                 TextInput(
                     label = stringResource(R.string.label_bank_account_name),
                     value = state.bankAccountName,

@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.chrispassold.data.storage.entities.BankAccountEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BankAccountDao {
@@ -22,6 +23,6 @@ interface BankAccountDao {
     suspend fun get(id: String): BankAccountEntity?
 
     @Query("SELECT * FROM bank_account ORDER BY name ASC")
-    suspend fun getAll(): List<BankAccountEntity>
+    fun getAll(): Flow<List<BankAccountEntity>>
 
 }

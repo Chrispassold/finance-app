@@ -41,11 +41,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.chrispassold.domain.models.TransactionType
 import com.chrispassold.presentation.R
-import com.chrispassold.presentation.components.avatars.Avatar
-import com.chrispassold.presentation.components.avatars.AvatarImage
-import com.chrispassold.presentation.components.avatars.AvatarSize
+import com.chrispassold.presentation.components.containers.CircularImage
+import com.chrispassold.presentation.components.containers.ImageVariant
+import com.chrispassold.presentation.components.containers.ImageSize
 import com.chrispassold.presentation.components.buttons.PrimaryButton
 import com.chrispassold.presentation.components.containers.AppScaffold
+import com.chrispassold.presentation.components.inputs.IconSelector
 import com.chrispassold.presentation.components.inputs.TextInput
 import com.chrispassold.presentation.components.progress.FullScreenCircularIndicator
 import com.chrispassold.presentation.extensions.PreviewUiModes
@@ -114,10 +115,11 @@ private fun DetailComponent(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Avatar(
-            image = AvatarImage.Icon(icon = IconTypeFormatter.format(state.image)),
-            avatarSize = AvatarSize.Large,
-            color = IconTintFormatter.format(state.color),
+        IconSelector(
+            selectedIcon = state.image,
+            onIconSelected = {
+                onEvent(DetailCategoryUiEvent.ImageChanged(it))
+            },
         )
         TextInput(
             label = stringResource(R.string.category_name_placeholder),

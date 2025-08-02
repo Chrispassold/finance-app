@@ -4,7 +4,10 @@ import com.chrispassold.core.common.Mapper
 import com.chrispassold.data.storage.dao.BankAccountDao
 import com.chrispassold.data.storage.entities.BankAccountEntity
 import com.chrispassold.domain.models.BankAccount
+import com.chrispassold.domain.models.DatabaseException
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class RoomBankAccountLocalDataSource @Inject constructor(
     private val bankAccountDao: BankAccountDao,
@@ -31,7 +34,14 @@ class RoomBankAccountLocalDataSource @Inject constructor(
         return entityToDomainMapper.mapToNullable(bankAccountDao.get(id))
     }
 
-    override suspend fun getAll(): List<BankAccount> {
-        return entityToDomainMapper.mapToList(bankAccountDao.getAll())
+    override fun getAll(): Flow<List<BankAccount>> {
+        return try {
+            bankAccountDao.getAll().map {
+                entityToDomainMapper.mapToList(it)
+            }
+        } catch (e: Throwable) {
+            throw DatabaseException(e)
+        }
     }
+
 }

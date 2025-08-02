@@ -38,6 +38,7 @@ import com.chrispassold.presentation.components.progress.FullScreenCircularIndic
 import com.chrispassold.presentation.components.tags.Tag
 import com.chrispassold.presentation.extensions.PreviewUiModes
 import com.chrispassold.presentation.formatters.BankAccountTypeFormatter
+import com.chrispassold.presentation.formatters.IconTypeFormatter
 import com.chrispassold.presentation.formatters.MoneyFormatter
 import com.chrispassold.presentation.theme.AppTheme
 import java.math.BigDecimal
@@ -80,12 +81,11 @@ fun ListBankAccountsScreen(
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 TotalAmountAccounts(state.totalAmount)
                 state.bankAccounts.forEach { account ->
-                    appLogger.v("${account.name} - ${account.id}")
                     BankAccount(
                         bankName = account.name,
                         type = account.type,
                         value = account.initialAmount,
-                        icon = Icons.Filled.Home, //todo add icon from domain
+                        icon = IconTypeFormatter.format(account.image),
                         onClick = {
                             onEvent(ListBankAccountUiEvent.OnBankAccountClicked(account))
                         },

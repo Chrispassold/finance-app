@@ -7,7 +7,7 @@ data class BankAccount(
     val name: String,
     val initialAmount: BigDecimal,
     val hideFromBalance: Boolean,
-    val image: String?,
+    val image: IconType,
     val userId: String,
     val type: BankAccountType,
 )

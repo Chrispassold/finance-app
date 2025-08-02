@@ -4,10 +4,14 @@ import com.chrispassold.data.repositories.datasources.bankaccount.BankAccountLoc
 import com.chrispassold.domain.models.BankAccount
 import com.chrispassold.domain.repositories.BankAccountRepository
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
 class BankAccountRepositoryImpl @Inject constructor(
     private val bankAccountLocalDataSource: BankAccountLocalDataSource,
 ) : BankAccountRepository {
+    override val bankAccounts: Flow<List<BankAccount>>
+        get() = bankAccountLocalDataSource.getAll()
+
     override suspend fun insert(bankAccount: BankAccount) {
         bankAccountLocalDataSource.insert(bankAccount)
     }
@@ -18,10 +22,6 @@ class BankAccountRepositoryImpl @Inject constructor(
 
     override suspend fun delete(id: String) {
         bankAccountLocalDataSource.delete(id)
-    }
-
-    override suspend fun getAll(): List<BankAccount> {
-        return bankAccountLocalDataSource.getAll()
     }
 
     override suspend fun get(id: String): BankAccount? {

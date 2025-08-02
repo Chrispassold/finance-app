@@ -29,7 +29,6 @@ import com.chrispassold.presentation.theme.AppThemePreview
 @Composable
 fun CategoryWidget(
     icon: ImageVector,
-    iconContentDescription: String,
     subCategoriesCount: Int,
     name: String,
     onClick: () -> Unit,
@@ -56,7 +55,7 @@ fun CategoryWidget(
                 ) {
                     Icon(
                         imageVector = icon,
-                        contentDescription = iconContentDescription,
+                        contentDescription = icon.name,
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
@@ -87,7 +86,6 @@ private fun Preview() {
     AppThemePreview {
         CategoryWidget(
             icon = Icons.Filled.House,
-            iconContentDescription = "House",
             subCategoriesCount = 5,
             name = "House",
             onClick = {},

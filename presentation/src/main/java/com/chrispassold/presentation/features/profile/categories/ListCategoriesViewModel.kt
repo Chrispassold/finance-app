@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -49,15 +48,14 @@ class ListCategoriesViewModel @Inject constructor(
     UiEffectBehavior<ListCategoriesUiEffect> by DefaultUiEffectBehavior() {
 
     private val _state = MutableStateFlow(ListCategoriesUiState())
-    val state: StateFlow<ListCategoriesUiState> = getRootCategoriesUseCase.invoke()
-        .onStart { _state.value = _state.value.copy(isLoading = true) }.map {
-            _state.value = _state.value.copy(categories = it, isLoading = false)
-            _state.value
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = ListCategoriesUiState(),
-        )
+    val state: StateFlow<ListCategoriesUiState> = getRootCategoriesUseCase.invoke().map {
+        _state.value = _state.value.copy(categories = it, isLoading = false)
+        _state.value
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = ListCategoriesUiState(isLoading = true),
+    )
 
     override fun onEvent(event: ListCategoriesUiEvent) {
         viewModelScope.launch {

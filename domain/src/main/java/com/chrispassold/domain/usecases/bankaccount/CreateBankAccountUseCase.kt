@@ -3,6 +3,7 @@ package com.chrispassold.domain.usecases.bankaccount
 import com.chrispassold.core.resultWithContext
 import com.chrispassold.domain.models.BankAccount
 import com.chrispassold.domain.models.BankAccountType
+import com.chrispassold.domain.models.IconType
 import com.chrispassold.domain.repositories.BankAccountRepository
 import com.chrispassold.domain.repositories.UserRepository
 import kotlinx.coroutines.Dispatchers
@@ -19,8 +20,8 @@ class CreateBankAccountUseCase @Inject constructor(
         val name: String?,
         val initialAmount: BigDecimal,
         val hideFromBalance: Boolean,
+        val image: IconType,
         val type: BankAccountType?,
-        val image: String?,
     )
 
     suspend fun invoke(params: Params): Result<Unit> = resultWithContext(Dispatchers.IO) {

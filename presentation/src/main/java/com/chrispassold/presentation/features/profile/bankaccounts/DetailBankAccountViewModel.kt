@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chrispassold.domain.models.BankAccountType
+import com.chrispassold.domain.models.IconType
 import com.chrispassold.domain.usecases.bankaccount.CreateBankAccountUseCase
 import com.chrispassold.domain.usecases.bankaccount.GetBankAccountUseCase
 import com.chrispassold.domain.usecases.bankaccount.UpdateBankAccountUseCase
@@ -27,7 +28,7 @@ data class DetailBankAccountUiState(
     val bankAccountName: String = "",
     val initialValue: BigDecimal = BigDecimal.ZERO,
     val hideFromBalanceCheck: Boolean = false,
-    val image: String? = null,
+    val image: IconType = IconType.Generic,
     val type: BankAccountType = BankAccountType.CHECKING_ACCOUNT,
 )
 
@@ -38,7 +39,7 @@ sealed interface DetailBankAccountUiEvent {
     data class HideFromBalanceCheckChanged(val hideFromBalanceCheck: Boolean) :
         DetailBankAccountUiEvent
 
-    data class ImageChanged(val image: String) : DetailBankAccountUiEvent
+    data class ImageChanged(val image: IconType) : DetailBankAccountUiEvent
     data class TypeChanged(val type: BankAccountType) : DetailBankAccountUiEvent
 
     data object Submit : DetailBankAccountUiEvent

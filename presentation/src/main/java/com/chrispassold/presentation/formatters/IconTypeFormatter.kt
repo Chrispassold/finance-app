@@ -19,21 +19,23 @@ import com.chrispassold.domain.models.IconType
 
 object IconTypeFormatter {
 
+    val icons = mapOf<IconType, ImageVector>(
+        IconType.Generic to Icons.Default.Category,
+        IconType.ShoppingCart to Icons.Default.ShoppingCart,
+        IconType.Food to Icons.Default.Restaurant,
+        IconType.Travel to Icons.Default.Flight,
+        IconType.Home to Icons.Default.Home,
+        IconType.Health to Icons.Default.MedicalServices,
+        IconType.Education to Icons.Default.School,
+        IconType.Entertainment to Icons.Default.Movie,
+        IconType.Savings to Icons.Default.Savings,
+        IconType.Salary to Icons.Default.AttachMoney,
+        IconType.Gift to Icons.Default.CardGiftcard,
+        IconType.Subscription to Icons.Default.Subscriptions,
+        IconType.Pet to Icons.Default.Pets,
+    )
+
     fun format(iconType: IconType): ImageVector {
-        return when (iconType) {
-            IconType.Generic -> Icons.Default.Category
-            IconType.ShoppingCart -> Icons.Default.ShoppingCart
-            IconType.Food -> Icons.Default.Restaurant
-            IconType.Travel -> Icons.Default.Flight
-            IconType.Home -> Icons.Default.Home
-            IconType.Health -> Icons.Default.MedicalServices
-            IconType.Education -> Icons.Default.School
-            IconType.Entertainment -> Icons.Default.Movie
-            IconType.Savings -> Icons.Default.Savings
-            IconType.Salary -> Icons.Default.AttachMoney
-            IconType.Gift -> Icons.Default.CardGiftcard
-            IconType.Subscription -> Icons.Default.Subscriptions
-            IconType.Pet -> Icons.Default.Pets
-        }
+        return icons[iconType] ?: Icons.Default.Category
     }
 }

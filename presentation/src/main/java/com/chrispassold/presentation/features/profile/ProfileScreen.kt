@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.chrispassold.presentation.extensions.PreviewUiModes
 import com.chrispassold.presentation.extensions.whenPreview
-import com.chrispassold.presentation.components.avatars.Avatar
-import com.chrispassold.presentation.components.avatars.AvatarImage
-import com.chrispassold.presentation.components.avatars.AvatarSize
+import com.chrispassold.presentation.components.containers.CircularImage
+import com.chrispassold.presentation.components.containers.ImageVariant
+import com.chrispassold.presentation.components.containers.ImageSize
 import com.chrispassold.presentation.components.containers.AppScaffold
 import com.chrispassold.presentation.components.items.ListItem
 import com.chrispassold.presentation.components.texts.TextLink
@@ -68,12 +68,12 @@ private fun Header() {
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
     ) {
         Row {
-            Avatar(
-                image = whenPreview(
-                    ifPreview = { AvatarImage.Drawable(id = com.chrispassold.presentation.R.drawable.ic_google_login) },
-                    ifNotPreview = { AvatarImage.Uri("https://picsum.photos/50/50".toUri()) },
+            CircularImage(
+                variant = whenPreview(
+                    ifPreview = { ImageVariant.Drawable(id = com.chrispassold.presentation.R.drawable.ic_google_login) },
+                    ifNotPreview = { ImageVariant.Icon(icon = Icons.Filled.Person) },
                 ),
-                avatarSize = AvatarSize.Large,
+                imageSize = ImageSize.Large,
             )
         }
         Row {

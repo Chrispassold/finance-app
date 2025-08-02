@@ -6,7 +6,7 @@ import com.chrispassold.domain.repositories.TransactionRepository
 import com.chrispassold.domain.repositories.UserRepository
 import com.chrispassold.domain.usecases.bankaccount.CreateBankAccountUseCase
 import com.chrispassold.domain.usecases.bankaccount.GetBankAccountUseCase
-import com.chrispassold.domain.usecases.bankaccount.ListBankAccountsUseCase
+import com.chrispassold.domain.usecases.bankaccount.GetAllBankAccountsUseCase
 import com.chrispassold.domain.usecases.bankaccount.UpdateBankAccountUseCase
 import com.chrispassold.domain.usecases.category.CreateCategoryUseCase
 import com.chrispassold.domain.usecases.category.DeleteCategoryUseCase
@@ -74,8 +74,8 @@ object UseCaseModule {
     @Provides
     fun provideListBankAccountsUseCase(
         bankAccountRepository: BankAccountRepository,
-    ): ListBankAccountsUseCase {
-        return ListBankAccountsUseCase(
+    ): GetAllBankAccountsUseCase {
+        return GetAllBankAccountsUseCase(
             bankAccountRepository = bankAccountRepository,
         )
     }

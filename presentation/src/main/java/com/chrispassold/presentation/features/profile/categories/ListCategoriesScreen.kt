@@ -98,7 +98,6 @@ private fun CategoryItemsContent(
                 val img = IconTypeFormatter.format(category.image)
                 CategoryWidget(
                     icon = img,
-                    iconContentDescription = img.name,
                     subCategoriesCount = category.subCategories.size,
                     name = category.name,
                     onClick = { onClick(category) },

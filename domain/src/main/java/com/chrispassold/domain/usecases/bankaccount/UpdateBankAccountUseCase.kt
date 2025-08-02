@@ -2,6 +2,7 @@ package com.chrispassold.domain.usecases.bankaccount
 
 import com.chrispassold.core.resultWithContext
 import com.chrispassold.domain.models.BankAccountType
+import com.chrispassold.domain.models.IconType
 import com.chrispassold.domain.repositories.BankAccountRepository
 import com.chrispassold.domain.repositories.UserRepository
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +20,7 @@ class UpdateBankAccountUseCase @Inject constructor(
         val initialAmount: BigDecimal,
         val hideFromBalance: Boolean,
         val type: BankAccountType?,
-        val image: String?,
+        val image: IconType,
         val id: String,
     )
 

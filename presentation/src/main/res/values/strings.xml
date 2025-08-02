@@ -35,4 +35,6 @@
     <string name="modal_title_new_sub_category">New sub category</string>
     <string name="category_name">Category name</string>
     <string name="add">Add</string>
+    <string name="choose_an_icon">Choose an icon</string>
+    <string name="close">Close</string>
 </resources>
